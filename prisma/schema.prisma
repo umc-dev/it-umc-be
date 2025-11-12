@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model admin {
+  id        String   @id
+  email     String   @unique(map: "Admin_email_key")
+  name      String?
+  password  String
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  news      news[]
+}
+
+model category {
+  id        String   @id
+  name      String   @unique(map: "Category_name_key")
+  slug      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  news      news[]
+}
+
+model news {
+  id         String   @id
+  title      String
+  content    String
+  authorId   String
+  thumbnail  String
+  categoryId String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime
+  admin      admin    @relation(fields: [authorId], references: [id], map: "News_authorId_fkey")
+  category   category @relation(fields: [categoryId], references: [id], map: "News_categoryId_fkey")
+
+  @@index([authorId], map: "News_authorId_fkey")
+  @@index([categoryId], map: "News_categoryId_fkey")
+}
