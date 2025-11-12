@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
   res.status(200).json({
     message: `API is running securely with Helmet on ${env.NODE_ENV} mode`,
   });

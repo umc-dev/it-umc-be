@@ -1,6 +1,5 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -9,7 +8,7 @@ datasource db {
 }
 
 model admin {
-  id        String   @id
+  id        String   @id @default(uuid())
   email     String   @unique(map: "Admin_email_key")
   name      String?
   password  String
@@ -20,7 +19,7 @@ model admin {
 }
 
 model category {
-  id        String   @id
+  id        String   @id @default(uuid())
   name      String   @unique(map: "Category_name_key")
   slug      String
   createdAt DateTime @default(now())
@@ -29,7 +28,7 @@ model category {
 }
 
 model news {
-  id         String   @id
+  id         String   @id @default(uuid())
   title      String
   content    String
   authorId   String
