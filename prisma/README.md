@@ -8,7 +8,9 @@ INSTALASI
 
 Pastikan sudah install dependencies:
 
+```shell
 pnpm install
+```
 
 Prisma sudah termasuk dalam dependencies, jadi bisa langsung pakai CLI-nya.
 
@@ -18,10 +20,11 @@ KONEKSI DATABASE
 
 Setiap koneksi database dikontrol lewat file .env:
 
+```.env
 DATABASE_URL="mysql://root:password@localhost:3306/ti_umc"
 PORT=9090
 NODE_ENV=development
-
+```
 Pastikan database MySQL sudah dibuat dan service MySQL berjalan (net start MySQL80).
 
 -----------------------------------------------------------
@@ -30,31 +33,36 @@ PERINTAH PRISMA (VIA PNPM)
 
 1. Pull schema dari database
 
+```shell
 pnpm prisma pull
-
+```
 - Fungsi: Ambil struktur tabel dari database yang sudah ada
 - Update file schema.prisma sesuai database
 - Catatan: Tidak membuat tabel baru
 
 2. Push schema ke database
 
+```shell
 pnpm prisma push
+```
 
 - Fungsi: Membuat tabel di database sesuai schema.prisma
 - Cocok untuk database kosong / development
 
 3. Migrate development
 
+```shell
 pnpm prisma migrate
-
+```
 - Fungsi: Buat migration file dan tabel baru sesuai schema.prisma
 - Bisa menambahkan nama migration:
   pnpm prisma:migrate dev --name init
 
 4. Prisma Studio
 
+```shell
 pnpm prisma:studio
-
+```
 - GUI untuk melihat isi database
 - Bisa CRUD data secara visual tanpa query manual
 
