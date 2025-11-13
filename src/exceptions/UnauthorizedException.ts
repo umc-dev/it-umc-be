@@ -1,4 +1,4 @@
-import HttpException from "./HttpException.js";
+import HttpException from "./HttpException.ts";
 
 export default class UnauthorizedException extends HttpException {
   constructor(message = "Unauthorized") {

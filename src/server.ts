@@ -1,12 +1,13 @@
 import express from "express";
+import type { Express } from "express";
 import helmet from "helmet";
 import morgan from "morgan";
-import { env } from "./config/env.js";
-import NotFoundException from "./exceptions/NotFoundException.js";
-import { errorHandler } from "./middlewares/errorHandler.js";
+import { env } from "./config/env.ts";
+import NotFoundException from "./exceptions/NotFoundException.ts";
+import { errorHandler } from "./middlewares/errorHandler.ts";
 
 // Init Express
-const app = express();
+const app: Express = express();
 
 // Proteksi header
 app.use(helmet());

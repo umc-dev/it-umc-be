@@ -3,7 +3,15 @@
 // Menangkap semua error dari route atau middleware lain
 // Gunakan next(err) di tempat lain kalo mau trigger global err handler ini
 
-export const errorHandler = (err, req, res, next) => {
+import type { NextFunction, Request, Response } from "express";
+import type HttpException from "../exceptions/HttpException.js";
+
+export const errorHandler = (
+  err: HttpException,
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   console.error("❌ Error:", err);
 
   const status = err.status || 500;
