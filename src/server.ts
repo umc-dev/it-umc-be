@@ -5,6 +5,7 @@ import morgan from "morgan";
 import { env } from "./config/env.ts";
 import NotFoundException from "./exceptions/NotFoundException.ts";
 import { errorHandler } from "./middlewares/errorHandler.ts";
+import routes from "./routes/index.ts";
 
 // Init Express
 const app: Express = express();
@@ -22,9 +23,11 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.get("/", async (req, res) => {
   res.status(200).json({
-    message: `API is running securely with Helmet on ${env.NODE_ENV} mode`,
+    message: `Welcome to UMC BE API`,
   });
 });
+
+app.use("/api/v1", routes);
 
 // Handler untuk route yang tidak ada
 app.use((req, res, next) => {
