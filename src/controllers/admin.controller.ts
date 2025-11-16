@@ -10,7 +10,11 @@ import BadRequestException from "../exceptions/BadRequestException.ts";
 export class AdminController {
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await adminService.getAll();
+      const limit = parseInt(req.query.limit as string) || 25;
+      const page = parseInt(req.query.page as string) || 1;
+
+      const data = await adminService.getAll(limit, page);
+
       return res.status(200).json(ResponseHTTP.ok(data, "Admins fetched"));
     } catch (err) {
       next(err);

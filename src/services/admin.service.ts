@@ -26,8 +26,8 @@ const mapToAdminWithNewsResponse = (admin: any): AdminWithNewsResponse => {
 
 const adminService = {
   // Ambil semua admin
-  async getAll(): Promise<AdminResponse[]> {
-    const admins = await adminRepository.getAllAdmin();
+  async getAll(limit: number, page: number): Promise<AdminResponse[]> {
+    const admins = await adminRepository.getAllAdmin(limit, page);
 
     return admins.map((admin) => mapToAdminResponse(admin));
   },

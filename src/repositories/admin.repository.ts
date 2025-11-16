@@ -4,8 +4,12 @@ import { db } from "../utils/prisma.ts";
 
 const adminRepository = {
   // Ambil semua admin
-  async getAllAdmin() {
+  async getAllAdmin(limit: number, page: number) {
+    const skip = (page - 1) * limit;
+
     return await db.admin.findMany({
+      skip,
+      take: limit,
       orderBy: {
         createdAt: "desc",
       },
