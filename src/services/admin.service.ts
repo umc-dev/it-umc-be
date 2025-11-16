@@ -3,12 +3,13 @@ import type {
   AdminWithNewsResponse,
   AdminCreateDTO,
   AdminUpdateDTO,
+  PaginatedAdminResponse,
 } from "../types/admin.type";
 import adminRepository from "../repositories/admin.repository";
 import NotFoundException from "../exceptions/NotFoundException";
 import { hashPassword } from "../utils/password";
 
-// Mapping ke admin response
+// Mapping ke admin response tanpa Password
 const mapToAdminResponse = (admin: any): AdminResponse => {
   if (!admin) return null as any;
 
@@ -16,7 +17,7 @@ const mapToAdminResponse = (admin: any): AdminResponse => {
   return safe;
 };
 
-// Mapping ke admin with news response
+// Mapping ke admin with news response tanpa Password
 const mapToAdminWithNewsResponse = (admin: any): AdminWithNewsResponse => {
   if (!admin) return null as any;
 
@@ -26,10 +27,23 @@ const mapToAdminWithNewsResponse = (admin: any): AdminWithNewsResponse => {
 
 const adminService = {
   // Ambil semua admin
-  async getAll(limit: number, page: number): Promise<AdminResponse[]> {
-    const admins = await adminRepository.getAllAdmin(limit, page);
+  async getAll(
+    limit: number,
+    page: number,
+    search: string,
+  ): Promise<PaginatedAdminResponse> {
+    const paginatedResult = await adminRepository.getAllAdmin(
+      limit,
+      page,
+      search,
+    );
 
-    return admins.map((admin) => mapToAdminResponse(admin));
+    const safeAdmins = paginatedResult.data.map(mapToAdminResponse);
+
+    return {
+      data: safeAdmins,
+      meta: paginatedResult.meta,
+    };
   },
 
   // Ambil admin berdasarkan id

@@ -6,16 +6,28 @@ import {
 } from "../validator/admin.validator";
 import { ResponseHTTP } from "../utils/response";
 import BadRequestException from "../exceptions/BadRequestException";
+import {
+  AdminResponse,
+  AdminWithNewsResponse,
+  PaginatedAdminResponse,
+} from "../types/admin.type";
 
 export class AdminController {
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
       const limit = parseInt(req.query.limit as string) || 25;
       const page = parseInt(req.query.page as string) || 1;
+      const search = (req.query.search as string) || "";
 
-      const data = await adminService.getAll(limit, page);
+      const response: PaginatedAdminResponse = await adminService.getAll(
+        limit,
+        page,
+        search,
+      );
 
-      return res.status(200).json(ResponseHTTP.ok(data, "Admins fetched"));
+      return res
+        .status(200)
+        .json(ResponseHTTP.ok(response.data, "Admins fetched", response.meta));
     } catch (err) {
       next(err);
     }
@@ -29,7 +41,7 @@ export class AdminController {
         throw new BadRequestException("Admin ID is required");
       }
 
-      const data = await adminService.getById(id);
+      const data: AdminWithNewsResponse = await adminService.getById(id);
       return res.status(200).json(ResponseHTTP.ok(data, "Admin fetched"));
     } catch (err) {
       next(err);
@@ -40,7 +52,7 @@ export class AdminController {
     try {
       const body = CreateAdminSchema.parse(req.body);
 
-      const data = await adminService.create(body);
+      const data: AdminResponse = await adminService.create(body);
       return res.status(201).json(ResponseHTTP.created(data, "Admin created"));
     } catch (err) {
       next(err);
@@ -57,7 +69,7 @@ export class AdminController {
 
       const body = UpdateAdminSchema.parse(req.body);
 
-      const data = await adminService.update(id, body);
+      const data: AdminResponse = await adminService.update(id, body);
       return res.status(200).json(ResponseHTTP.ok(data, "Admin updated"));
     } catch (err) {
       next(err);

@@ -4,16 +4,41 @@ import { db } from "../utils/prisma";
 
 const adminRepository = {
   // Ambil semua admin
-  async getAllAdmin(limit: number, page: number) {
+  async getAllAdmin(limit: number, page: number, search: string) {
     const skip = (page - 1) * limit;
+    const whereClause = search
+      ? {
+          OR: [{ name: { contains: search } }, { email: { contains: search } }],
+        }
+      : {};
 
-    return await db.admin.findMany({
-      skip,
-      take: limit,
-      orderBy: {
-        createdAt: "desc",
+    // Pake Transaction biar konsisten
+    const [admins, total] = await db.$transaction([
+      // 1. Query untuk mengambil data
+      db.admin.findMany({
+        skip,
+        take: limit,
+        orderBy: {
+          createdAt: "desc",
+        },
+        where: whereClause,
+      }),
+
+      // 2. Query untuk menghitung total data
+      db.admin.count({
+        where: whereClause,
+      }),
+    ]);
+
+    return {
+      data: admins,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
       },
-    });
+    };
   },
 
   // Menambahkan admin

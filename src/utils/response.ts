@@ -1,11 +1,12 @@
-import type { ApiResponse } from "../types/index";
+import type { ApiResponse, PaginationMeta } from "../types/index";
 
 export const ResponseHTTP = {
-  ok<T>(data: T, message = "Success"): ApiResponse<T> {
+  ok<T>(data: T, message = "Success", meta?: PaginationMeta): ApiResponse<T> {
     return {
       success: true,
       message,
       data,
+      meta,
     };
   },
 

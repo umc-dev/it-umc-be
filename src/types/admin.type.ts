@@ -3,6 +3,7 @@ import {
   CreateAdminSchema,
   UpdateAdminSchema,
 } from "../validator/admin.validator";
+import { PaginationMeta } from ".";
 // Admin DTO
 
 export interface Admin {
@@ -61,6 +62,11 @@ export interface AdminResponse {
   avatar: string | null;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface PaginatedAdminResponse {
+  data: AdminResponse[];
+  meta: PaginationMeta;
 }
 
 export interface AdminWithNewsResponse extends AdminResponse {
