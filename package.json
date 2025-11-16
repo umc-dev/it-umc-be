@@ -7,7 +7,8 @@
     "dev": "pnpm exec nodemon --watch \"src/**/*.ts\" --exec \"pnpm exec ts-node\" src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "seed": "ts-node prisma/seeds/index.ts",
+    "db:seed": "ts-node prisma/seeds/index.ts",
+    "db:reset": "pnpm prisma migrate reset",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
