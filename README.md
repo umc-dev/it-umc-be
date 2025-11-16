@@ -1,3 +1,44 @@
+## Cara Jalanin
+
+### 1. Clone repository
+
+```bash
+git clone https://github.com/umc-dev/it-umc-be.git
+cd it-umc-be
+```
+### 2. Install dependencies
+
+```bash
+pnpm install
+```
+
+### 3. Setup environment variables
+
+Buat file .env di root project, contoh isi:
+
+```env
+DATABASE_URL="mysql://root:password@localhost:3306/ti_umc"
+PORT=9090
+NODE_ENV=development
+JWT_SECRET="123"
+```
+
+Note: Pastikan JWT_SECRET tidak dibagikan ke publik.
+
+### 4. Migrate database
+```bash
+pnpm prisma migrate dev --name init
+```
+
+### 5. Generate Prisma Client
+```bash
+pnpm prisma generate
+```
+
+### 6. Jalankan development server
+```bash
+pnpm run dev
+```
 
 ## 📁 Struktur Folder Proyek
 
