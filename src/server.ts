@@ -4,7 +4,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import { env } from "./config/env";
 import NotFoundException from "./exceptions/NotFoundException";
-import { errorHandler } from "./middlewares/errorHandler";
+import { errorHandler } from "./middlewares/error.middleware";
 import routes from "./routes/index";
 
 // Init Express

@@ -3,3 +3,7 @@ export interface AuthPayload {
   id: string;
   email: string;
 }
+
+export interface AuthResponse {
+  token: string;
+}
