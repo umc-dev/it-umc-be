@@ -2,7 +2,7 @@ import z from "zod";
 import {
   CreateAdminSchema,
   UpdateAdminSchema,
-} from "../validator/admin.validator.ts";
+} from "../validator/admin.validator";
 // Admin DTO
 
 export interface Admin {

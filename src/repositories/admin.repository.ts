@@ -1,6 +1,6 @@
-import type { AdminCreateDTO, AdminUpdateDTO } from "../types/admin.type.ts";
-import { removeUndefined } from "../utils/index.ts";
-import { db } from "../utils/prisma.ts";
+import type { AdminCreateDTO, AdminUpdateDTO } from "../types/admin.type";
+import { removeUndefined } from "../utils/index";
+import { db } from "../utils/prisma";
 
 const adminRepository = {
   // Ambil semua admin

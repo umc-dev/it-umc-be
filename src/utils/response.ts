@@ -1,4 +1,4 @@
-import type { ApiResponse } from "../types/index.ts";
+import type { ApiResponse } from "../types/index";
 
 export const ResponseHTTP = {
   ok<T>(data: T, message = "Success"): ApiResponse<T> {

@@ -1,7 +1,7 @@
 // All Routes
 
 import { Router, type IRouter } from "express";
-import adminRouter from "./admin.route.ts";
+import adminRouter from "./admin.route";
 
 const router: IRouter = Router();
 

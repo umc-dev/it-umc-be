@@ -3,10 +3,10 @@ import type {
   AdminWithNewsResponse,
   AdminCreateDTO,
   AdminUpdateDTO,
-} from "../types/admin.type.ts";
-import adminRepository from "../repositories/admin.repository.ts";
-import NotFoundException from "../exceptions/NotFoundException.ts";
-import { hashPassword } from "../utils/password.ts";
+} from "../types/admin.type";
+import adminRepository from "../repositories/admin.repository";
+import NotFoundException from "../exceptions/NotFoundException";
+import { hashPassword } from "../utils/password";
 
 // Mapping ke admin response
 const mapToAdminResponse = (admin: any): AdminResponse => {

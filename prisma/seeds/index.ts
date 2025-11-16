@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { seedAdmins } from "./admin.seed.ts";
+import { seedAdmins } from "./admin.seed";
 
 const prisma = new PrismaClient();
 

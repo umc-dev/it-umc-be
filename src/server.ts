@@ -2,10 +2,10 @@ import express from "express";
 import type { Express } from "express";
 import helmet from "helmet";
 import morgan from "morgan";
-import { env } from "./config/env.ts";
-import NotFoundException from "./exceptions/NotFoundException.ts";
-import { errorHandler } from "./middlewares/errorHandler.ts";
-import routes from "./routes/index.ts";
+import { env } from "./config/env";
+import NotFoundException from "./exceptions/NotFoundException";
+import { errorHandler } from "./middlewares/errorHandler";
+import routes from "./routes/index";
 
 // Init Express
 const app: Express = express();

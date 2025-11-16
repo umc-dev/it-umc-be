@@ -1,4 +1,4 @@
-import HttpException from "./HttpException.ts";
+import HttpException from "./HttpException";
 
 export default class InternalServerError extends HttpException {
   constructor(message = "Internal Server Error") {

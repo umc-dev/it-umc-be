@@ -1,11 +1,11 @@
 import type { NextFunction, Request, Response } from "express";
-import adminService from "../services/admin.service.ts";
+import adminService from "../services/admin.service";
 import {
   CreateAdminSchema,
   UpdateAdminSchema,
-} from "../validator/admin.validator.ts";
-import { ResponseHTTP } from "../utils/response.ts";
-import BadRequestException from "../exceptions/BadRequestException.ts";
+} from "../validator/admin.validator";
+import { ResponseHTTP } from "../utils/response";
+import BadRequestException from "../exceptions/BadRequestException";
 
 export class AdminController {
   async getAll(req: Request, res: Response, next: NextFunction) {

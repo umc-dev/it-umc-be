@@ -1,4 +1,4 @@
-import HttpException from "./HttpException.ts";
+import HttpException from "./HttpException";
 
 export default class NotFoundException extends HttpException {
   constructor(message = "Resource Not Found") {

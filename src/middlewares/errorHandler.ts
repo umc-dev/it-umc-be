@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import HttpException from "../exceptions/HttpException.ts";
+import HttpException from "../exceptions/HttpException";
 import { ZodError } from "zod";
 
 export const errorHandler = (

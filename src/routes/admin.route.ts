@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import AdminController from "../controllers/admin.controller.ts";
+import AdminController from "../controllers/admin.controller";
 
 const adminRouter: IRouter = Router();
 

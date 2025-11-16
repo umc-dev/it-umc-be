@@ -2,20 +2,22 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     // File Layout
-    // "rootDir": "./src",
-    // "outDir": "./dist",
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "Node16",
-    "moduleResolution": "Node16",
-    "allowImportingTsExtensions": true,
-    "noEmit": true,
+    "module": "CommonJS",
+    "moduleResolution": "node",
     "target": "esnext",
-    "types": [],
+    "types": ["node"],
+    // "allowImportingTsExtensions": true,
+    // "noEmit": true,
     // For nodejs:
     // "lib": ["esnext"],
-    // "types": ["node"],
     // and npm install -D @types/node
 
     // Other Outputs
@@ -24,8 +26,8 @@
     "declarationMap": true,
 
     // Stricter Typechecking Options
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
+    // "noUncheckedIndexedAccess": true,
+    // "exactOptionalPropertyTypes": true
 
     // Style Options
     // "noImplicitReturns": true,
@@ -35,13 +37,15 @@
     // "noFallthroughCasesInSwitch": true,
     // "noPropertyAccessFromIndexSignature": true,
 
-    // Recommended Options
-    "strict": true,
-    "jsx": "react-jsx",
-    "verbatimModuleSyntax": true,
+    //  Recommended Options
+    // "strict": true,
+    // "jsx": "react-jsx",
+    // // "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true
-  }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "prisma"]
 }
