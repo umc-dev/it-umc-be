@@ -8,6 +8,7 @@ import type {
 import adminRepository from "../repositories/admin.repository";
 import NotFoundException from "../exceptions/NotFoundException";
 import { hashPassword } from "../utils/password";
+import BadRequestException from "../exceptions/BadRequestException";
 
 // Mapping ke admin response tanpa Password
 const mapToAdminResponse = (admin: any): AdminResponse => {
@@ -57,8 +58,25 @@ const adminService = {
     return mapToAdminWithNewsResponse(admin);
   },
 
+  // Ambil admin berdasarkan email
+  async getByEmail(email: string): Promise<AdminResponse | null> {
+    const admin = await adminRepository.getAdminByEmail(email);
+
+    if (!admin) {
+      throw new NotFoundException("Admin not found");
+    }
+
+    return mapToAdminWithNewsResponse(admin);
+  },
+
   // Menambahkan admin
   async create(data: AdminCreateDTO): Promise<AdminResponse> {
+    const adminIsExist = await adminRepository.getAdminByEmail(data.email);
+
+    if (adminIsExist) {
+      throw new BadRequestException("Admin already exist");
+    }
+
     const rawPassword = data.password;
     const hashedPassword = await hashPassword(rawPassword);
 

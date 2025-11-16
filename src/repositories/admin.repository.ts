@@ -12,7 +12,7 @@ const adminRepository = {
         }
       : {};
 
-    // Pake Transaction biar konsisten
+    // Pake Transaction biar konsisten kalo jalanin 2 kali query
     const [admins, total] = await db.$transaction([
       // 1. Query untuk mengambil data
       db.admin.findMany({
@@ -51,6 +51,13 @@ const adminRepository = {
         avatar: data.avatar ?? null,
         updatedAt: new Date(),
       },
+    });
+  },
+
+  // Ambil Admin berdasarkan email
+  async getAdminByEmail(email: string) {
+    return await db.admin.findUnique({
+      where: { email },
     });
   },
 
