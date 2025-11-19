@@ -10,7 +10,7 @@
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "CommonJS",
+    "module": "ESNext",
     "moduleResolution": "node",
     "target": "esnext",
     "types": ["node"],
@@ -45,6 +45,10 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true
+  },
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
   },
   "include": ["src"],
   "exclude": ["node_modules", "prisma"]
