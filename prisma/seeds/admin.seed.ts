@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 export async function seedAdmins() {
   // Total data
-  const totalAdmins = 50;
+  const totalAdmins = 5;
 
   // Faker Bahasa Indonesia
   const fakerID = new Faker({ locale: [id_ID] });
@@ -15,7 +15,7 @@ export async function seedAdmins() {
     Array.from({ length: totalAdmins }).map(async () => ({
       name: fakerID.person.fullName(),
       email: fakerID.internet.email().toLowerCase(),
-      password: await bcrypt.hash(fakerID.internet.password(), 10),
+      password: await bcrypt.hash("cirebon321", 10),
       createdAt: new Date(),
       updatedAt: new Date(),
     })),
