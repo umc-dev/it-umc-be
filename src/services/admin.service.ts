@@ -9,6 +9,7 @@ import adminRepository from "../repositories/admin.repository";
 import NotFoundException from "../exceptions/NotFoundException";
 import { hashPassword } from "../utils/password";
 import BadRequestException from "../exceptions/BadRequestException";
+import { da } from "zod/v4/locales";
 
 // Mapping ke admin response tanpa Password
 const mapToAdminResponse = (admin: any): AdminResponse => {
@@ -95,6 +96,13 @@ const adminService = {
 
     if (!admin) {
       throw new NotFoundException("Admin not found");
+    }
+
+    if(data.email){
+      const adminIsExist = await adminRepository.getAdminByEmail(data.email);
+      if (data.email !== admin.email && adminIsExist) {
+        throw new BadRequestException("Email already in use");
+      }
     }
 
     let dataToUpdate: AdminUpdateDTO = { ...data };
