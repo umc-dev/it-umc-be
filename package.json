@@ -1,7 +1,6 @@
 {
   "name": "it-umc-be",
   "version": "1.0.0",
-  "type": "module",
   "description": "Umc TI Faculty backend",
   "main": "src/index.ts",
   "scripts": {

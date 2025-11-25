@@ -1,5 +1,9 @@
 import { defineConfig, env } from "prisma/config";
-import "dotenv/config";
+
+if (!process.env.DATABASE_URL) {
+  // Menggunakan dynamic import atau require untuk loading kondisional
+  require("dotenv/config");
+}
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
