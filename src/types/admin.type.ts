@@ -4,6 +4,8 @@ import {
   UpdateAdminSchema,
 } from "../validator/admin.validator";
 import { PaginationMeta } from ".";
+import { News } from "./news.type";
+
 // Admin DTO
 
 export interface Admin {
@@ -14,15 +16,6 @@ export interface Admin {
   avatar: string | null;
   createdAt: Date;
   updatedAt: Date;
-}
-
-export interface News {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: Date;
-  updatedAt: Date;
-  adminId: string;
 }
 
 export interface AdminWithNews extends Admin {

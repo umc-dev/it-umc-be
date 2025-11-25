@@ -30,12 +30,12 @@ model category {
 model news {
   id         String   @id @default(uuid())
   title      String
-  content    String
+  content    String   @db.Text
   authorId   String
   thumbnail  String
   categoryId String
   createdAt  DateTime @default(now())
-  updatedAt  DateTime
+  updatedAt  DateTime @updatedAt
   admin      admin    @relation(fields: [authorId], references: [id], map: "News_authorId_fkey")
   category   category @relation(fields: [categoryId], references: [id], map: "News_categoryId_fkey")
 
