@@ -33,6 +33,7 @@ model news {
   content    String   @db.Text
   authorId   String
   thumbnail  String
+  slug       String @unique
   categoryId String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

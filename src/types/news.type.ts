@@ -12,6 +12,7 @@ export interface News {
   title: string;
   content: string;
   thumbnail: string | null;
+  slug: string;
   categoryId: string;
   authorId: string;
   createdAt: Date;
@@ -19,7 +20,10 @@ export interface News {
 }
 
 // Request DTO
-export type CreateNewsDto = z.infer<typeof CreateNewsSchema>;
+export type CreateNewsDto = z.infer<typeof CreateNewsSchema> & {
+  slug: string;
+};
+
 export type UpdateNewsDto = z.infer<typeof UpdateNewsSchema>;
 
 // Response DTO
@@ -28,6 +32,7 @@ export interface NewsResponse {
   title: string;
   content: string;
   thumbnail: string | null;
+  slug: string;
   categoryId: string;
   authorId: string;
   createdAt: Date;
