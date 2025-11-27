@@ -24,7 +24,9 @@ export type CreateNewsDto = z.infer<typeof CreateNewsSchema> & {
   slug: string;
 };
 
-export type UpdateNewsDto = z.infer<typeof UpdateNewsSchema>;
+export type UpdateNewsDto = z.infer<typeof UpdateNewsSchema> & {
+  slug: string;
+};
 
 // Response DTO
 export interface NewsResponse {
