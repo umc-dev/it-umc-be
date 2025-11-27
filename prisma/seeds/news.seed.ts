@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { Faker, id_ID } from "@faker-js/faker";
+import { Faker, id_ID, faker } from "@faker-js/faker";
 import slugify from "slugify";
 
 const prisma = new PrismaClient();
@@ -13,8 +13,7 @@ export async function seedNews() {
 
   // Cek admin & category (pakai yang pertama)
   const admin = await prisma.admin.findFirst();
-  // const category = await prisma.category.findFirst();
-  const category = { id: "12", name: "Lorem" };
+  const category = await prisma.category.findFirst();
 
   if (!admin || !category) {
     console.log("Admin atau Category belum ada. Seed dibatalkan.");
@@ -23,14 +22,14 @@ export async function seedNews() {
 
   const newsData = await Promise.all(
     Array.from({ length: totalNews }).map(async () => {
-      const title = fakerID.lorem.sentence(6);
+      const title = faker.lorem.sentence(3);
       const slug = slugify(title, { lower: true, strict: true });
 
       return {
         title,
-        content: fakerID.lorem.paragraphs(3),
+        content: faker.lorem.paragraphs(3),
         authorId: admin.id,
-        thumbnail: fakerID.image.urlLoremFlickr({ category: "news" }),
+        thumbnail: fakerID.image.url(),
         slug,
         categoryId: category.id,
         createdAt: new Date(),
