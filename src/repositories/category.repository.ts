@@ -62,10 +62,11 @@ const categoryRepository = {
   },
 
   async updateCategory(id: string, data: CategoryUpdateDTO) {
+    const slug = data.name ? data.name.toLowerCase().replace(/\s+/g, '-') : undefined;
     return await db.category.update({
       where: { id },
       data: {
-        ...removeUndefined(data),
+        ...removeUndefined({ ...data, ...{ slug }}),
         updatedAt: new Date(),
       },
     });
