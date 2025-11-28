@@ -20,13 +20,26 @@ export interface News {
 }
 
 // Request DTO
-export type CreateNewsDto = z.infer<typeof CreateNewsSchema> & {
-  slug: string;
-};
+export type CreateNewsDto = z.infer<typeof CreateNewsSchema>;
 
-export type UpdateNewsDto = z.infer<typeof UpdateNewsSchema> & {
+export interface CreateNewsData {
+  title: string;
+  content: string;
   slug: string;
-};
+  thumbnail: string;
+  categoryId: string;
+  authorId: string;
+}
+
+export type UpdateNewsDto = z.infer<typeof UpdateNewsSchema>;
+
+export interface UpdateNewsData {
+  title?: string;
+  content?: string;
+  categoryId?: string;
+  thumbnail?: string;
+  slug?: string;
+}
 
 // Response DTO
 export interface NewsResponse {

@@ -3,19 +3,36 @@ import { newsService } from "../services/news.service";
 import { CreateNewsDto, NewsResponse, UpdateNewsDto } from "../types/news.type";
 import { ResponseHTTP } from "../utils/response";
 import BadRequestException from "../exceptions/BadRequestException";
+import fs from "fs";
+import path from "path";
 
 export const newsController = {
   async create(req: Request, res: Response, next: NextFunction) {
     try {
+      if (!req.file) {
+        throw new BadRequestException("Thumbnail file is required");
+      }
+
       const body: CreateNewsDto = {
         ...req.body,
-        authorId: req.user.id,
       };
 
-      const result: NewsResponse = await newsService.create(body);
+      const result: NewsResponse = await newsService.create(
+        body,
+        req.file,
+        req.user.id,
+      );
 
       return res.status(201).json(ResponseHTTP.created(result, "News created"));
     } catch (err) {
+      if (req.file) {
+        const filepath = path.join("uploads", req.file.filename);
+
+        fs.unlink(filepath, (e) => {
+          if (e) console.error("Gagal hapus file temp:", e);
+        });
+      }
+
       next(err);
     }
   },
@@ -44,7 +61,7 @@ export const newsController = {
 
       const result = await newsService.getBySlug(slug);
 
-      return res.status(200).json(ResponseHTTP.ok(result, "Admin fetched"));
+      return res.status(200).json(ResponseHTTP.ok(result, "News fetched"));
     } catch (err) {
       next(err);
     }
@@ -60,10 +77,13 @@ export const newsController = {
 
       const body: UpdateNewsDto = {
         ...req.body,
-        authorId: req.user.id,
       };
 
-      const result: NewsResponse = await newsService.update(slug, body);
+      const result: NewsResponse = await newsService.update(
+        slug,
+        body,
+        req.file,
+      );
 
       return res.status(200).json(ResponseHTTP.created(result, "News updated"));
     } catch (err) {
