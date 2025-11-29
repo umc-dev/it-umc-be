@@ -1,3 +1,4 @@
+import { ca } from 'zod/v4/locales';
 import { CreateCategoryData, UpdateCategoryData } from '../types/category.type';
 import { removeUndefined } from '../utils';
 import { db } from '../utils/prisma';
@@ -43,9 +44,18 @@ export const categoryRepository = {
     };
   },
 
-  async getById(id: string) {
+  // async getById(id: string) {
+  //   return await db.category.findUnique({
+  //     where: { id },
+  //     include: {
+  //       news: true,
+  //     },
+  //   });
+  // },
+
+  async getBySlug(slug: string) {
     return await db.category.findUnique({
-      where: { id },
+      where: { slug },
       include: {
         news: true,
       },
@@ -58,9 +68,9 @@ export const categoryRepository = {
     });
   },
 
-  async update(id: string, data: UpdateCategoryData) {
+  async update(slug: string, data: UpdateCategoryData) {
     return await db.category.update({
-      where: { id },
+      where: { slug },
       data: {
         ...removeUndefined(data),
       },
@@ -68,9 +78,9 @@ export const categoryRepository = {
   },
   // data.name.toLowerCase().replace(/\s+/g, '-');
 
-  async delete(id: string) {
+  async delete(slug: string) {
     return await db.category.delete({
-      where: { id },
+      where: { slug },
     });
   },
 };

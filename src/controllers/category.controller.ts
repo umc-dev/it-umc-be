@@ -31,25 +31,36 @@ export class CategoryController {
       const page = parseInt(req.query.page as string) || 1;
       const search = (req.query.search as string) || '';
 
-      const result = await categoryService.getAll(page, limit, search);
+      const result = await categoryService.getAll(limit, page, search);
 
       return res
         .status(200)
-        .json(
-          ResponseHTTP.ok(result.data, 'Categories fetched', result.meta)
-        );
+        .json(ResponseHTTP.ok(result.data, 'Categories fetched', result.meta));
     } catch (err) {
       next(err);
     }
   }
 
-  async getById(req: Request, res: Response, next: NextFunction) {
+  // async getById(req: Request, res: Response, next: NextFunction) {
+  //   try {
+  //     const { id } = req.params;
+
+  //     if (!id) throw new BadRequestException('ID param is required');
+
+  //     const result = await categoryService.getById(id);
+  //     return res.status(200).json(ResponseHTTP.ok(result, 'Category fetched'));
+  //   } catch (err) {
+  //     next(err);
+  //   }
+  // }
+
+  async getBySlug(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params;
+      const { slug } = req.params;
 
-      if (!id) throw new BadRequestException('Category ID is required');
+      if (!slug) throw new BadRequestException('Slug param is required');
 
-      const result = await categoryService.getById(id);
+      const result = await categoryService.getBySlug(slug);
       return res.status(200).json(ResponseHTTP.ok(result, 'Category fetched'));
     } catch (err) {
       next(err);
@@ -58,15 +69,15 @@ export class CategoryController {
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params;
+      const { slug } = req.params;
 
-      if (!id) throw new BadRequestException('Category ID is required');
+      if (!slug) throw new BadRequestException('Slug param is required');
 
       const body: UpdateCategoryDto = {
         ...req.body,
       };
 
-      const result: CategoryResponse = await categoryService.update(id, body);
+      const result: CategoryResponse = await categoryService.update(slug, body);
       return res.status(200).json(ResponseHTTP.ok(result, 'Category updated'));
     } catch (err) {
       next(err);
@@ -75,11 +86,11 @@ export class CategoryController {
 
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params;
+      const { slug } = req.params;
 
-      if (!id) throw new BadRequestException('Category ID is required');
+      if (!slug) throw new BadRequestException('Slug param is required');
 
-      await categoryService.delete(id);
+      await categoryService.delete(slug);
       return res.status(200).json(ResponseHTTP.success('Category deleted'));
     } catch (err) {
       next(err);

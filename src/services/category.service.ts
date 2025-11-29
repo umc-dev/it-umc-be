@@ -14,16 +14,16 @@ import { generateSlug } from '../utils';
 
 export const categoryService = {
   async create(data: CreateCategoryDto): Promise<CategoryResponse> {
+    const categoryIsExist = await categoryRepository.getByName(data.name);
+
+    if (categoryIsExist) throw new BadRequestException('Category already exists');
+
     const slug = generateSlug(data.name);
 
     const dataToSave: CreateCategoryData = {
       name: data.name,
       slug,
     };
-
-    const categoryIsExist = await categoryRepository.getByName(data.name);
-
-    if (categoryIsExist) throw new BadRequestException('Category already exists');
 
     const newCategory = await categoryRepository.add(dataToSave);
     return newCategory;
@@ -46,8 +46,16 @@ export const categoryService = {
     };
   },
 
-  async getById(id: string): Promise<CategoryWithNewsResponse | null> {
-    const category = await categoryRepository.getById(id);
+  // async getById(id: string): Promise<CategoryWithNewsResponse | null> {
+  //   const category = await categoryRepository.getById(id);
+
+  //   if (!category) throw new NotFoundException('Category not found');
+
+  //   return category;
+  // },
+
+  async getBySlug(slug: string): Promise<CategoryWithNewsResponse | null> {
+    const category = await categoryRepository.getBySlug(slug);
 
     if (!category) throw new NotFoundException('Category not found');
 
@@ -62,13 +70,16 @@ export const categoryService = {
     return category;
   },
 
-  async update(id: string, data: UpdateCategoryDto): Promise<CategoryResponse> {
-    const category = await categoryRepository.getById(id);
+  async update(slug: string, data: UpdateCategoryDto): Promise<CategoryResponse> {
+    const category = await categoryRepository.getBySlug(slug);
 
     if (!category) throw new NotFoundException('Category not found');
 
-    const dataToUpdate: UpdateCategoryData = { ...data };
+    const dataToUpdate: UpdateCategoryData = { 
+      ...data, 
+    };
 
+    // Jika data.name diubah, generate slug baru
     if (data.name && data.name !== category.name) {
       const categoryIsExist = await categoryRepository.getByName(data.name);
 
@@ -77,20 +88,19 @@ export const categoryService = {
         throw new BadRequestException('Category name already in use');
       }
 
-      // Jika aman, generate slug baru
       dataToUpdate.slug = generateSlug(data.name);
     }
 
-    const updated = await categoryRepository.update(id, data);
+    const updated = await categoryRepository.update(slug, dataToUpdate);
     return updated;
   },
 
-  async delete(id: string): Promise<Boolean> {
-    const category = await categoryRepository.getById(id);
+  async delete(slug: string): Promise<Boolean> {
+    const category = await categoryRepository.getBySlug(slug);
 
     if (!category) throw new NotFoundException('Category not found');
 
-    await categoryRepository.delete(id);
+    await categoryRepository.delete(slug);
     return true;
   },
 };
