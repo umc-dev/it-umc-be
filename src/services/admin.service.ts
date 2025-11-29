@@ -98,9 +98,9 @@ const adminService = {
       throw new NotFoundException("Admin not found");
     }
 
-    if(data.email){
+    if(data.email && data.email !== admin.email){
       const adminIsExist = await adminRepository.getAdminByEmail(data.email);
-      if (data.email !== admin.email && adminIsExist) {
+      if (adminIsExist) {
         throw new BadRequestException("Email already in use");
       }
     }
