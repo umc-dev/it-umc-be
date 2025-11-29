@@ -1,9 +1,15 @@
-import { CategoryCreateDTO, CategoryUpdateDTO } from "../types/category.type";
-import { removeUndefined } from "../utils";
-import { db } from "../utils/prisma";
+import { CreateCategoryData, UpdateCategoryData } from '../types/category.type';
+import { removeUndefined } from '../utils';
+import { db } from '../utils/prisma';
 
-const categoryRepository = {
-  async getAllCategory(limit: number, page: number, search: string) {
+export const categoryRepository = {
+  async add(data: CreateCategoryData) {
+    return await db.category.create({
+      data
+    });
+  },
+
+  async getAll(limit: number, page: number, search: string) {
     const skip = (page - 1) * limit;
     const whereClause = search
       ? {
@@ -12,20 +18,18 @@ const categoryRepository = {
       : {};
 
     const [categories, total] = await db.$transaction([
-      
       db.category.findMany({
         skip,
         take: limit,
         orderBy: {
-          createdAt: "desc",
-        }, 
+          createdAt: 'desc',
+        },
         where: whereClause,
       }),
 
       db.category.count({
         where: whereClause,
       }),
-
     ]);
 
     return {
@@ -39,40 +43,7 @@ const categoryRepository = {
     };
   },
 
-  async addCategory(data: CategoryCreateDTO) {
-    return await db.category.create({
-      data: {
-        name: data.name,
-        slug: data.name.toLowerCase().replace(/\s+/g, '-'),
-        updatedAt: new Date(),
-      }
-    })
-  },
-
-  async getCategoryByName(name: string) {
-    return await db.category.findUnique({
-      where: { name },
-    });
-  },
-
-  async deleteCategory(id: string) {
-    return await db.category.delete({
-      where: { id },
-    });
-  },
-
-  async updateCategory(id: string, data: CategoryUpdateDTO) {
-    const slug = data.name ? data.name.toLowerCase().replace(/\s+/g, '-') : undefined;
-    return await db.category.update({
-      where: { id },
-      data: {
-        ...removeUndefined({ ...data, ...{ slug }}),
-        updatedAt: new Date(),
-      },
-    });
-  },
-
-  async getCategoryById(id: string) {
+  async getById(id: string) {
     return await db.category.findUnique({
       where: { id },
       include: {
@@ -80,6 +51,26 @@ const categoryRepository = {
       },
     });
   },
-}
 
-export default categoryRepository;
+  async getByName(name: string) {
+    return await db.category.findUnique({
+      where: { name },
+    });
+  },
+
+  async update(id: string, data: UpdateCategoryData) {
+    return await db.category.update({
+      where: { id },
+      data: {
+        ...removeUndefined(data),
+      },
+    });
+  },
+  // data.name.toLowerCase().replace(/\s+/g, '-');
+
+  async delete(id: string) {
+    return await db.category.delete({
+      where: { id },
+    });
+  },
+};
