@@ -43,3 +43,13 @@ model news {
   @@index([authorId], map: "News_authorId_fkey")
   @@index([categoryId], map: "News_categoryId_fkey")
 }
+
+model dosen {
+  id          String @id @default(uuid())
+  nama        String
+  kepakaran   String
+  photo       String
+  pengabdian  String
+  pengajaran  String
+  penelitian  String
+}
