@@ -1,9 +1,13 @@
-import { CreateNewsDto, UpdateNewsDto } from "../types/news.type";
+import {
+  CreateNewsData,
+  CreateNewsDto,
+  UpdateNewsDto,
+} from "../types/news.type";
 import { db } from "../utils/prisma";
 import { removeUndefined } from "../utils";
 
 export const newsRepository = {
-  async add(data: CreateNewsDto) {
+  async add(data: CreateNewsData) {
     return await db.news.create({
       data,
     });

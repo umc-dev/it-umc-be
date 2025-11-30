@@ -6,6 +6,7 @@ import { env } from "./config/env";
 import NotFoundException from "./exceptions/NotFoundException";
 import { errorHandler } from "./middlewares/error.middleware";
 import routes from "./routes/index";
+import path from "path";
 
 // Init Express
 const app: Express = express();
@@ -19,6 +20,9 @@ app.use(morgan("combined"));
 // Parsing JSON dan form-urlencoded
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Public folder for uploads
+app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
 // Routes
 app.get("/", async (req, res) => {
