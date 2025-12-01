@@ -1,5 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
 import adminService from "../services/admin.service";
+import {
+  CreateAdminSchema,
+  UpdateAdminSchema,
+} from "../validator/admin.validator";
 import { ResponseHTTP } from "../utils/response";
 import BadRequestException from "../exceptions/BadRequestException";
 import {
@@ -7,10 +11,8 @@ import {
   AdminWithNewsResponse,
   PaginatedAdminResponse,
 } from "../types/admin.type";
-import path from "path";
-import fs from "fs";
 
-export const adminController = {
+export class AdminController {
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
       const limit = parseInt(req.query.limit as string) || 25;
@@ -29,7 +31,7 @@ export const adminController = {
     } catch (err) {
       next(err);
     }
-  },
+  }
 
   async getById(req: Request, res: Response, next: NextFunction) {
     try {
@@ -44,26 +46,18 @@ export const adminController = {
     } catch (err) {
       next(err);
     }
-  },
+  }
 
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const body = req.body;
+      const body = CreateAdminSchema.parse(req.body);
 
-      const data: AdminResponse = await adminService.create(body, req.file);
+      const data: AdminResponse = await adminService.create(body);
       return res.status(201).json(ResponseHTTP.created(data, "Admin created"));
     } catch (err) {
-      // Hapus uploaded file kalo error
-      const filePath = path.join(process.env.UPLOADS_PATH, req.file.filename);
-
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-        return true;
-      }
-
       next(err);
     }
-  },
+  }
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
@@ -73,15 +67,14 @@ export const adminController = {
         throw new BadRequestException("Admin ID is required");
       }
 
-      const body = req.body;
+      const body = UpdateAdminSchema.parse(req.body);
 
-      const data: AdminResponse = await adminService.update(id, body, req.file);
-
+      const data: AdminResponse = await adminService.update(id, body);
       return res.status(200).json(ResponseHTTP.ok(data, "Admin updated"));
     } catch (err) {
       next(err);
     }
-  },
+  }
 
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
@@ -96,7 +89,7 @@ export const adminController = {
     } catch (err) {
       next(err);
     }
-  },
-};
+  }
+}
 
-export default adminController;
+export default new AdminController();

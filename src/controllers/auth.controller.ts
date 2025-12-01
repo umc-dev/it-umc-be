@@ -10,7 +10,7 @@ const authController = {
       const { email, password } = LoginSchema.parse(req.body);
       const data: AuthResponse = await authService.login(email, password);
 
-      return res.status(200).json(ResponseHTTP.ok(data, "Login success"));
+      return res.status(200).json(ResponseHTTP.created(data, "Login success"));
     } catch (err) {
       next(err);
     }

@@ -4,15 +4,11 @@ import type {
   AdminCreateDTO,
   AdminUpdateDTO,
   PaginatedAdminResponse,
-  AdminUpdateData,
-  AdminCreateData,
 } from "../types/admin.type";
 import adminRepository from "../repositories/admin.repository";
 import NotFoundException from "../exceptions/NotFoundException";
 import { hashPassword } from "../utils/password";
 import BadRequestException from "../exceptions/BadRequestException";
-import { da } from "zod/v4/locales";
-import { deleteUploadedFile, saveUploadedFile } from "../utils/file";
 
 // Mapping ke admin response tanpa Password
 const mapToAdminResponse = (admin: any): AdminResponse => {
@@ -74,10 +70,7 @@ const adminService = {
   },
 
   // Menambahkan admin
-  async create(
-    data: AdminCreateDTO,
-    file?: Express.Multer.File,
-  ): Promise<AdminResponse> {
+  async create(data: AdminCreateDTO): Promise<AdminResponse> {
     const adminIsExist = await adminRepository.getAdminByEmail(data.email);
 
     if (adminIsExist) {
@@ -87,12 +80,9 @@ const adminService = {
     const rawPassword = data.password;
     const hashedPassword = await hashPassword(rawPassword);
 
-    const avatar = saveUploadedFile(file);
-
-    const dataToSave: AdminCreateData = {
+    const dataToSave: AdminCreateDTO = {
       ...data,
       password: hashedPassword,
-      avatar: avatar.url,
     };
 
     const newAdmin = await adminRepository.addAdmin(dataToSave);
@@ -100,55 +90,22 @@ const adminService = {
   },
 
   // Update admin
-  async update(
-    id: string,
-    data: AdminUpdateDTO,
-    file?: Express.Multer.File,
-  ): Promise<AdminResponse> {
+  async update(id: string, data: AdminUpdateDTO): Promise<AdminResponse> {
     const admin = await adminRepository.getAdminById(id);
 
     if (!admin) {
       throw new NotFoundException("Admin not found");
     }
 
-    const oldAvatarUrl = admin.avatar;
-    let newAvatarUrl: string | undefined;
+    let dataToUpdate: AdminUpdateDTO = { ...data };
 
-    // Upload file baru
-    if (file) {
-      const saved = saveUploadedFile(file);
-      newAvatarUrl = saved.url;
-    }
-
-    // Validasi email
-    if (data.email) {
-      const adminExist = await adminRepository.getAdminByEmail(data.email);
-
-      if (data.email !== admin.email && adminExist) {
-        throw new BadRequestException("Email already in use");
-      }
-    }
-
-    // Siapkan data untuk update
-    const dataToUpdate: AdminUpdateData = { ...data };
-
-    // Hash password
     if (data.password) {
-      dataToUpdate.password = await hashPassword(data.password);
-    }
-
-    // Update avatar jika ada file baru
-    if (newAvatarUrl) {
-      dataToUpdate.avatar = newAvatarUrl;
+      const rawPassword = data.password;
+      const hashedPassword = await hashPassword(rawPassword);
+      dataToUpdate.password = hashedPassword;
     }
 
     const updated = await adminRepository.updateAdmin(id, dataToUpdate);
-
-    // Hapus file lama jika update sukses
-    if (newAvatarUrl && oldAvatarUrl) {
-      deleteUploadedFile(oldAvatarUrl);
-    }
-
     return mapToAdminResponse(updated);
   },
 
@@ -158,10 +115,6 @@ const adminService = {
 
     if (!admin) {
       throw new NotFoundException("Admin not found");
-    }
-
-    if (admin.avatar) {
-      deleteUploadedFile(admin.avatar);
     }
 
     await adminRepository.deleteAdmin(id);
