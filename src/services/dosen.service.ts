@@ -12,7 +12,7 @@ import { deleteUploadedFile, saveUploadedFile } from "../utils/file";
 
 export const dosenService = {
   // Create dosen
-  async add(
+  async create(
     data: CreateDosenDTO,
     file?: Express.Multer.File,
   ): Promise<DosenResponse> {
