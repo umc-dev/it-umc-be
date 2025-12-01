@@ -1,11 +1,10 @@
-import z from "zod";
-import { 
-  CreateCategorySchema, 
-  UpdateCategorySchema 
-} from "../validator/category.validator";
-import { PaginationMeta } from ".";
-import { News } from "./news.type";
-
+import {
+  CreateCategorySchema,
+  UpdateCategorySchema,
+} from '../validator/category.validator';
+import { PaginationMeta } from '.';
+import { News } from './news.type';
+import z from 'zod';
 
 // Category DTO
 export interface Category {
@@ -17,8 +16,19 @@ export interface Category {
 }
 
 // Request DTO
-export type CategoryCreateDTO = z.infer<typeof CreateCategorySchema>;
-export type CategoryUpdateDTO = z.infer<typeof UpdateCategorySchema>;
+export type CreateCategoryDto = z.infer<typeof CreateCategorySchema>;
+
+export interface CreateCategoryData {
+  name: string;
+  slug: string;
+}
+
+export type UpdateCategoryDto = z.infer<typeof UpdateCategorySchema>;
+
+export interface UpdateCategoryData {
+  name?: string;
+  slug?: string;
+}
 
 // Response DTO
 export interface CategoryResponse {
@@ -51,10 +61,3 @@ export interface CategoryWithNewsResponse extends CategoryResponse {
 export interface CategoryWithNews extends Category {
   news: News[];
 }
-
-
-
-
-
-
-
