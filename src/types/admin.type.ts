@@ -37,8 +37,22 @@ export interface AdminWithNews extends Admin {
 //   password?: string;
 //   avatar?: string;
 // }
+export interface AdminCreateData {
+  email: string;
+  name: string;
+  password?: string;
+  avatar?: string;
+}
 
 export type AdminCreateDTO = z.infer<typeof CreateAdminSchema>;
+
+export interface AdminUpdateData {
+  email?: string;
+  name?: string;
+  password?: string;
+  avatar?: string;
+}
+
 export type AdminUpdateDTO = z.infer<typeof UpdateAdminSchema>;
 
 export interface AdminLoginDTO {

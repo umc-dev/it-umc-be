@@ -37,9 +37,20 @@ model news {
   categoryId String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  admin      admin    @relation(fields: [authorId], references: [id], map: "News_authorId_fkey")
-  category   category @relation(fields: [categoryId], references: [id], map: "News_categoryId_fkey")
+  admin      admin    @relation(fields: [authorId], references: [id], map: "News_authorId_fkey", onDelete : Cascade)
+  category   category @relation(fields: [categoryId], references: [id], map: "News_categoryId_fkey", onDelete : Restrict)
 
   @@index([authorId], map: "News_authorId_fkey")
   @@index([categoryId], map: "News_categoryId_fkey")
+}
+
+model dosen {
+  id          String @id @default(uuid())
+  name        String
+  expertise   String
+  photo       String
+  teaching    String
+  research    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
