@@ -23,34 +23,22 @@ model category {
   name      String   @unique(map: "Category_name_key")
   slug      String
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime
   news      news[]
 }
 
 model news {
   id         String   @id @default(uuid())
   title      String
-  content    String   @db.Text
+  content    String
   authorId   String
   thumbnail  String
-  slug       String @unique
   categoryId String
   createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  admin      admin    @relation(fields: [authorId], references: [id], map: "News_authorId_fkey", onDelete : Cascade)
-  category   category @relation(fields: [categoryId], references: [id], map: "News_categoryId_fkey", onDelete : Restrict)
+  updatedAt  DateTime
+  admin      admin    @relation(fields: [authorId], references: [id], map: "News_authorId_fkey")
+  category   category @relation(fields: [categoryId], references: [id], map: "News_categoryId_fkey")
 
   @@index([authorId], map: "News_authorId_fkey")
   @@index([categoryId], map: "News_categoryId_fkey")
-}
-
-model dosen {
-  id          String @id @default(uuid())
-  name        String
-  expertise   String
-  photo       String
-  teaching    String
-  research    String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 }

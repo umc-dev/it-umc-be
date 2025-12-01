@@ -12,18 +12,10 @@ export const errorHandler = (
 
   // Jika error berasal dari Zod (validasi input)
   if (err instanceof ZodError) {
-    const errors: Record<string, string[]> = {};
-    err.issues.forEach((issue) => {
-      const fieldPath = issue.path.join('.');
-      if (!errors[fieldPath]) {
-        errors[fieldPath] = [];
-      }
-      errors[fieldPath].push(issue.message);
-    });
     return res.status(400).json({
       success: false,
       status: 400,
-      errors,
+      message: err.issues,
     });
   }
 
