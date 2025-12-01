@@ -4,6 +4,8 @@ import {
   UpdateAdminSchema,
 } from "../validator/admin.validator";
 import { PaginationMeta } from ".";
+import { News } from "./news.type";
+
 // Admin DTO
 
 export interface Admin {
@@ -14,15 +16,6 @@ export interface Admin {
   avatar: string | null;
   createdAt: Date;
   updatedAt: Date;
-}
-
-export interface News {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: Date;
-  updatedAt: Date;
-  adminId: string;
 }
 
 export interface AdminWithNews extends Admin {
@@ -44,8 +37,22 @@ export interface AdminWithNews extends Admin {
 //   password?: string;
 //   avatar?: string;
 // }
+export interface AdminCreateData {
+  email: string;
+  name: string;
+  password?: string;
+  avatar?: string;
+}
 
 export type AdminCreateDTO = z.infer<typeof CreateAdminSchema>;
+
+export interface AdminUpdateData {
+  email?: string;
+  name?: string;
+  password?: string;
+  avatar?: string;
+}
+
 export type AdminUpdateDTO = z.infer<typeof UpdateAdminSchema>;
 
 export interface AdminLoginDTO {

@@ -9,9 +9,10 @@ dotenv.config();
 // Pengecekan .env
 const envSchema = z.object({
   NODE_ENV: z.enum(["development", "production"]).default("development"),
-  PORT: z.string().default("3000"),
-  DATABASE_URL: z.url(),
+  PORT: z.string(),
+  DATABASE_URL: z.string(),
   JWT_SECRET: z.string(),
+  BASE_URL: z.url(),
 });
 
 const parsed = envSchema.safeParse(process.env);

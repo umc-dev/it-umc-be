@@ -1,4 +1,8 @@
-import type { AdminCreateDTO, AdminUpdateDTO } from "../types/admin.type";
+import type {
+  AdminCreateData,
+  AdminCreateDTO,
+  AdminUpdateDTO,
+} from "../types/admin.type";
 import { removeUndefined } from "../utils/index";
 import { db } from "../utils/prisma";
 
@@ -42,7 +46,7 @@ const adminRepository = {
   },
 
   // Menambahkan admin
-  async addAdmin(data: AdminCreateDTO) {
+  async addAdmin(data: AdminCreateData) {
     return await db.admin.create({
       data: {
         email: data.email,

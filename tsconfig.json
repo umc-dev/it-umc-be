@@ -14,8 +14,9 @@
     "moduleResolution": "node",
     "target": "esnext",
     "types": ["node"],
-    // "allowImportingTsExtensions": true,
-    // "noEmit": true,
+    "typeRoots": ["./src/types", "./node_modules/@types"],
+    "allowImportingTsExtensions": false,
+    "noEmit": false,
     // For nodejs:
     // "lib": ["esnext"],
     // and npm install -D @types/node
