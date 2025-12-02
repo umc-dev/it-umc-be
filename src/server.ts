@@ -7,12 +7,28 @@ import NotFoundException from "./exceptions/NotFoundException";
 import { errorHandler } from "./middlewares/error.middleware";
 import routes from "./routes/index";
 import path from "path";
+import cors from "cors";
 
 // Init Express
 const app: Express = express();
 
 // Proteksi header
 app.use(helmet());
+
+// Cors (Ganti pas mau di deploy)
+const allowedOrigins = ["http://localhost:3000", "http://localhost:5000"];
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true); // untuk testing kaya postman / apidog / curl
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+  }),
+);
 
 // Logging Request HTTP
 app.use(morgan("combined"));
