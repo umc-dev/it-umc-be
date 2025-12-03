@@ -27,7 +27,7 @@ dosenRouter.post(
 
 // Update Dosen
 dosenRouter.put(
-  "/:slug",
+  "/:id",
   authMiddleware,
   upload.single("photo"),
   validate(UpdateDosenSchema),

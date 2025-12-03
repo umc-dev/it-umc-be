@@ -10,7 +10,6 @@ import {
 import { dosenService } from "../services/dosen.service";
 import { ResponseHTTP } from "../utils/response";
 import BadRequestException from "../exceptions/BadRequestException";
-import { newsService } from "../services/news.service";
 
 export const dosenController = {
   // Create Dosen Controller
@@ -110,7 +109,7 @@ export const dosenController = {
         throw new BadRequestException("Id params is required");
       }
 
-      await newsService.delete(id);
+      await dosenService.delete(id);
 
       return res.status(200).json(ResponseHTTP.success("Dosen deleted"));
     } catch (err) {
