@@ -45,7 +45,9 @@ export const newsController = {
 
       const result = await newsService.getAll(limit, page, search);
 
-      return res.status(200).json(ResponseHTTP.ok(result.data, "News fetched"));
+      return res
+        .status(200)
+        .json(ResponseHTTP.ok(result.data, "News fetched", result.meta));
     } catch (err) {
       next(err);
     }

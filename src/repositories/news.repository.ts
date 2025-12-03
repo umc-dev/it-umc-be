@@ -19,10 +19,10 @@ export const newsRepository = {
       ? {
           OR: [
             {
-              title: { contains: search, mode: "insensitive" },
+              title: { contains: search },
             },
             {
-              content: { contains: search, mode: "insensitive" },
+              content: { contains: search },
             },
           ],
         }
