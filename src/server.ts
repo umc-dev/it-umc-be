@@ -12,9 +12,6 @@ import cors from "cors";
 // Init Express
 const app: Express = express();
 
-// Proteksi header
-app.use(helmet());
-
 // Cors (Ganti pas mau di deploy)
 const allowedOrigins = ["http://localhost:3000", "http://localhost:5000"];
 app.use(
@@ -30,11 +27,21 @@ app.use(
   }),
 );
 
+// Proteksi header
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginOpenerPolicy: false,
+    crossOriginResourcePolicy: false,
+  }),
+);
+
 // Logging Request HTTP
 app.use(morgan("combined"));
 
 // Parsing JSON dan form-urlencoded
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: true }));
 
 // Public folder for uploads
