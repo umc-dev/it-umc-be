@@ -9,7 +9,7 @@ import {
 import { ResponseHTTP } from '../utils/response';
 import BadRequestException from '../exceptions/BadRequestException';
 
-export class CategoryController {
+export const categoryController = {
   async create(req: Request, res: Response, next: NextFunction) {
     try {
       const body: CreateCategoryDto = {
@@ -23,7 +23,7 @@ export class CategoryController {
     } catch (err) {
       next(err);
     }
-  }
+  },
 
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
@@ -39,7 +39,7 @@ export class CategoryController {
     } catch (err) {
       next(err);
     }
-  }
+  },
 
   // async getById(req: Request, res: Response, next: NextFunction) {
   //   try {
@@ -52,7 +52,7 @@ export class CategoryController {
   //   } catch (err) {
   //     next(err);
   //   }
-  // }
+  // },
 
   async getBySlug(req: Request, res: Response, next: NextFunction) {
     try {
@@ -60,12 +60,12 @@ export class CategoryController {
 
       if (!slug) throw new BadRequestException('Slug param is required');
 
-      const result = await categoryService.getBySlug(slug);
+      const result: CategoryWithNewsResponse = await categoryService.getBySlug(slug);
       return res.status(200).json(ResponseHTTP.ok(result, 'Category fetched'));
     } catch (err) {
       next(err);
     }
-  }
+  },
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
@@ -82,7 +82,7 @@ export class CategoryController {
     } catch (err) {
       next(err);
     }
-  }
+  },
 
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
@@ -95,7 +95,5 @@ export class CategoryController {
     } catch (err) {
       next(err);
     }
-  }
+  },
 }
-
-export default new CategoryController();
