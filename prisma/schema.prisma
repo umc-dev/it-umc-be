@@ -54,3 +54,10 @@ model dosen {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model statistic_student {
+  id           String @id @default(uuid())
+  tahun        Int @unique @db.UnsignedMediumInt
+  total_keluar Int @db.UnsignedMediumInt
+  total_masuk  Int @db.UnsignedMediumInt
+}
