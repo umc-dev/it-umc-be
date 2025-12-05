@@ -55,7 +55,7 @@ model dosen {
   updatedAt   DateTime @updatedAt
 }
 
-model statistic_student {
+model StatisticStudent  {
   id           String @id @default(uuid())
   tahun        Int @unique @db.UnsignedMediumInt
   total_keluar Int @db.UnsignedMediumInt
