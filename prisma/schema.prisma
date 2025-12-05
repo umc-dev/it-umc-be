@@ -57,7 +57,7 @@ model dosen {
 
 model StatisticStudent  {
   id                 String @id @default(uuid())
-  tahun              Int @unique @db.UnsignedMediumInt
+  year              Int @unique @db.UnsignedMediumInt
   enteredStudents    Int @db.UnsignedMediumInt
   graduatedStudents  Int @db.UnsignedMediumInt
   createdAt          DateTime @default(now())
