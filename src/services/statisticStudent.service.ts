@@ -28,10 +28,9 @@ export const statisticStudentService = {
       enteredStudents: data.enteredStudents,
       graduatedStudents: data.graduatedStudents,
     };
-    const newStatisticStudent = await statisticStudentRepository.add(
+    return await statisticStudentRepository.add(
       dataToSave
     );
-    return newStatisticStudent;
   },
 
   async getAll(
@@ -84,8 +83,7 @@ export const statisticStudentService = {
         );
     }
 
-    const updated = await statisticStudentRepository.update(year, dataToUpdate);
-    return updated;
+    return await statisticStudentRepository.update(year, dataToUpdate);;
   },
 
   async delete(year: number): Promise<StatisticStudentResponse> {
@@ -94,7 +92,6 @@ export const statisticStudentService = {
     if (!statisticStudent)
       throw new NotFoundException('Statistic Student not found');
 
-    const deleted = await statisticStudentRepository.delete(year);
-    return deleted;
+    return await statisticStudentRepository.delete(year);
   },
 };

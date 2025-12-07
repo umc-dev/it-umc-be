@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import {
   StatisticStudentResponse,
+  PaginatedStatisticStudentResponse,
   CreateStatisticStudentDto,
   UpdateStatisticStudentDto,
 } from './../types/statisticStudent.type';
@@ -32,7 +33,7 @@ export const statisticStudentController = {
       const page = parseInt(req.query.page as string) || 1;
       const search = parseInt(req.query.search as string) || 0;
 
-      const result = await statisticStudentService.getAll(limit, page, search);
+      const result: PaginatedStatisticStudentResponse = await statisticStudentService.getAll(limit, page, search);
 
       return res
         .status(200)
@@ -55,7 +56,7 @@ export const statisticStudentController = {
       if (Number.isNaN(yearParsed))
         throw new BadRequestException('Year must be a valid number');
 
-      const result = await statisticStudentService.getByYear(yearParsed);
+      const result: StatisticStudentResponse = await statisticStudentService.getByYear(yearParsed);
       return res
         .status(200)
         .json(ResponseHTTP.ok(result, 'Statstic Studen fetched'));
