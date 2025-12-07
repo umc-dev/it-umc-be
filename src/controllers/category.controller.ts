@@ -4,6 +4,7 @@ import {
   CategoryResponse,
   CategoryWithNewsResponse,
   CreateCategoryDto,
+  PaginatedCategoryResponse,
   UpdateCategoryDto,
 } from './../types/category.type';
 import { ResponseHTTP } from '../utils/response';
@@ -31,7 +32,7 @@ export const categoryController = {
       const page = parseInt(req.query.page as string) || 1;
       const search = (req.query.search as string) || '';
 
-      const result = await categoryService.getAll(limit, page, search);
+      const result: PaginatedCategoryResponse = await categoryService.getAll(limit, page, search);
 
       return res
         .status(200)
