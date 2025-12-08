@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { AuthPayload } from "../types/auth.type";
 import UnauthorizedException from "../exceptions/UnauthorizedException";
 import { verifyToken } from "../utils/jwt";
+import adminService from "../services/admin.service";
+import { AuthPayload } from "../types/auth.type";
 
 declare global {
   namespace Express {
@@ -11,7 +12,7 @@ declare global {
   }
 }
 
-export const authMiddleware = (
+export const authMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -29,6 +30,12 @@ export const authMiddleware = (
     }
 
     const payload = verifyToken(token);
+
+    const user = await adminService.getById(payload.id);
+
+    if (!user) {
+      throw new UnauthorizedException("Access denied, user not found");
+    }
 
     req.user = payload;
 

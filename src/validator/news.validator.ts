@@ -9,6 +9,5 @@ export const CreateNewsSchema = z.object({
 export const UpdateNewsSchema = z.object({
   title: z.string().optional(),
   content: z.string().optional(),
-  thumbnail: z.url().optional(),
   categoryId: z.string().optional(),
 });
