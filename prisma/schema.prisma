@@ -54,3 +54,20 @@ model dosen {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model StatisticStudent  {
+  id                 String @id @default(uuid())
+  year              Int @unique @db.UnsignedMediumInt
+  enteredStudents    Int @db.UnsignedMediumInt
+  graduatedStudents  Int @db.UnsignedMediumInt
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model VisionMission {
+  id       String @id @default(uuid())
+  vision   String @db.Text
+  mission  String @db.Text
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}

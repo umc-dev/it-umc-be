@@ -14,7 +14,7 @@ export const categoryRepository = {
     const skip = (page - 1) * limit;
     const whereClause = search
       ? {
-          OR: [{ name: { contains: search } }],
+          OR: [{ name: { contains: search, mode: 'insensitive' } }],
         }
       : {};
 
