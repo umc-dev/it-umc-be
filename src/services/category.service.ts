@@ -24,9 +24,7 @@ export const categoryService = {
       name: data.name,
       slug,
     };
-
-    const newCategory = await categoryRepository.add(dataToSave);
-    return newCategory;
+    return await categoryRepository.add(dataToSave);
   },
 
   async getAll(
@@ -91,8 +89,7 @@ export const categoryService = {
       dataToUpdate.slug = generateSlug(data.name);
     }
 
-    const updated = await categoryRepository.update(slug, dataToUpdate);
-    return updated;
+    return await categoryRepository.update(slug, dataToUpdate);
   },
 
   async delete(slug: string): Promise<Boolean> {

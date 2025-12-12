@@ -1,4 +1,3 @@
-import { ca } from 'zod/v4/locales';
 import { CreateCategoryData, UpdateCategoryData } from '../types/category.type';
 import { removeUndefined } from '../utils';
 import { db } from '../utils/prisma';
