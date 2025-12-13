@@ -8,14 +8,30 @@ datasource db {
 }
 
 model admin {
-  id        String   @id @default(uuid())
-  email     String   @unique(map: "Admin_email_key")
+  id        String          @id @default(uuid())
+  email     String          @unique
   name      String?
-  password  String
+  password  String?
   avatar    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  accounts  AdminAccount[]
   news      news[]
+}
+
+model AdminAccount {
+  id                String   @id @default(uuid())
+  provider          String   // "google"
+  providerAccountId String
+  access_token      String? @db.Text
+  refresh_token     String? @db.Text
+  expires_at        Int?
+
+  admin   admin   @relation(fields: [adminId], references: [id])
+  adminId String
+
+  @@unique([provider, providerAccountId])
 }
 
 model category {

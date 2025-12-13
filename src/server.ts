@@ -8,6 +8,8 @@ import { errorHandler } from "./middlewares/error.middleware";
 import routes from "./routes/index";
 import path from "path";
 import cors from "cors";
+import "./config/passport";
+import passport from "passport";
 
 // Init Express
 const app: Express = express();
@@ -35,6 +37,8 @@ app.use(
     crossOriginResourcePolicy: false,
   }),
 );
+
+app.use(passport.initialize());
 
 // Logging Request HTTP
 app.use(morgan("combined"));
