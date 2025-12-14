@@ -3,6 +3,7 @@ import { LoginSchema } from "../validator/auth.validator";
 import { AuthResponse } from "../types/auth.type";
 import authService from "../services/auth.service";
 import { ResponseHTTP } from "../utils/response";
+import { env } from "../config/env";
 
 const authController = {
   async loginWithEmail(req: Request, res: Response, next: NextFunction) {
@@ -28,6 +29,24 @@ const authController = {
     } catch (err) {
       next(err);
     }
+  },
+
+  me(req: Request, res: Response) {
+    const data = {
+      admin: req.user,
+    };
+
+    res.status(200).json(ResponseHTTP.ok(data, "User verified"));
+  },
+
+  logout(req: Request, res: Response) {
+    res.clearCookie("access_token", {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: env.NODE_ENV === "production",
+    });
+
+    res.status(200).json(ResponseHTTP.success("Logout successfully"));
   },
 };
 
