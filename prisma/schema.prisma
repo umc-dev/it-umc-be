@@ -20,19 +20,16 @@ model admin {
   news      news[]
 }
 
-model AdminAccount {
-  id                String   @id @default(uuid())
-  provider          String   // "google"
-  providerAccountId String
-  access_token      String? @db.Text
-  refresh_token     String? @db.Text
-  expires_at        Int?
+  model AdminAccount {
+    id                String   @id @default(uuid())
+    provider          String   // "google"
+    providerAccountId String
 
-  admin   admin   @relation(fields: [adminId], references: [id])
-  adminId String
+    admin   admin   @relation(fields: [adminId], references: [id])
+    adminId String
 
-  @@unique([provider, providerAccountId])
-}
+    @@unique([provider, providerAccountId])
+  }
 
 model category {
   id        String   @id @default(uuid())

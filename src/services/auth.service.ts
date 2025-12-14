@@ -47,9 +47,6 @@ const authService = {
     email: string;
     name?: string;
     avatar?: string;
-    access_token?: string;
-    refresh_token?: string;
-    expires_at?: number;
   }): Promise<AuthResponse> {
     // Whitelist
     const admin = await adminRepository.getAdminByEmail(params.email);
@@ -68,9 +65,6 @@ const authService = {
         provider: params.provider,
         providerAccountId: params.providerAccountId,
         adminId: admin.id,
-        access_token: params.access_token,
-        refresh_token: params.refresh_token,
-        expires_at: params.expires_at,
       });
     }
 
