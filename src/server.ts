@@ -8,6 +8,9 @@ import { errorHandler } from "./middlewares/error.middleware";
 import routes from "./routes/index";
 import path from "path";
 import cors from "cors";
+import "./config/passport";
+import passport from "passport";
+import cookieParser from "cookie-parser";
 
 // Init Express
 const app: Express = express();
@@ -36,6 +39,8 @@ app.use(
   }),
 );
 
+app.use(passport.initialize());
+
 // Logging Request HTTP
 app.use(morgan("combined"));
 
@@ -43,6 +48,9 @@ app.use(morgan("combined"));
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
+
+// Cookie parser
+app.use(cookieParser());
 
 // Public folder for uploads
 app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));

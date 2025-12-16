@@ -1,3 +1,5 @@
+import { AuthAdmin } from "./admin.type";
+
 // Interface untuk auth payload
 export interface AuthPayload {
   id: string;
@@ -5,5 +7,6 @@ export interface AuthPayload {
 }
 
 export interface AuthResponse {
+  admin: AuthAdmin;
   token: string;
 }

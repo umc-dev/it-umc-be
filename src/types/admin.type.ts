@@ -94,3 +94,10 @@ export interface LoginResponse {
   admin: AdminResponse;
   token: string;
 }
+
+export interface AuthAdmin {
+  id: string;
+  email: string;
+  name?: string;
+  avatar?: string | null;
+}
