@@ -10,12 +10,20 @@ const authController = {
     try {
       const { email, password } = LoginSchema.parse(req.body);
 
-      const data: AuthResponse = await authService.loginWithEmail(
+      const { token, admin } = await authService.loginWithEmail(
         email,
         password,
       );
 
-      return res.status(200).json(ResponseHTTP.ok(data, "Login success"));
+      res.cookie("access_token", token, {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: env.NODE_ENV === "production",
+        path: "/",
+        maxAge: 1000 * 60 * 60 * 24,
+      });
+
+      return res.status(200).json(ResponseHTTP.success("Login success"));
     } catch (err) {
       next(err);
     }
@@ -23,9 +31,17 @@ const authController = {
 
   async loginWithGoogle(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await authService.loginWithGoogle(req.user as any);
+      const { token } = await authService.loginWithGoogle(req.user as any);
 
-      return res.status(200).json(ResponseHTTP.ok(data, "Login successfully"));
+      res.cookie("access_token", token, {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: env.NODE_ENV === "production",
+        path: "/",
+        maxAge: 1000 * 60 * 60 * 24,
+      });
+
+      return res.redirect(`${env.CLIENT_URL}/dashboard`);
     } catch (err) {
       next(err);
     }
@@ -44,6 +60,7 @@ const authController = {
       httpOnly: true,
       sameSite: "lax",
       secure: env.NODE_ENV === "production",
+      path: "/",
     });
 
     res.status(200).json(ResponseHTTP.success("Logout successfully"));

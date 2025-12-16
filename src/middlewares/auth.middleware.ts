@@ -18,13 +18,12 @@ export const authMiddleware = async (
   next: NextFunction,
 ) => {
   try {
-    const authHeader = req.headers.authorization;
+    let token: string | undefined;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      throw new UnauthorizedException("Access denied, No token provided.");
+    if (req.cookies?.access_token) {
+      token = req.cookies.access_token;
     }
 
-    const token = authHeader.split(" ")[1];
     if (!token) {
       throw new UnauthorizedException("Access denied, Token is malformed");
     }
