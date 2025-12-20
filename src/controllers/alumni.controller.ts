@@ -40,7 +40,7 @@ export const alumniController = {
       return res
         .status(200)
         .json(
-          ResponseHTTP.ok(result.data, 'Alumnies fetched', result.meta)
+          ResponseHTTP.ok(result.data, 'Alumni fetched', result.meta)
         );
     } catch (err) {
       next(err);
