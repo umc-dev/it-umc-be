@@ -19,7 +19,7 @@ export const alumniRepository = {
           OR: [
             ...(Number.isInteger(Number(search))
               ? [{ year: Number(search) }]
-              : [{ name: { contains: search, mode: 'insensitive' } }]),
+              : [{ name: { contains: search } }]),
           ],
         }
       : {};
