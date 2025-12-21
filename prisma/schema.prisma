@@ -32,7 +32,7 @@ model admin {
   }
 
 model category {
-  id        String   @id @default(uuid())
+  id        Int      @id @default(autoincrement())
   name      String   @unique(map: "Category_name_key")
   slug      String   @unique
   createdAt DateTime @default(now())
@@ -47,7 +47,7 @@ model news {
   authorId   String
   thumbnail  String
   slug       String @unique
-  categoryId String
+  categoryId Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   admin      admin    @relation(fields: [authorId], references: [id], map: "News_authorId_fkey", onDelete : Cascade)

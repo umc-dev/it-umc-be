@@ -8,7 +8,7 @@ import z from 'zod';
 
 // Category DTO
 export interface Category {
-  id: string;
+  id: number;
   name: string;
   slug: string;
   createdAt: Date;
@@ -32,7 +32,7 @@ export interface UpdateCategoryData {
 
 // Response DTO
 export interface CategoryResponse {
-  id: string;
+  id: number;
   name: string;
   slug: string;
   createdAt: Date;
