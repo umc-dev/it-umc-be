@@ -85,6 +85,16 @@ model VisionMission {
   updatedAt          DateTime @updatedAt
 }
 
+model Partnership {
+  id            String      @id @default(uuid())
+  name          String   @db.VarChar(255)
+  photo         String?   @db.VarChar(255)
+  startDate     DateTime @db.Date
+  endDate       DateTime @db.Date
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("partnerships")
 model Alumni {
   id       String @id @default(uuid())
   name      String
