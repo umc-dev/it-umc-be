@@ -1,18 +1,36 @@
 import { Router, type IRouter } from 'express';
-import CategoryController from '../controllers/category.controller';
 import { authMiddleware } from '../middlewares/auth.middleware';
-import { CreateCategorySchema, UpdateCategorySchema } from '../validator/category.validator';
+import { categoryController } from './../controllers/category.controller';
+import {
+  CreateCategorySchema,
+  UpdateCategorySchema,
+} from '../validator/category.validator';
 import { validate } from '../middlewares/validation.middleware';
 
-const categoryRoute: IRouter = Router();
+const categoryRouter: IRouter = Router();
 
-categoryRoute.get('/', CategoryController.getAll);
-categoryRoute.get('/:slug', CategoryController.getBySlug);
-categoryRoute.post('/', authMiddleware, validate(CreateCategorySchema), CategoryController.create);
-categoryRoute.put('/:slug', authMiddleware, validate(UpdateCategorySchema), CategoryController.update);
-categoryRoute.delete('/:slug', authMiddleware, CategoryController.delete);
-// categoryRoute.get('/:id', CategoryController.getById);
-// categoryRoute.put('/:id', authMiddleware, CategoryController.update);
-// categoryRoute.delete('/:id', authMiddleware, CategoryController.delete);
+categoryRouter.get('/', categoryController.getAll);
 
-export default categoryRoute;
+categoryRouter.get('/:slug', categoryController.getBySlug);
+
+categoryRouter.post(
+  '/',
+  authMiddleware,
+  validate(CreateCategorySchema),
+  categoryController.create
+);
+
+categoryRouter.put(
+  '/:slug',
+  authMiddleware,
+  validate(UpdateCategorySchema),
+  categoryController.update
+);
+
+categoryRouter.delete('/:slug', authMiddleware, categoryController.delete);
+
+// categoryRouter.get('/:id', categoryController.getById);
+// categoryRouter.put('/:id', authMiddleware, categoryController.update);
+// categoryRouter.delete('/:id', authMiddleware, categoryController.delete);
+
+export default categoryRouter;

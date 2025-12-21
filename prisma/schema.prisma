@@ -95,4 +95,12 @@ model Partnership {
   updatedAt     DateTime @updatedAt
 
   @@map("partnerships")
+model Alumni {
+  id       String @id @default(uuid())
+  name      String
+  video     String
+  message   String @db.Text
+  year      Int @db.UnsignedMediumInt
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }
