@@ -8,6 +8,7 @@ import newsRouter from "./news.route";
 import dosenRouter from "./dosen.route";
 import statisticStudentRouter from "./statisticStudent.route";
 import visionMissionRouter from "./visionMission.route";
+import partnershipsRouter from "./partnerships.route";
 
 const router: IRouter = Router();
 
@@ -16,8 +17,9 @@ router.use("/admin", adminRouter);
 router.use("/auth", authRouter);
 router.use("/news", newsRouter);
 router.use("/dosen", dosenRouter);
-router.use("/statistic-student", statisticStudentRouter)
-router.use("/vision-mission", visionMissionRouter)
+router.use("/statistic-student", statisticStudentRouter);
+router.use("/vision-mission", visionMissionRouter);
+router.use("/partnerships", partnershipsRouter);
 
 // kalau nanti ada routes lain
 // router.use("/news", newsRoutes);
