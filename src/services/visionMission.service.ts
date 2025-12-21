@@ -35,7 +35,7 @@ export const visionMissionService = {
     };
   },
 
-  async getById(id: string): Promise<VisionMissionResponse> {
+  async getById(id: number): Promise<VisionMissionResponse> {
     const visionMission = await visionMissionRepository.getById(id);
 
     if (!visionMission) throw new NotFoundException('Vision Mission not found');
@@ -44,7 +44,7 @@ export const visionMissionService = {
   },
 
   async update(
-    id: string,
+    id: number,
     data: UpdateVisionMissionDto
   ): Promise<VisionMissionResponse> {
     const visionMission = await visionMissionRepository.getById(id);
@@ -58,7 +58,7 @@ export const visionMissionService = {
     return await visionMissionRepository.update(id, dataToUpdate);
   },
 
-  async delete(id: string): Promise<VisionMissionResponse> {
+  async delete(id: number): Promise<VisionMissionResponse> {
     const visionMission = await visionMissionRepository.getById(id);
 
     if (!visionMission) throw new NotFoundException('Vision Mission not found');

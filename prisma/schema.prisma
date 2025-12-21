@@ -78,7 +78,7 @@ model StatisticStudent  {
 }
 
 model VisionMission {
-  id       String @id @default(uuid())
+  id       Int @id @default(autoincrement())
   vision   String @db.Text
   mission  String @db.Text
   createdAt          DateTime @default(now())

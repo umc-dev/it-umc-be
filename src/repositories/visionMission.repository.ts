@@ -50,13 +50,13 @@ export const visionMissionRepository = {
     };
   },
 
-  async getById(id: string) {
+  async getById(id: number) {
     return db.visionMission.findUnique({
       where: { id },
     });
   },
 
-  async update(id: string, data: UpdateVisionMissionData) {
+  async update(id: number, data: UpdateVisionMissionData) {
     return await db.visionMission.update({
       where: { id },
       data: {
@@ -65,7 +65,7 @@ export const visionMissionRepository = {
     });
   },
 
-  async delete(id: string) {
+  async delete(id: number) {
     return db.visionMission.delete({
       where: { id },
     });
