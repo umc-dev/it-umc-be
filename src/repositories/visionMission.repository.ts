@@ -15,10 +15,10 @@ export const visionMissionRepository = {
       ? {
           OR: [
             {
-              vision: { contains: search, mode: 'insensitive' },
+              vision: { contains: search },
             },
             {
-              mission: { contains: search, mode: 'insensitive' },
+              mission: { contains: search },
             },
           ],
         }
