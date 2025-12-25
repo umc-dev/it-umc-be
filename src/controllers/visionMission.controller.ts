@@ -49,9 +49,10 @@ export const visionMissionController = {
 
   async getById(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params;
+      const id = Number(req.params.id);
 
-      if (!id) throw new BadRequestException('Id param is required');
+      if (Number.isNaN(id))
+        throw new BadRequestException('Id param must be a number');
 
       const result: VisionMissionResponse = await visionMissionService.getById(
         id
@@ -66,9 +67,10 @@ export const visionMissionController = {
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params;
+      const id = Number(req.params.id);
 
-      if (!id) throw new BadRequestException('Id param is required');
+      if (Number.isNaN(id))
+        throw new BadRequestException('Id param must be a number');
 
       const body: UpdateVisionMissionDto = {
         ...req.body,
@@ -88,9 +90,10 @@ export const visionMissionController = {
 
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params;
+      const id = Number(req.params.id);
 
-      if (!id) throw new BadRequestException('Id param is required');
+      if (Number.isNaN(id))
+        throw new BadRequestException('Id param must be a number');
 
       await visionMissionService.delete(id);
       return res

@@ -7,7 +7,7 @@ import z from 'zod';
 
 // Vision Mission DTO
 export interface VisionMission {
-  id: string;
+  id: number;
   vision: string;
   mission: string;
   createdAt: Date;
@@ -31,7 +31,7 @@ export interface UpdateVisionMissionData {
 
 // Response DTO
 export interface VisionMissionResponse {
-  id: string;
+  id: number;
   vision: string;
   mission: string;
   createdAt: Date;

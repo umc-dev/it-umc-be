@@ -13,7 +13,7 @@ export interface News {
   content: string;
   thumbnail: string | null;
   slug: string;
-  categoryId: string;
+  categoryId: number;
   authorId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -27,7 +27,7 @@ export interface CreateNewsData {
   content: string;
   slug: string;
   thumbnail: string;
-  categoryId: string;
+  categoryId: number;
   authorId: string;
 }
 
@@ -36,7 +36,7 @@ export type UpdateNewsDto = z.infer<typeof UpdateNewsSchema>;
 export interface UpdateNewsData {
   title?: string;
   content?: string;
-  categoryId?: string;
+  categoryId?: number;
   thumbnail?: string;
   slug?: string;
 }
@@ -48,7 +48,7 @@ export interface NewsResponse {
   content: string;
   thumbnail: string | null;
   slug: string;
-  categoryId: string;
+  categoryId: number;
   authorId: string;
   createdAt: Date;
   updatedAt: Date;
