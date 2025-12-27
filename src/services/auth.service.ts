@@ -26,6 +26,7 @@ const authService = {
     const authPayload: AuthPayload = {
       id: admin.id,
       email: admin.email,
+      role: admin.role,
     };
 
     const token = generateToken(authPayload);
@@ -35,7 +36,7 @@ const authService = {
         id: admin.id,
         email: admin.email,
         name: admin.name,
-        avatar: admin.avatar,
+        role: admin.role,
       },
       token,
     };
@@ -71,6 +72,7 @@ const authService = {
     const authPayload: AuthPayload = {
       id: admin.id,
       email: admin.email,
+      role: admin.role,
     };
 
     const token = generateToken(authPayload);
@@ -78,7 +80,12 @@ const authService = {
     const { password, ...safeAdmin } = admin;
 
     return {
-      admin: safeAdmin,
+      admin: {
+        id: admin.id,
+        email: admin.email,
+        name: admin.name,
+        role: admin.role,
+      },
       token,
     };
   },

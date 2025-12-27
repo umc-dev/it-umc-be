@@ -1,35 +1,37 @@
-import { Router, type IRouter } from 'express';
-import { authMiddleware } from '../middlewares/auth.middleware';
-import { alumniController } from '../controllers/alumni.controller';
-import { validate } from '../middlewares/validation.middleware';
+import { Router, type IRouter } from "express";
+import { authMiddleware } from "../middlewares/auth.middleware";
+import { alumniController } from "../controllers/alumni.controller";
+import { validate } from "../middlewares/validation.middleware";
 import {
   CreateAlumniSchema,
   UpdateAlumniSchema,
-} from '../validator/alumni.validator';
+} from "../validator/alumni.validator";
+import { requirePermission } from "../middlewares/permissions.middleware";
+import { PERMISSIONS } from "../auth/permissions";
 
 const alumniRouter: IRouter = Router();
 
-alumniRouter.get('/', alumniController.getAll);
+/* =====================
+   PUBLIC
+===================== */
 
-alumniRouter.get('/:id', alumniController.getById);
+// GET ALUMNI
+alumniRouter.get("/", alumniController.getAll);
+alumniRouter.get("/:id", alumniController.getById);
 
-alumniRouter.post(
-  '/',
-  authMiddleware,
-  validate(CreateAlumniSchema),
-  alumniController.create
-);
+/* =====================
+   PROTECTED
+===================== */
 
-alumniRouter.put(
-  '/:id',
-  authMiddleware,
-  validate(UpdateAlumniSchema),
-  alumniController.update
-);
-alumniRouter.delete(
-  '/:id',
-  authMiddleware,
-  alumniController.delete
-);
+alumniRouter.use(authMiddleware, requirePermission(PERMISSIONS.ALUMNI_MANAGE));
+
+// CREATE ALUMNI
+alumniRouter.post("/", validate(CreateAlumniSchema), alumniController.create);
+
+// UPDATE ALUMNI
+alumniRouter.put("/:id", validate(UpdateAlumniSchema), alumniController.update);
+
+// DELETE ALUMNI
+alumniRouter.delete("/:id", alumniController.delete);
 
 export default alumniRouter;

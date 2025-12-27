@@ -36,7 +36,11 @@ export const authMiddleware = async (
       throw new UnauthorizedException("Access denied, user not found");
     }
 
-    req.user = payload;
+    req.user = {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    };
 
     next();
   } catch (err) {

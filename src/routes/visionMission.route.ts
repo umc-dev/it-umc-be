@@ -1,35 +1,48 @@
-import { Router, type IRouter } from 'express';
-import { authMiddleware } from '../middlewares/auth.middleware';
-import { visionMissionController } from '../controllers/visionMission.controller';
-import { validate } from '../middlewares/validation.middleware';
+import { Router, type IRouter } from "express";
+import { authMiddleware } from "../middlewares/auth.middleware";
+import { visionMissionController } from "../controllers/visionMission.controller";
+import { validate } from "../middlewares/validation.middleware";
 import {
   CreateVisionMissionSchema,
   UpdateVisionMissionSchema,
-} from '../validator/visionMission.validator';
+} from "../validator/visionMission.validator";
+import { PERMISSIONS } from "../auth/permissions";
+import { requirePermission } from "../middlewares/permissions.middleware";
 
 const visionMissionRouter: IRouter = Router();
 
-visionMissionRouter.get('/', visionMissionController.getAll);
+/* =====================
+    PUBLIC
+===================== */
 
-visionMissionRouter.get('/:id', visionMissionController.getById);
+// GET VISION MISSION
+visionMissionRouter.get("/", visionMissionController.getAll);
+visionMissionRouter.get("/:id", visionMissionController.getById);
 
+/* =====================
+    PROTECTED
+===================== */
+
+visionMissionRouter.use(
+  authMiddleware,
+  requirePermission(PERMISSIONS.VISION_MISSION_MANAGE),
+);
+
+// CREATE VISION MISSION
 visionMissionRouter.post(
-  '/',
-  authMiddleware,
+  "/",
   validate(CreateVisionMissionSchema),
-  visionMissionController.create
+  visionMissionController.create,
 );
 
+// UPDATE VISION MISSION
 visionMissionRouter.put(
-  '/:id',
-  authMiddleware,
+  "/:id",
   validate(UpdateVisionMissionSchema),
-  visionMissionController.update
+  visionMissionController.update,
 );
-visionMissionRouter.delete(
-  '/:id',
-  authMiddleware,
-  visionMissionController.delete
-);
+
+// DELETE VISION MISSION
+visionMissionRouter.delete("/:id", visionMissionController.delete);
 
 export default visionMissionRouter;

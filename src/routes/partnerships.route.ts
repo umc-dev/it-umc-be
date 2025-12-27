@@ -7,38 +7,44 @@ import {
   CreatePartnershipSchema,
   UpdatePartnershipSchema,
 } from "../validator/partnerships.validator";
+import { requirePermission } from "../middlewares/permissions.middleware";
+import { PERMISSIONS } from "../auth/permissions";
 
 const partnershipsRouter: IRouter = Router();
 
-// Get All
-partnershipsRouter.get("/", partnershipsController.getAll);
+/* =====================
+   PUBLIC
+===================== */
 
-// Get By Id
+// GET PARTNERSHIP
+partnershipsRouter.get("/", partnershipsController.getAll);
 partnershipsRouter.get("/:id", partnershipsController.getById);
 
-// Create Partnership
+/* =====================
+   PROTECTED
+===================== */
+partnershipsRouter.use(
+  authMiddleware,
+  requirePermission(PERMISSIONS.PARTNERSHIP_MANAGE),
+);
+
+// CREATE PARTNERSHIP
 partnershipsRouter.post(
   "/",
-  authMiddleware,
   upload.single("photo"),
   validate(CreatePartnershipSchema),
   partnershipsController.create,
 );
 
-// Update Partnership
+// UPDATE PARTNERSHIP
 partnershipsRouter.put(
   "/:id",
-  authMiddleware,
   upload.single("photo"),
   validate(UpdatePartnershipSchema),
   partnershipsController.update,
 );
 
-// Delete Partnership
-partnershipsRouter.delete(
-  "/:id",
-  authMiddleware,
-  partnershipsController.delete,
-);
+// DELETE PARTNERSHIP
+partnershipsRouter.delete("/:id", partnershipsController.delete);
 
 export default partnershipsRouter;

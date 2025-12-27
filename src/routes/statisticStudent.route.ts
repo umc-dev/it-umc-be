@@ -1,35 +1,48 @@
-import { Router, type IRouter } from 'express';
-import { authMiddleware } from '../middlewares/auth.middleware';
-import { statisticStudentController } from '../controllers/statisticStudent.controller';
+import { Router, type IRouter } from "express";
+import { authMiddleware } from "../middlewares/auth.middleware";
+import { statisticStudentController } from "../controllers/statisticStudent.controller";
 import {
   CreateStatisticStudentSchema,
   UpdateStatisticStudentSchema,
-} from '../validator/statisticStudent.validator';
-import { validate } from '../middlewares/validation.middleware';
+} from "../validator/statisticStudent.validator";
+import { validate } from "../middlewares/validation.middleware";
+import { requirePermission } from "../middlewares/permissions.middleware";
+import { PERMISSIONS } from "../auth/permissions";
 
 const statisticStudentRouter: IRouter = Router();
 
-statisticStudentRouter.get('/', statisticStudentController.getAll);
+/* =====================
+   PUBLIC
+===================== */
 
-statisticStudentRouter.get('/:year', statisticStudentController.getByYear);
+// GET STATISTIC STUDENT
+statisticStudentRouter.get("/", statisticStudentController.getAll);
+statisticStudentRouter.get("/:year", statisticStudentController.getByYear);
 
+/* =====================
+    PROTECTED
+===================== */
+
+statisticStudentRouter.use(
+  authMiddleware,
+  requirePermission(PERMISSIONS.STATISTIC_MANAGE),
+);
+
+// CREATE STATISTIC STUDENT
 statisticStudentRouter.post(
-  '/',
-  authMiddleware,
+  "/",
   validate(CreateStatisticStudentSchema),
-  statisticStudentController.create
+  statisticStudentController.create,
 );
 
+// UPDATE STATISTIC STUDENT
 statisticStudentRouter.put(
-  '/:year',
-  authMiddleware,
+  "/:year",
   validate(UpdateStatisticStudentSchema),
-  statisticStudentController.update
-);
-statisticStudentRouter.delete(
-  '/:year',
-  authMiddleware,
-  statisticStudentController.delete
+  statisticStudentController.update,
 );
 
-export default statisticStudentRouter
+// DELETE STATISTIC STUDENT
+statisticStudentRouter.delete("/:year", statisticStudentController.delete);
+
+export default statisticStudentRouter;

@@ -1,36 +1,48 @@
-import { Router, type IRouter } from 'express';
-import { authMiddleware } from '../middlewares/auth.middleware';
-import { categoryController } from './../controllers/category.controller';
+import { Router, type IRouter } from "express";
+import { authMiddleware } from "../middlewares/auth.middleware";
+import { categoryController } from "./../controllers/category.controller";
 import {
   CreateCategorySchema,
   UpdateCategorySchema,
-} from '../validator/category.validator';
-import { validate } from '../middlewares/validation.middleware';
+} from "../validator/category.validator";
+import { validate } from "../middlewares/validation.middleware";
+import { requirePermission } from "../middlewares/permissions.middleware";
+import { PERMISSIONS } from "../auth/permissions";
 
 const categoryRouter: IRouter = Router();
 
-categoryRouter.get('/', categoryController.getAll);
+/* =====================
+   PUBLIC
+===================== */
 
-categoryRouter.get('/:slug', categoryController.getBySlug);
+// GET CATEGORY
+categoryRouter.get("/", categoryController.getAll);
+categoryRouter.get("/:slug", categoryController.getBySlug);
 
+/* =====================
+   PROTECTED
+===================== */
+
+categoryRouter.use(
+  authMiddleware,
+  requirePermission(PERMISSIONS.CATEGORY_MANAGE),
+);
+
+// CREATE CATEGORY
 categoryRouter.post(
-  '/',
-  authMiddleware,
+  "/",
   validate(CreateCategorySchema),
-  categoryController.create
+  categoryController.create,
 );
 
+// UPDATE CATEGORY
 categoryRouter.put(
-  '/:slug',
-  authMiddleware,
+  "/:slug",
   validate(UpdateCategorySchema),
-  categoryController.update
+  categoryController.update,
 );
 
-categoryRouter.delete('/:slug', authMiddleware, categoryController.delete);
-
-// categoryRouter.get('/:id', categoryController.getById);
-// categoryRouter.put('/:id', authMiddleware, categoryController.update);
-// categoryRouter.delete('/:id', authMiddleware, categoryController.delete);
+// DELETE CATEGORY
+categoryRouter.delete("/:slug", categoryController.delete);
 
 export default categoryRouter;

@@ -7,6 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR
+}
+
 model admin {
   id        String          @id @default(uuid())
   email     String          @unique
@@ -15,21 +21,22 @@ model admin {
   avatar    String?
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
+  role      AdminRole       @default(ADMIN)
 
   accounts  AdminAccount[]
   news      news[]
 }
 
-  model AdminAccount {
-    id                String   @id @default(uuid())
-    provider          String   // "google"
-    providerAccountId String
+model AdminAccount {
+  id                String   @id @default(uuid())
+  provider          String   // "google"
+  providerAccountId String
 
-    admin   admin   @relation(fields: [adminId], references: [id])
-    adminId String
+  admin   admin   @relation(fields: [adminId], references: [id])
+  adminId String
 
-    @@unique([provider, providerAccountId])
-  }
+  @@unique([provider, providerAccountId])
+}
 
 model category {
   id        Int      @id @default(autoincrement())
@@ -95,6 +102,8 @@ model Partnership {
   updatedAt     DateTime @updatedAt
 
   @@map("partnerships")
+}
+
 model Alumni {
   id       String @id @default(uuid())
   name      String

@@ -1,29 +1,42 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, AdminRole } from "@prisma/client";
 import { Faker, id_ID } from "@faker-js/faker";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 export async function seedAdmins() {
-  // Total data
-  const totalAdmins = 1;
-
-  // Faker Bahasa Indonesia
   const fakerID = new Faker({ locale: [id_ID] });
 
-  const adminsData = await Promise.all(
-    Array.from({ length: totalAdmins }).map(async () => ({
+  const password = await bcrypt.hash("cirebon321", 10);
+
+  const adminsData = [
+    {
+      name: fakerID.person.fullName(),
+      email: "superadmin@mail.com",
+      password,
+      role: AdminRole.SUPER_ADMIN,
+    },
+    {
       name: fakerID.person.fullName(),
       email: "admin@mail.com",
-      password: await bcrypt.hash("cirebon321", 10),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    })),
-  );
+      password,
+      role: AdminRole.ADMIN,
+    },
+    {
+      name: fakerID.person.fullName(),
+      email: "editor@mail.com",
+      password,
+      role: AdminRole.EDITOR,
+    },
+  ];
 
   await prisma.admin.createMany({
     data: adminsData,
+    skipDuplicates: true, // aman kalau seed dijalankan ulang
   });
 
-  console.log(`${totalAdmins} admins created.`);
+  console.log("✅ Admin seeded:");
+  console.log("- superadmin@mail.com (SUPER_ADMIN)");
+  console.log("- admin@mail.com (ADMIN)");
+  console.log("- editor@mail.com (EDITOR)");
 }

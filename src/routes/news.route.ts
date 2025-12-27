@@ -7,34 +7,50 @@ import {
 } from "../validator/news.validator";
 import { validate } from "../middlewares/validation.middleware";
 import upload from "../middlewares/upload.middleware";
+import { requirePermission } from "../middlewares/permissions.middleware";
+import { PERMISSIONS } from "../auth/permissions";
 
 const newsRouter: IRouter = Router();
 
-// Get All
+/* =====================
+   PUBLIC
+===================== */
+
+// GET NEWS
 newsRouter.get("/", newsController.getAll);
 
 // Get By Slug
 newsRouter.get("/:slug", newsController.getBySlug);
 
-// Create News
+/* =====================
+   PROTECTED
+===================== */
+
+newsRouter.use(authMiddleware);
+
+// CREATE NEWS
 newsRouter.post(
   "/",
-  authMiddleware,
+  requirePermission(PERMISSIONS.NEWS_CREATE),
   upload.single("thumbnail"),
   validate(CreateNewsSchema),
   newsController.create,
 );
 
-// Update News
+// UPDATE NEWS
 newsRouter.put(
   "/:slug",
-  authMiddleware,
+  requirePermission(PERMISSIONS.NEWS_UPDATE),
   upload.single("thumbnail"),
   validate(UpdateNewsSchema),
   newsController.update,
 );
 
-// Delete News
-newsRouter.delete("/:slug", authMiddleware, newsController.delete);
+// DELETE NEWS
+newsRouter.delete(
+  "/:slug",
+  requirePermission(PERMISSIONS.NEWS_DELETE),
+  newsController.delete,
+);
 
 export default newsRouter;

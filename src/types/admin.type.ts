@@ -5,6 +5,8 @@ import {
 } from "../validator/admin.validator";
 import { PaginationMeta } from ".";
 import { News } from "./news.type";
+import { AdminRole } from "@prisma/client";
+import { Permission } from "../auth/permissions";
 
 // Admin DTO
 
@@ -12,8 +14,9 @@ export interface Admin {
   id: string;
   email: string;
   name: string | null;
-  password: string;
+  password: string | null;
   avatar: string | null;
+  role: AdminRole;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -42,6 +45,7 @@ export interface AdminCreateData {
   name: string;
   password?: string;
   avatar?: string;
+  role?: AdminRole;
 }
 
 export type AdminCreateDTO = z.infer<typeof CreateAdminSchema>;
@@ -51,6 +55,7 @@ export interface AdminUpdateData {
   name?: string;
   password?: string;
   avatar?: string;
+  role?: AdminRole;
 }
 
 export type AdminUpdateDTO = z.infer<typeof UpdateAdminSchema>;
@@ -67,6 +72,7 @@ export interface AdminResponse {
   email: string;
   name: string | null;
   avatar: string | null;
+  role: AdminRole;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -98,6 +104,6 @@ export interface LoginResponse {
 export interface AuthAdmin {
   id: string;
   email: string;
-  name?: string;
-  avatar?: string | null;
+  name: string;
+  role: AdminRole;
 }
