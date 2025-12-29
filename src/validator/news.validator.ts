@@ -1,13 +1,13 @@
 import { z } from "zod";
 
 export const CreateNewsSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  content: z.string().min(1, "Content is required"),
-  categoryId: z.number().min(1, "Category ID is required"),
+  title: z.string().min(1, 'Title is required'),
+  content: z.string().min(1, 'Content is required'),
+  categoryId: z.coerce.number().min(1, 'Category ID is required'),
 });
 
 export const UpdateNewsSchema = z.object({
   title: z.string().optional(),
   content: z.string().optional(),
-  categoryId: z.number().optional(),
+  categoryId: z.coerce.number().optional(),
 });
