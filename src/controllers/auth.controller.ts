@@ -4,6 +4,7 @@ import { AuthResponse } from "../types/auth.type";
 import authService from "../services/auth.service";
 import { ResponseHTTP } from "../utils/response";
 import { env } from "../config/env";
+import adminService from "../services/admin.service";
 
 const authController = {
   async loginWithEmail(req: Request, res: Response, next: NextFunction) {
@@ -47,12 +48,10 @@ const authController = {
     }
   },
 
-  me(req: Request, res: Response) {
-    const data = {
-      admin: req.user,
-    };
+  async me(req: Request, res: Response) {
+    const admin = await adminService.getById(req.user.id);
 
-    res.status(200).json(ResponseHTTP.ok(data, "User verified"));
+    res.status(200).json(ResponseHTTP.ok(admin, "User verified"));
   },
 
   logout(req: Request, res: Response) {
