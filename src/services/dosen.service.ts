@@ -16,16 +16,28 @@ export const dosenService = {
     data: CreateDosenDTO,
     file?: Express.Multer.File,
   ): Promise<DosenResponse> {
-    const savedFile = saveUploadedFile(file);
-    const dataToSave: CreateDosenData = {
-      name: data.name,
-      expertise: data.expertise,
-      photo: savedFile.url,
-      research: data.research,
-      teaching: data.teaching,
-    };
+    let uploaded: { url: string } | null = null;
 
-    return await dosenRepository.create(dataToSave);
+    try {
+      if (file) {
+        uploaded = saveUploadedFile(file);
+      }
+
+      const dataToSave: CreateDosenData = {
+        name: data.name,
+        expertise: data.expertise,
+        photo: uploaded.url,
+        research: data.research,
+        teaching: data.teaching,
+      };
+
+      return await dosenRepository.create(dataToSave);
+    } catch (err: unknown) {
+      if (uploaded?.url) {
+        deleteUploadedFile(uploaded.url);
+      }
+      throw err;
+    }
   },
 
   // Get all dosen

@@ -17,20 +17,30 @@ export const newsService = {
     file: Express.Multer.File,
     authorId: string,
   ): Promise<NewsResponse> {
-    const slug = generateSlug(data.title);
+    let uploaded: { url: string } | null = null;
+    try {
+      const slug = generateSlug(data.title);
 
-    const savedFile = saveUploadedFile(file);
+      if (file) {
+        uploaded = saveUploadedFile(file);
+      }
 
-    const dataToSave: CreateNewsData = {
-      title: data.title,
-      content: data.content,
-      authorId,
-      categoryId: data.categoryId,
-      slug,
-      thumbnail: savedFile.url,
-    };
+      const dataToSave: CreateNewsData = {
+        title: data.title,
+        content: data.content,
+        authorId,
+        categoryId: data.categoryId,
+        slug,
+        thumbnail: uploaded.url,
+      };
 
-    return await newsRepository.add(dataToSave);
+      return await newsRepository.add(dataToSave);
+    } catch (err: unknown) {
+      if (uploaded?.url) {
+        deleteUploadedFile(uploaded.url);
+      }
+      throw err;
+    }
   },
 
   async getAll(

@@ -25,14 +25,6 @@ export const dosenController = {
         .status(201)
         .json(ResponseHTTP.created(result, "Dosen created"));
     } catch (err) {
-      if (req.file) {
-        const filepath = path.join("uploads", req.file.filename);
-
-        fs.unlink(filepath, (e) => {
-          if (e) console.error("Gagal hapus file temp:", e);
-        });
-      }
-
       next(err);
     }
   },

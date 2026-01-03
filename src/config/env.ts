@@ -21,6 +21,9 @@ const envSchema = z.object({
 
   // URL
   CLIENT_URL: z.url(),
+
+  // File uploads
+  UPLOADS_PATH: z.string().optional(),
 });
 
 const parsed = envSchema.safeParse(process.env);

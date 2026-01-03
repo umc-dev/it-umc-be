@@ -78,25 +78,37 @@ const adminService = {
     data: AdminCreateDTO,
     file?: Express.Multer.File,
   ): Promise<AdminResponse> {
-    const adminIsExist = await adminRepository.getAdminByEmail(data.email);
+    let avatar: { url: string } | null = null;
 
-    if (adminIsExist) {
-      throw new BadRequestException("Admin already exist");
+    try {
+      const adminIsExist = await adminRepository.getAdminByEmail(data.email);
+
+      if (adminIsExist) {
+        throw new BadRequestException("Admin already exist");
+      }
+
+      const rawPassword = data.password;
+      const hashedPassword = await hashPassword(rawPassword);
+
+      if (file) {
+        avatar = saveUploadedFile(file);
+      }
+
+      const dataToSave: AdminCreateData = {
+        ...data,
+        password: hashedPassword,
+        avatar: avatar.url,
+      };
+
+      const newAdmin = await adminRepository.addAdmin(dataToSave);
+      return mapToAdminResponse(newAdmin);
+    } catch (error: unknown) {
+      if (avatar?.url) {
+        deleteUploadedFile(avatar.url);
+      }
+
+      throw error;
     }
-
-    const rawPassword = data.password;
-    const hashedPassword = await hashPassword(rawPassword);
-
-    const avatar = saveUploadedFile(file);
-
-    const dataToSave: AdminCreateData = {
-      ...data,
-      password: hashedPassword,
-      avatar: avatar.url,
-    };
-
-    const newAdmin = await adminRepository.addAdmin(dataToSave);
-    return mapToAdminResponse(newAdmin);
   },
 
   // Update admin

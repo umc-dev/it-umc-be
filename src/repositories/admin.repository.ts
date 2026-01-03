@@ -53,6 +53,7 @@ const adminRepository = {
         name: data.name ?? null,
         password: data.password,
         avatar: data.avatar ?? null,
+        role: data.role,
         updatedAt: new Date(),
       },
     });

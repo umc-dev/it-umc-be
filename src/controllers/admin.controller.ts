@@ -9,6 +9,7 @@ import {
 } from "../types/admin.type";
 import path from "path";
 import fs from "fs";
+import { UPLOADS_PATH } from "../config/path.config";
 
 export const adminController = {
   async getAll(req: Request, res: Response, next: NextFunction) {
@@ -53,14 +54,6 @@ export const adminController = {
       const data: AdminResponse = await adminService.create(body, req.file);
       return res.status(201).json(ResponseHTTP.created(data, "Admin created"));
     } catch (err) {
-      // Hapus uploaded file kalo error
-      const filePath = path.join(process.env.UPLOADS_PATH, req.file.filename);
-
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-        return true;
-      }
-
       next(err);
     }
   },
