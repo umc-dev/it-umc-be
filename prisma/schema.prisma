@@ -32,7 +32,7 @@ model AdminAccount {
   provider          String   // "google"
   providerAccountId String
 
-  admin   admin   @relation(fields: [adminId], references: [id])
+  admin   admin   @relation(fields: [adminId], references: [id], onDelete: Cascade)
   adminId String
 
   @@unique([provider, providerAccountId])
