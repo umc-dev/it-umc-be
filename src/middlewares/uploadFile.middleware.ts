@@ -1,15 +1,17 @@
 import multer from 'multer';
 import path from 'path';
 import BadRequestException from '../exceptions/BadRequestException';
+import { UPLOAD_ALLOWED_MIME, UPLOAD_MAX_FILE_SIZE } from '../config/file.config';
+
 
 const uploadFile = multer({
   limits: {
-    fileSize: 2 * 1024 * 1024, // 2 MB
+    fileSize: UPLOAD_MAX_FILE_SIZE, // 2 MB
   },
   fileFilter(req, file, next) {
-    const allowed = 'application/pdf';
+    const allowed = UPLOAD_ALLOWED_MIME;
 
-    if (file.mimetype !== allowed) {
+    if (!allowed.includes(file.mimetype)) {
       return next(new BadRequestException('File extention not allowed'));
     }
 
