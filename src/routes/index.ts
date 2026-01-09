@@ -10,6 +10,7 @@ import statisticStudentRouter from "./statisticStudent.route";
 import visionMissionRouter from "./visionMission.route";
 import partnershipsRouter from "./partnerships.route";
 import alumniRouter from "./alumni.route";
+import studyRouter from "./study.route";
 
 const router: IRouter = Router();
 
@@ -23,6 +24,7 @@ router.use("/statistic-student", statisticStudentRouter);
 router.use("/vision-mission", visionMissionRouter);
 router.use("/partnerships", partnershipsRouter);
 router.use("/alumni", alumniRouter);
+router.use("/studies", studyRouter);
 
 // kalau nanti ada routes lain
 // router.use("/news", newsRoutes);
