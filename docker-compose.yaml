@@ -1,6 +1,6 @@
 services:
   db:
-    image: mysql:8.0
+    image: mysql:5.7
     container_name: it-umc-be-mysql
     restart: always
     env_file:
@@ -26,7 +26,7 @@ services:
     env_file:
       - .env
     environment:
-      DATABASE_URL: mysql://root:${MYSQL_ROOT_PASSWORD}@db:3306/${MYSQL_DATABASE}
+      DATABASE_URL: mysql://root:${MYSQL_ROOT_PASSWORD}@it-umc-be-mysql:3306/${MYSQL_DATABASE}
       JWT_SECRET: ${JWT_SECRET}
       PORT: ${PORT}
       NODE_ENV: ${NODE_ENV}
