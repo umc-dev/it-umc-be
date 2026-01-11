@@ -24,6 +24,8 @@ const envSchema = z.object({
 
   // File uploads
   UPLOADS_PATH: z.string().optional(),
+  UPLOAD_ALLOWED_MIME: z.string().optional(),
+  UPLOAD_MAX_FILE_SIZE: z.coerce.number().optional(),
 });
 
 const parsed = envSchema.safeParse(process.env);

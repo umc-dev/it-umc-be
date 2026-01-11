@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import HttpException from "../exceptions/HttpException";
 import { ZodError } from "zod";
+import multer from "multer";
 
 export const errorHandler = (
   err: unknown,
@@ -24,6 +25,22 @@ export const errorHandler = (
       success: false,
       status: 400,
       errors,
+    });
+  }
+
+  // Jika error berasal dari multer (upload file)
+  if (err instanceof multer.MulterError) {
+    let message: string;
+
+    if (err.code === "LIMIT_FILE_SIZE") {
+      message = "File size too large";
+    }
+    // Error spesifik bisa ditambah di sini
+
+    return res.status(400).json({
+      success: false,
+      status: 400,
+      message: message || err.message
     });
   }
 
