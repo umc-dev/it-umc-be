@@ -5,38 +5,31 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 export async function seedAdmins() {
-  const fakerID = new Faker({ locale: [id_ID] });
+  const name = process.env.INITIAL_ADMIN_NAME;
+  const email = process.env.INITIAL_ADMIN_EMAIL;
 
-  const password = await bcrypt.hash("cirebon321", 10);
+  const rawPassword = process.env.INITIAL_ADMIN_PASSWORD;
 
-  const adminsData = [
-    {
-      name: fakerID.person.fullName(),
-      email: "superadmin@mail.com",
-      password,
+  // Cek jika email atau password kosong di .env
+  if (!email || !rawPassword) {
+    console.error(
+      "❌ Error: INITIAL_ADMIN_EMAIL atau INITIAL_ADMIN_PASSWORD belum diset di .env",
+    );
+    return;
+  }
+
+  const hashedPassword = await bcrypt.hash(rawPassword, 10);
+
+  await prisma.admin.upsert({
+    where: { email: email },
+    update: {}, // Jika sudah ada, jangan timpa apapun
+    create: {
+      name,
+      email,
+      password: hashedPassword,
       role: AdminRole.SUPER_ADMIN,
     },
-    {
-      name: fakerID.person.fullName(),
-      email: "admin@mail.com",
-      password,
-      role: AdminRole.ADMIN,
-    },
-    {
-      name: fakerID.person.fullName(),
-      email: "editor@mail.com",
-      password,
-      role: AdminRole.EDITOR,
-    },
-  ];
-
-  await prisma.admin.createMany({
-    data: adminsData,
-    skipDuplicates: true, // aman kalau seed dijalankan ulang
   });
 
   console.log("✅ Admin seeded:");
-  console.log("- superadmin@mail.com (SUPER_ADMIN)");
-  console.log("- admin@mail.com (ADMIN)");
-  console.log("- editor@mail.com (EDITOR)");
 }

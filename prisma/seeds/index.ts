@@ -10,10 +10,6 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("Running seeders...");
   await seedAdmins();
-  await seedCategory();
-  await seedNews();
-  await seedVisionMission();
-  await seedAlumni();
   console.log("Seeding finished.");
 }
 
