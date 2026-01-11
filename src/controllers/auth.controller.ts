@@ -13,12 +13,12 @@ const authController = {
 
       const { token, admin } = await authService.loginWithEmail(
         email,
-        password,
+        password
       );
 
       res.cookie("access_token", token, {
         httpOnly: true,
-        sameSite: "lax",
+        sameSite: "none",
         secure: env.NODE_ENV === "production",
         path: "/",
         maxAge: 1000 * 60 * 60 * 24,
@@ -36,7 +36,7 @@ const authController = {
 
       res.cookie("access_token", token, {
         httpOnly: true,
-        sameSite: "lax",
+        sameSite: "none",
         secure: env.NODE_ENV === "production",
         path: "/",
         maxAge: 1000 * 60 * 60 * 24,
@@ -57,7 +57,7 @@ const authController = {
   logout(req: Request, res: Response) {
     res.clearCookie("access_token", {
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "none",
       secure: env.NODE_ENV === "production",
       path: "/",
     });
