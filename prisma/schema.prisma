@@ -25,6 +25,8 @@ model admin {
 
   accounts  AdminAccount[]
   news      news[]
+
+  @@map("admin")
 }
 
 model AdminAccount {
@@ -36,6 +38,7 @@ model AdminAccount {
   adminId String
 
   @@unique([provider, providerAccountId])
+  @@map("admin_accounts")
 }
 
 model category {
@@ -45,6 +48,8 @@ model category {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   news      news[]
+
+  @@map("category")
 }
 
 model news {
@@ -62,6 +67,8 @@ model news {
 
   @@index([authorId], map: "News_authorId_fkey")
   @@index([categoryId], map: "News_categoryId_fkey")
+
+  @@map("news")
 }
 
 model dosen {
@@ -82,6 +89,8 @@ model StatisticStudent  {
   graduatedStudents  Int @db.UnsignedMediumInt
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+
+  @@map("statistic_student")
 }
 
 model VisionMission {
@@ -90,6 +99,8 @@ model VisionMission {
   mission  String @db.Text
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+
+  @@map("vission_mission")
 }
 
 model Partnership {
@@ -112,6 +123,8 @@ model Alumni {
   year      Int @db.UnsignedMediumInt
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+
+  @@map("alumni")
 }
 
 model Study {
@@ -119,4 +132,6 @@ model Study {
   source             String
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+
+  @@map("study")
 }
