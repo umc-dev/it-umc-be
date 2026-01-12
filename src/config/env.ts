@@ -26,6 +26,9 @@ const envSchema = z.object({
   UPLOADS_PATH: z.string().optional(),
   UPLOAD_ALLOWED_MIME: z.string().optional(),
   UPLOAD_MAX_FILE_SIZE: z.coerce.number().optional(),
+
+  // Cokkie
+  COOKIE_DOMAIN: z.string(),
 });
 
 const parsed = envSchema.safeParse(process.env);

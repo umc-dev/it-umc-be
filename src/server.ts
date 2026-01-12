@@ -41,6 +41,7 @@ app.use(
     contentSecurityPolicy: false,
     crossOriginOpenerPolicy: false,
     crossOriginResourcePolicy: false,
+    hidePoweredBy: true,
   }),
 );
 

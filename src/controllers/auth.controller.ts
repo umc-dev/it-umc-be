@@ -13,7 +13,7 @@ const authController = {
 
       const { token, admin } = await authService.loginWithEmail(
         email,
-        password
+        password,
       );
 
       res.cookie("access_token", token, {
@@ -22,6 +22,7 @@ const authController = {
         secure: env.NODE_ENV === "production",
         path: "/",
         maxAge: 1000 * 60 * 60 * 24,
+        domain: env.COOKIE_DOMAIN,
       });
 
       return res.status(200).json(ResponseHTTP.success("Login success"));
@@ -40,6 +41,7 @@ const authController = {
         secure: env.NODE_ENV === "production",
         path: "/",
         maxAge: 1000 * 60 * 60 * 24,
+        domain: env.COOKIE_DOMAIN,
       });
 
       return res.redirect(`${env.CLIENT_URL}/dashboard`);
@@ -60,6 +62,7 @@ const authController = {
       sameSite: "none",
       secure: env.NODE_ENV === "production",
       path: "/",
+      domain: env.COOKIE_DOMAIN,
     });
 
     res.status(200).json(ResponseHTTP.success("Logout successfully"));
