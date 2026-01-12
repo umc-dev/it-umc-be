@@ -11,10 +11,7 @@ const authController = {
     try {
       const { email, password } = LoginSchema.parse(req.body);
 
-      const { token, admin } = await authService.loginWithEmail(
-        email,
-        password,
-      );
+      const { token } = await authService.loginWithEmail(email, password);
 
       res.cookie("access_token", token, {
         httpOnly: true,
