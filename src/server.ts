@@ -16,7 +16,12 @@ import cookieParser from "cookie-parser";
 const app: Express = express();
 
 // Cors (Ganti pas mau di deploy)
-const allowedOrigins = ["http://localhost:3000", "http://localhost:5000", "https://umc-it-dashboard.vercel.app"];
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:5000",
+  "https://umc-it-dashboard.vercel.app",
+  "https://dashboard.tiumc.my.id",
+];
 app.use(
   cors({
     origin: function (origin, callback) {
