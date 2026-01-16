@@ -11,6 +11,7 @@ import cors from "cors";
 import "./config/passport";
 import passport from "passport";
 import cookieParser from "cookie-parser";
+import { UPLOADS_PATH } from "./config/path.config";
 
 // Init Express
 const app: Express = express();
@@ -56,7 +57,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Public folder for uploads
-app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
+app.use("/uploads", express.static(UPLOADS_PATH));
 
 // Routes
 app.get("/", async (req, res) => {
