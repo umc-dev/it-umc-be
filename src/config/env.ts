@@ -29,6 +29,9 @@ const envSchema = z.object({
 
   // Cokkie
   COOKIE_DOMAIN: z.string(),
+
+  // Allowed Origins
+  ALLOWED_ORIGINS: z.string(),
 });
 
 const parsed = envSchema.safeParse(process.env);
