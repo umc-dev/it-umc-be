@@ -35,6 +35,8 @@ services:
         condition: service_healthy
     ports:
       - "9090:9090"
+    volumes:
+      - /var/www/uploads:/uploads
     command: sh -c "pnpm prisma migrate deploy && pnpm run start"
 
 volumes:
