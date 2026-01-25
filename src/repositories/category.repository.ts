@@ -43,14 +43,14 @@ export const categoryRepository = {
     };
   },
 
-  // async getById(id: string) {
-  //   return await db.category.findUnique({
-  //     where: { id },
-  //     include: {
-  //       news: true,
-  //     },
-  //   });
-  // },
+  async getById(id: number) {
+    return await db.category.findUnique({
+      where: { id },
+      // include: {
+      //   news: true,
+      // },
+    });
+  },
 
   async getBySlug(slug: string) {
     return await db.category.findUnique({
