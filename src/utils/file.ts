@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { UPLOADS_PATH } from "../config/path.config";
+import sharp from 'sharp';
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
@@ -10,12 +11,20 @@ if (!fs.existsSync(UPLOADS_PATH)) {
 }
 
 // Save uploaded file
-export const saveUploadedFile = (file: Express.Multer.File) => {
+export const saveUploadedFile = async (file: Express.Multer.File) => {
   if (!file) throw new Error("No file provided");
 
+  // Pengecekan mimetype
+  const mimetype = file.mimetype.startsWith('image/');
+
   const ext = path.extname(file.originalname);
-  const fileName = `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
+  const fileName = `${Date.now()}-${Math.round(Math.random() * 1e9)}${mimetype ? '.webp' : ext}`;
   const targetPath = path.join(UPLOADS_PATH, fileName);
+
+  if (mimetype) {
+    // convert ke webp
+    await sharp(file.path).webp({ quality: 80 }).toFile(targetPath);
+  }
 
   // pindahkan dari temp ke uploads
   fs.renameSync(file.path, targetPath);
