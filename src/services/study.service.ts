@@ -2,11 +2,9 @@ import NotFoundException from "../exceptions/NotFoundException";
 import { studyRepository } from "../repositories/study.repository";
 import {
   CreateStudyData,
-  CreateStudyDto,
   StudyResponse,
   PaginatedStudyResponse,
   UpdateStudyData,
-  UpdateStudyDto,
 } from "../types/study.type";
 import { deleteUploadedFile, saveUploadedFile } from "../utils/file";
 
@@ -16,7 +14,7 @@ export const studyService = {
   ): Promise<StudyResponse> {
     let uploaded: { url: string } | null = null;
     try {
-      const uploaded = saveUploadedFile(file);
+      const uploaded = await saveUploadedFile(file);
       const dataToSave: CreateStudyData = {
         source: uploaded.url,
       };
@@ -64,7 +62,7 @@ export const studyService = {
 
     // Jika ada file baru, simpan dan hapus file lama
     if (file) {
-      const saved = saveUploadedFile(file);
+      const saved = await saveUploadedFile(file);
       updateData.source = saved.url;
       deleteUploadedFile(exist.source);
     }

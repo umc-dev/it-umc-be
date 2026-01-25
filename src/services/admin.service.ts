@@ -11,7 +11,6 @@ import adminRepository from "../repositories/admin.repository";
 import NotFoundException from "../exceptions/NotFoundException";
 import { hashPassword } from "../utils/password";
 import BadRequestException from "../exceptions/BadRequestException";
-import { da } from "zod/v4/locales";
 import { deleteUploadedFile, saveUploadedFile } from "../utils/file";
 
 // Mapping ke admin response tanpa Password
@@ -90,9 +89,7 @@ const adminService = {
       const rawPassword = data.password;
       const hashedPassword = await hashPassword(rawPassword);
 
-      if (file) {
-        avatar = saveUploadedFile(file);
-      }
+      avatar = await saveUploadedFile(file);
 
       const dataToSave: AdminCreateData = {
         ...data,
@@ -128,7 +125,7 @@ const adminService = {
 
     // Upload file baru
     if (file) {
-      const saved = saveUploadedFile(file);
+      const saved = await saveUploadedFile(file);
       newAvatarUrl = saved.url;
     }
 

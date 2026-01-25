@@ -18,10 +18,8 @@ const partnershipsService = {
   ): Promise<PartnershipResponse> {
     let photo: string | null = null;
 
-    if (file) {
-      const savedFile = saveUploadedFile(file);
-      photo = savedFile.url;
-    }
+    const savedFile = await saveUploadedFile(file);
+    photo = savedFile.url;
 
     const dataToSave: CreatePartnershipData = {
       name: data.name,
@@ -74,7 +72,7 @@ const partnershipsService = {
     const oldPhotoUrl = partnership.photo;
 
     if (file) {
-      const saved = saveUploadedFile(file);
+      const saved = await saveUploadedFile(file);
       newPhotoUrl = saved.url;
     }
 

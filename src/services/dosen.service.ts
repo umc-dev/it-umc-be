@@ -19,9 +19,7 @@ export const dosenService = {
     let uploaded: { url: string } | null = null;
 
     try {
-      if (file) {
-        uploaded = saveUploadedFile(file);
-      }
+      uploaded = await saveUploadedFile(file);
 
       const dataToSave: CreateDosenData = {
         name: data.name,
@@ -77,7 +75,7 @@ export const dosenService = {
     const oldPhotoUrl = dosen.photo;
 
     if (file) {
-      const saved = saveUploadedFile(file);
+      const saved = await saveUploadedFile(file);
       newPhotoUrl = saved.url;
     }
 

@@ -1,4 +1,5 @@
 import NotFoundException from "../exceptions/NotFoundException";
+import { categoryRepository } from "../repositories/category.repository";
 import { newsRepository } from "../repositories/news.repository";
 import {
   CreateNewsData,
@@ -19,11 +20,12 @@ export const newsService = {
   ): Promise<NewsResponse> {
     let uploaded: { url: string } | null = null;
     try {
+      const category = await categoryRepository.getById(data.categoryId);
+      if (!category) throw new NotFoundException('Category not found');
+
       const slug = generateSlug(data.title);
 
-      if (file) {
-        uploaded = saveUploadedFile(file);
-      }
+      uploaded = await saveUploadedFile(file);
 
       const dataToSave: CreateNewsData = {
         title: data.title,
@@ -78,7 +80,7 @@ export const newsService = {
     const oldThumbnailUrl = exist.thumbnail;
 
     if (file) {
-      const saved = saveUploadedFile(file);
+      const saved = await saveUploadedFile(file);
       newThumbnailUrl = saved.url;
     }
 
