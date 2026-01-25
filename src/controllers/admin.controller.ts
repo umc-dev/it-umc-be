@@ -49,6 +49,10 @@ export const adminController = {
 
   async create(req: Request, res: Response, next: NextFunction) {
     try {
+      if (!req.file) {
+        throw new BadRequestException('Avatar image is required');
+      }
+
       const body = req.body;
 
       const data: AdminResponse = await adminService.create(body, req.file);

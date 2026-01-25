@@ -15,6 +15,10 @@ export const dosenController = {
   // Create Dosen Controller
   async create(req: Request, res: Response, next: NextFunction) {
     try {
+      if (!req.file) {
+        throw new BadRequestException('Photo is required');
+      }
+
       const body: CreateDosenDTO = {
         ...req.body,
       };
