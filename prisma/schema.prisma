@@ -71,15 +71,34 @@ model news {
   @@map("news")
 }
 
-model dosen {
-  id          String @id @default(uuid())
-  name        String
-  expertise   String
-  photo       String
-  teaching    String
-  research    String
+model Lectureship {
+  id          Int @id @default(autoincrement())
+  name        String @db.VarChar(50)
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  dosen       dosen[]
+
+  @@map("lectureships")
+}
+
+model dosen {
+  id            String @id @default(uuid())
+  name          String
+  expertise     String
+  photo         String
+  teaching      String
+  research      String
+  lectureshipId Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  lectureship   Lectureship? @relation(fields: [lectureshipId], references: [id], map: "News_lectureshipId_fkey", onDelete : SetNull)
+
+  @@index([lectureshipId], map: "News_lectureshipId_fkey")
+
+  @@map("dosen")
 }
 
 model StatisticStudent  {
