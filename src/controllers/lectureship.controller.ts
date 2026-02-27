@@ -21,7 +21,7 @@ export const lectureshipController = {
 
       return res
         .status(201)
-        .json(ResponseHTTP.created(result, 'Vision Mission created'));
+        .json(ResponseHTTP.created(result, 'Lectureship created'));
     } catch (err) {
       next(err);
     }
