@@ -1,5 +1,6 @@
 import NotFoundException from "../exceptions/NotFoundException";
 import { dosenRepository } from "../repositories/dosen.repository";
+import { lectureshipRepository } from "../repositories/lectureship.repository";
 import {
   CreateDosenData,
   CreateDosenDTO,
@@ -23,12 +24,21 @@ export const dosenService = {
         uploaded = saveUploadedFile(file);
       }
 
+      // Validasi lectureship jika lectureshipId disediakan
+      if(data.lectureshipId != undefined) {
+        const lectureship = await lectureshipRepository.getById(data.lectureshipId);
+        if(!lectureship) {
+          throw new NotFoundException('Lectureship not found');
+        }
+      }
+
       const dataToSave: CreateDosenData = {
         name: data.name,
         expertise: data.expertise,
         photo: uploaded.url,
         research: data.research,
         teaching: data.teaching,
+        lectureshipId: data.lectureshipId,
       };
 
       return await dosenRepository.create(dataToSave);
@@ -88,6 +98,14 @@ export const dosenService = {
     // set thumbnail jika upload baru
     if (newPhotoUrl) {
       updateData.photo = newPhotoUrl;
+    }
+
+    // Validasi lectureship jika lectureshipId disediakan
+    if(data.lectureshipId != undefined) {
+      const lectureship = await lectureshipRepository.getById(data.lectureshipId);
+      if(!lectureship) {
+        throw new NotFoundException('Lectureship not found');
+      }
     }
 
     const updated = await dosenRepository.update(id, updateData);

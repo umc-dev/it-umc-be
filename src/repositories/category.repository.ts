@@ -1,11 +1,11 @@
-import { CreateCategoryData, UpdateCategoryData } from '../types/category.type';
-import { removeUndefined } from '../utils';
-import { db } from '../utils/prisma';
+import { CreateCategoryData, UpdateCategoryData } from "../types/category.type";
+import { removeUndefined } from "../utils";
+import { db } from "../utils/prisma";
 
 export const categoryRepository = {
   async add(data: CreateCategoryData) {
     return await db.category.create({
-      data
+      data,
     });
   },
 
@@ -22,7 +22,7 @@ export const categoryRepository = {
         skip,
         take: limit,
         orderBy: {
-          createdAt: 'desc',
+          createdAt: "desc",
         },
         where: whereClause,
       }),
@@ -56,7 +56,15 @@ export const categoryRepository = {
     return await db.category.findUnique({
       where: { slug },
       include: {
-        news: true,
+        news: {
+          include: {
+            admin: true,
+            category: true,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
       },
     });
   },

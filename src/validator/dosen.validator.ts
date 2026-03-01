@@ -1,10 +1,11 @@
 import { z } from "zod";
 
 export const CreateDosenSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  expertise: z.string().min(1, "Expertise is required"),
-  research: z.url().min(1, "Research description is required"),
-  teaching: z.url().min(1, "Teaching description is required"),
+  name: z.string().min(1, 'Name is required'),
+  expertise: z.string().min(1, 'Expertise is required'),
+  research: z.url().min(1, 'Research description is required'),
+  teaching: z.url().min(1, 'Teaching description is required'),
+  lectureshipId: z.coerce.number().optional(),
 });
 
 export const UpdateDosenSchema = z.object({
@@ -12,4 +13,5 @@ export const UpdateDosenSchema = z.object({
   expertise: z.string().optional(),
   research: z.url().optional(),
   teaching: z.url().optional(),
+  lectureshipId: z.coerce.number().optional(),
 });

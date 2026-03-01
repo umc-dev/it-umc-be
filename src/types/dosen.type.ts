@@ -13,6 +13,7 @@ export interface Dosen {
   research: string;
   teaching: string;
   photo: string | null;
+  lectureshipId: number | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -26,6 +27,7 @@ export interface CreateDosenData {
   research: string;
   teaching: string;
   photo: string;
+  lectureshipId?: number;
 }
 export type UpdateDosenDTO = z.infer<typeof UpdateDosenSchema>;
 
@@ -35,6 +37,7 @@ export interface UpdateDosenData {
   research?: string;
   teaching?: string;
   photo?: string;
+  lectureshipId?: number;
 }
 
 // Response DTO
@@ -46,6 +49,7 @@ export interface DosenResponse {
   research: string;
   teaching: string;
   photo: string | null;
+  lectureshipId: number | null;
   createdAt: Date;
   updatedAt: Date;
 }

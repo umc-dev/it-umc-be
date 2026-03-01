@@ -5,24 +5,16 @@ import authService from "../services/auth.service";
 import { ResponseHTTP } from "../utils/response";
 import { env } from "../config/env";
 import adminService from "../services/admin.service";
+import cookieOptions from "../config/cookies";
 
 const authController = {
   async loginWithEmail(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, password } = LoginSchema.parse(req.body);
 
-      const { token, admin } = await authService.loginWithEmail(
-        email,
-        password,
-      );
+      const { token } = await authService.loginWithEmail(email, password);
 
-      res.cookie("access_token", token, {
-        httpOnly: true,
-        sameSite: "lax",
-        secure: env.NODE_ENV === "production",
-        path: "/",
-        maxAge: 1000 * 60 * 60 * 24,
-      });
+      res.cookie("access_token", token, cookieOptions);
 
       return res.status(200).json(ResponseHTTP.success("Login success"));
     } catch (err) {
@@ -34,13 +26,7 @@ const authController = {
     try {
       const { token } = await authService.loginWithGoogle(req.user as any);
 
-      res.cookie("access_token", token, {
-        httpOnly: true,
-        sameSite: "lax",
-        secure: env.NODE_ENV === "production",
-        path: "/",
-        maxAge: 1000 * 60 * 60 * 24,
-      });
+      res.cookie("access_token", token, cookieOptions);
 
       return res.redirect(`${env.CLIENT_URL}/dashboard`);
     } catch (err) {
@@ -55,12 +41,7 @@ const authController = {
   },
 
   logout(req: Request, res: Response) {
-    res.clearCookie("access_token", {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: env.NODE_ENV === "production",
-      path: "/",
-    });
+    res.clearCookie("access_token", cookieOptions);
 
     res.status(200).json(ResponseHTTP.success("Logout successfully"));
   },
