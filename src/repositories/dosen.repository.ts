@@ -41,6 +41,11 @@ export const dosenRepository = {
           createdAt: "desc",
         },
         where: whereClause,
+        include: {
+          lectureship: {
+            select: { id: true, name: true },
+          },
+        },
       }),
 
       // 2. Query untuk hitung total data
@@ -63,6 +68,11 @@ export const dosenRepository = {
   async getById(id: string) {
     return db.dosen.findUnique({
       where: { id },
+      include: {
+        lectureship: {
+          select: { id: true, name: true },
+        },
+      },
     });
   },
 

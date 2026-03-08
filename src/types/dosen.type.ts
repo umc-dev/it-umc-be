@@ -18,6 +18,12 @@ export interface Dosen {
   updatedAt: Date;
 }
 
+// Nested relation ref
+export interface LectureshipRef {
+  id: number;
+  name: string;
+}
+
 // Request DTO
 export type CreateDosenDTO = z.infer<typeof CreateDosenSchema>;
 
@@ -49,7 +55,7 @@ export interface DosenResponse {
   research: string;
   teaching: string;
   photo: string | null;
-  lectureshipId: number | null;
+  lectureship: LectureshipRef | null;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -4,6 +4,7 @@ import { lectureshipRepository } from "../repositories/lectureship.repository";
 import {
   CreateDosenData,
   CreateDosenDTO,
+  Dosen,
   DosenResponse,
   PaginatedDosenResponse,
   UpdateDosenData,
@@ -16,7 +17,7 @@ export const dosenService = {
   async create(
     data: CreateDosenDTO,
     file?: Express.Multer.File,
-  ): Promise<DosenResponse> {
+  ): Promise<Dosen> {
     let uploaded: { url: string } | null = null;
 
     try {
@@ -78,7 +79,7 @@ export const dosenService = {
     id: string,
     data: UpdateDosenDTO,
     file?: Express.Multer.File,
-  ): Promise<DosenResponse> {
+  ): Promise<Dosen> {
     const dosen = await dosenRepository.getById(id);
 
     if (!dosen) throw new NotFoundException("Dosen not found");
@@ -119,7 +120,7 @@ export const dosenService = {
   },
 
   // Delete dosen
-  async delete(id: string): Promise<DosenResponse> {
+  async delete(id: string): Promise<Dosen> {
     const dosen = await dosenRepository.getById(id);
 
     if (!dosen) throw new NotFoundException("Dosen not found");
