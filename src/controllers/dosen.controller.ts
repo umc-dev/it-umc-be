@@ -3,7 +3,6 @@ import fs from "fs";
 import path from "path";
 import {
   CreateDosenDTO,
-  Dosen,
   DosenResponse,
   PaginatedDosenResponse,
   UpdateDosenDTO,
@@ -20,7 +19,7 @@ export const dosenController = {
         ...req.body,
       };
 
-      const result: Dosen = await dosenService.create(body, req.file);
+      const result: DosenResponse = await dosenService.create(body, req.file);
 
       return res
         .status(201)
@@ -81,7 +80,7 @@ export const dosenController = {
         ...req.body,
       };
 
-      const result: Dosen = await dosenService.update(
+      const result: DosenResponse = await dosenService.update(
         id,
         body,
         req.file,

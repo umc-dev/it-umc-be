@@ -4,7 +4,21 @@ import { db } from "../utils/prisma";
 
 export const dosenRepository = {
   async create(data: CreateDosenData) {
-    return await db.dosen.create({ data });
+    return await db.dosen.create({
+      data,
+      include: {
+        positions: {
+          orderBy: {
+            startDate: "desc",
+          },
+          include: {
+            lectureship: {
+              select: { id: true, name: true },
+            },
+          },
+        },
+      },
+    });
   },
 
   async update(id: string, data: UpdateDosenData) {
@@ -12,6 +26,18 @@ export const dosenRepository = {
       where: { id },
       data: {
         ...removeUndefined(data),
+      },
+      include: {
+        positions: {
+          orderBy: {
+            startDate: "desc",
+          },
+          include: {
+            lectureship: {
+              select: { id: true, name: true },
+            },
+          },
+        },
       },
     });
   },
@@ -42,8 +68,15 @@ export const dosenRepository = {
         },
         where: whereClause,
         include: {
-          lectureship: {
-            select: { id: true, name: true },
+          positions: {
+            orderBy: {
+              startDate: "desc",
+            },
+            include: {
+              lectureship: {
+                select: { id: true, name: true },
+              },
+            },
           },
         },
       }),
@@ -69,8 +102,15 @@ export const dosenRepository = {
     return db.dosen.findUnique({
       where: { id },
       include: {
-        lectureship: {
-          select: { id: true, name: true },
+        positions: {
+          orderBy: {
+            startDate: "desc",
+          },
+          include: {
+            lectureship: {
+              select: { id: true, name: true },
+            },
+          },
         },
       },
     });
@@ -79,6 +119,18 @@ export const dosenRepository = {
   async delete(id: string) {
     return db.dosen.delete({
       where: { id },
+      include: {
+        positions: {
+          orderBy: {
+            startDate: "desc",
+          },
+          include: {
+            lectureship: {
+              select: { id: true, name: true },
+            },
+          },
+        },
+      },
     });
   },
 };

@@ -13,7 +13,6 @@ export interface Dosen {
   research: string;
   teaching: string;
   photo: string | null;
-  lectureshipId: number | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -22,6 +21,25 @@ export interface Dosen {
 export interface LectureshipRef {
   id: number;
   name: string;
+}
+
+export interface DosenPositionInput {
+  lectureshipId: number;
+  startDate: Date;
+  endDate?: Date | null;
+}
+
+export interface DosenPositionData extends DosenPositionInput {
+  lectureshipId: number;
+  startDate: Date;
+  endDate?: Date | null;
+}
+
+export interface DosenPositionResponse {
+  id: number;
+  startDate: Date;
+  endDate: Date | null;
+  lectureship: LectureshipRef;
 }
 
 // Request DTO
@@ -33,7 +51,9 @@ export interface CreateDosenData {
   research: string;
   teaching: string;
   photo: string;
-  lectureshipId?: number;
+  positions?: {
+    create: DosenPositionData[];
+  };
 }
 export type UpdateDosenDTO = z.infer<typeof UpdateDosenSchema>;
 
@@ -43,7 +63,10 @@ export interface UpdateDosenData {
   research?: string;
   teaching?: string;
   photo?: string;
-  lectureshipId?: number;
+  positions?: {
+    deleteMany: Record<string, never>;
+    create: DosenPositionData[];
+  };
 }
 
 // Response DTO
@@ -55,7 +78,7 @@ export interface DosenResponse {
   research: string;
   teaching: string;
   photo: string | null;
-  lectureship: LectureshipRef | null;
+  positions: DosenPositionResponse[];
   createdAt: Date;
   updatedAt: Date;
 }

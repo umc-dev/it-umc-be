@@ -4,8 +4,8 @@ import { lectureshipRepository } from "../repositories/lectureship.repository";
 import {
   CreateDosenData,
   CreateDosenDTO,
-  Dosen,
   DosenResponse,
+  DosenPositionData,
   PaginatedDosenResponse,
   UpdateDosenData,
   UpdateDosenDTO,
@@ -13,11 +13,35 @@ import {
 import { deleteUploadedFile, saveUploadedFile } from "../utils/file";
 
 export const dosenService = {
+  async validatePositions(
+    positions?: CreateDosenDTO["positions"],
+  ): Promise<DosenPositionData[] | undefined> {
+    if (!positions) return undefined;
+
+    await Promise.all(
+      positions.map(async (position) => {
+        const lectureship = await lectureshipRepository.getById(
+          position.lectureshipId,
+        );
+
+        if (!lectureship) {
+          throw new NotFoundException("Lectureship not found");
+        }
+      }),
+    );
+
+    return positions.map((position) => ({
+      lectureshipId: position.lectureshipId,
+      startDate: position.startDate,
+      endDate: position.endDate ?? null,
+    }));
+  },
+
   // Create dosen
   async create(
     data: CreateDosenDTO,
     file?: Express.Multer.File,
-  ): Promise<Dosen> {
+  ): Promise<DosenResponse> {
     let uploaded: { url: string } | null = null;
 
     try {
@@ -25,13 +49,7 @@ export const dosenService = {
         uploaded = saveUploadedFile(file);
       }
 
-      // Validasi lectureship jika lectureshipId disediakan
-      if(data.lectureshipId != undefined) {
-        const lectureship = await lectureshipRepository.getById(data.lectureshipId);
-        if(!lectureship) {
-          throw new NotFoundException('Lectureship not found');
-        }
-      }
+      const positions = await this.validatePositions(data.positions);
 
       const dataToSave: CreateDosenData = {
         name: data.name,
@@ -39,7 +57,11 @@ export const dosenService = {
         photo: uploaded.url,
         research: data.research,
         teaching: data.teaching,
-        lectureshipId: data.lectureshipId,
+        ...(positions && {
+          positions: {
+            create: positions,
+          },
+        }),
       };
 
       return await dosenRepository.create(dataToSave);
@@ -79,7 +101,7 @@ export const dosenService = {
     id: string,
     data: UpdateDosenDTO,
     file?: Express.Multer.File,
-  ): Promise<Dosen> {
+  ): Promise<DosenResponse> {
     const dosen = await dosenRepository.getById(id);
 
     if (!dosen) throw new NotFoundException("Dosen not found");
@@ -92,8 +114,10 @@ export const dosenService = {
       newPhotoUrl = saved.url;
     }
 
+    const { positions: rawPositions, ...restData } = data;
+
     const updateData: UpdateDosenData = {
-      ...data,
+      ...restData,
     };
 
     // set thumbnail jika upload baru
@@ -101,12 +125,12 @@ export const dosenService = {
       updateData.photo = newPhotoUrl;
     }
 
-    // Validasi lectureship jika lectureshipId disediakan
-    if(data.lectureshipId != undefined) {
-      const lectureship = await lectureshipRepository.getById(data.lectureshipId);
-      if(!lectureship) {
-        throw new NotFoundException('Lectureship not found');
-      }
+    if (rawPositions) {
+      const positions = await this.validatePositions(rawPositions);
+      updateData.positions = {
+        deleteMany: {},
+        create: positions ?? [],
+      };
     }
 
     const updated = await dosenRepository.update(id, updateData);
@@ -120,7 +144,7 @@ export const dosenService = {
   },
 
   // Delete dosen
-  async delete(id: string): Promise<Dosen> {
+  async delete(id: string): Promise<DosenResponse> {
     const dosen = await dosenRepository.getById(id);
 
     if (!dosen) throw new NotFoundException("Dosen not found");

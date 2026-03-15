@@ -72,33 +72,44 @@ model news {
 }
 
 model Lectureship {
-  id          Int @id @default(autoincrement())
-  name        String @db.VarChar(50)
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  dosen       dosen[]
+  id          Int                 @id @default(autoincrement())
+  name        String              @db.VarChar(50)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  assignments DosenLectureship[]
 
   @@map("lectureships")
 }
 
 model dosen {
-  id            String @id @default(uuid())
+  id            String             @id @default(uuid())
   name          String
   expertise     String
   photo         String
   teaching      String
   research      String
-  lectureshipId Int?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  lectureship   Lectureship? @relation(fields: [lectureshipId], references: [id], map: "News_lectureshipId_fkey", onDelete : SetNull)
-
-  @@index([lectureshipId], map: "News_lectureshipId_fkey")
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  positions     DosenLectureship[]
 
   @@map("dosen")
+}
+
+model DosenLectureship {
+  id            Int         @id @default(autoincrement())
+  dosenId       String
+  lectureshipId Int
+  startDate     DateTime    @db.Date
+  endDate       DateTime?   @db.Date
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  dosen         dosen       @relation(fields: [dosenId], references: [id], onDelete: Cascade)
+  lectureship   Lectureship @relation(fields: [lectureshipId], references: [id], onDelete: Cascade)
+
+  @@index([dosenId], map: "DosenLectureship_dosenId_fkey")
+  @@index([lectureshipId], map: "DosenLectureship_lectureshipId_fkey")
+  @@map("dosen_lectureships")
 }
 
 model StatisticStudent  {

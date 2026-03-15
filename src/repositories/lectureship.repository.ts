@@ -51,9 +51,19 @@ export const lectureshipRepository = {
     return db.lectureship.findUnique({
       where: { id },
       include: {
-        dosen: {
+        assignments: {
           orderBy: {
-            createdAt: 'desc',
+            startDate: 'desc',
+          },
+          include: {
+            dosen: {
+              select: {
+                id: true,
+                name: true,
+                photo: true,
+                expertise: true,
+              },
+            },
           },
         },
       },

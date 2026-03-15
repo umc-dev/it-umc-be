@@ -3,9 +3,7 @@ import {
   UpdateLectureshipSchema,
 } from '../validator/lectureship.validator';
 import { PaginationMeta } from '.';
-import { News } from './news.type';
 import z from 'zod';
-import { Dosen } from './dosen.type';
 
 // Lectureship DTO
 export interface Lectureship {
@@ -46,15 +44,33 @@ export interface PaginatedLectureshipResponse {
 }
 
 export interface LectureshipWithDosenResponse extends LectureshipResponse {
+  assignments: {
+    id: number;
+    startDate: Date;
+    endDate: Date | null;
+    dosenId: string;
+    dosen: {
+      id: string;
+      name: string;
+      photo: string;
+      expertise: string;
+    };
+  }[];
+}
+
+export interface LectureshipAssignment {
+  id: number;
+  startDate: Date;
+  endDate: Date | null;
+  dosenId: string;
   dosen: {
     id: string;
     name: string;
     photo: string;
-    createdAt: Date;
-    updatedAt: Date;
-  }[];
+    expertise: string;
+  };
 }
 
 export interface LectureshipWithDosen extends Lectureship {
-  dosen: Dosen[];
+  assignments: LectureshipAssignment[];
 }
