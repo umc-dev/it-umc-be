@@ -154,3 +154,15 @@ model Study {
 
   @@map("study")
 }
+
+model Achievement {
+  id              Int      @id @default(autoincrement())
+  name            String   @db.VarChar(255)
+  achievementName String @db.VarChar(255)
+  link            String   @db.VarChar(255)
+  achievedAt      DateTime @db.Date
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("achievements")
+}

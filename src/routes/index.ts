@@ -12,6 +12,7 @@ import visionMissionRouter from "./visionMission.route";
 import partnershipsRouter from "./partnerships.route";
 import alumniRouter from "./alumni.route";
 import studyRouter from "./study.route";
+import achievementRouter from "./achievement.route";
 
 const router: IRouter = Router();
 
@@ -27,6 +28,7 @@ router.use("/vision-mission", visionMissionRouter);
 router.use("/partnerships", partnershipsRouter);
 router.use("/alumni", alumniRouter);
 router.use("/studies", studyRouter);
+router.use("/achievement", achievementRouter);
 
 // kalau nanti ada routes lain
 // router.use("/news", newsRoutes);

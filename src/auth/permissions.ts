@@ -13,6 +13,7 @@ export const PERMISSIONS = {
   PARTNERSHIP_MANAGE: "partnership:manage",
   ALUMNI_MANAGE: "alumni:manage",
   STUDY_MANAGE: "study:manage",
+  ACHIEVEMENT_MANAGE: "achievement:manage",
 } as const;
 
 export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
