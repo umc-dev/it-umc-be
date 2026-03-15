@@ -7,16 +7,11 @@ import {
 import { removeUndefined } from '../utils';
 import { db } from '../utils/prisma';
 
+// Untuk mengubah photo menjadi null jika tidak ada
 function toAlumniResponse(data: any): AlumniResponse {
   return {
-    id: data.id,
-    name: data.name,
+    ...data,
     photo: data.photo ?? null,
-    video: data.video,
-    message: data.message,
-    year: data.year,
-    createdAt: data.createdAt,
-    updatedAt: data.updatedAt,
   };
 }
 
