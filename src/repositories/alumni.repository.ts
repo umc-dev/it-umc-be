@@ -1,18 +1,39 @@
 import {
+  AlumniResponse,
+  PaginatedAlumniResponse,
   CreateAlumniData,
   UpdateAlumniData,
 } from '../types/alumni.type';
 import { removeUndefined } from '../utils';
 import { db } from '../utils/prisma';
 
+function toAlumniResponse(data: any): AlumniResponse {
+  return {
+    id: data.id,
+    name: data.name,
+    photo: data.photo ?? null,
+    video: data.video,
+    message: data.message,
+    year: data.year,
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
+  };
+}
+
 export const alumniRepository = {
-  async add(data: CreateAlumniData) {
-    return await db.alumni.create({
+  async add(data: CreateAlumniData): Promise<AlumniResponse> {
+    const alumni = await db.alumni.create({
       data,
     });
+
+    return toAlumniResponse(alumni);
   },
 
-  async getAll(limit: number, page: number, search: string) {
+  async getAll(
+    limit: number,
+    page: number,
+    search: string,
+  ): Promise<PaginatedAlumniResponse> {
     const skip = (page - 1) * limit;
     const whereClause = search
       ? {
@@ -40,7 +61,7 @@ export const alumniRepository = {
     ]);
 
     return {
-      data: alumni,
+      data: alumni.map(toAlumniResponse),
       meta: {
         total,
         page,
@@ -50,24 +71,30 @@ export const alumniRepository = {
     };
   },
 
-  async getAlumniById(id: string) {
-    return await db.alumni.findUnique({
+  async getAlumniById(id: string): Promise<AlumniResponse | null> {
+    const alumni = await db.alumni.findUnique({
       where: { id },
     });
+
+    return alumni ? toAlumniResponse(alumni) : null;
   },
 
-  async update(id: string, data: UpdateAlumniData) {
-    return await db.alumni.update({
+  async update(id: string, data: UpdateAlumniData): Promise<AlumniResponse> {
+    const alumni = await db.alumni.update({
       where: { id },
       data: {
         ...removeUndefined(data),
       },
     });
+
+    return toAlumniResponse(alumni);
   },
 
-  async delete(id: string) {
-    return db.alumni.delete({
+  async delete(id: string): Promise<AlumniResponse> {
+    const alumni = await db.alumni.delete({
       where: { id },
     });
+
+    return toAlumniResponse(alumni);
   },
 };

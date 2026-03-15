@@ -1,4 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
+import fs from 'fs';
+import path from 'path';
 import {
   CreateAlumniDto,
   PaginatedAlumniResponse,
@@ -17,13 +19,18 @@ export const alumniController = {
       };
 
       const result: AlumniResponse = await alumniService.create(
-        body
+        body,
+        req.file,
       );
 
       return res
         .status(201)
         .json(ResponseHTTP.created(result, 'Alumni created'));
     } catch (err) {
+      if (req.file) {
+        const filepath = path.join("uploads", req.file.filename);
+        fs.unlink(filepath, () => null);
+      }
       next(err);
     }
   },
@@ -76,7 +83,8 @@ export const alumniController = {
 
       const result: AlumniResponse = await alumniService.update(
         id,
-        body
+        body,
+        req.file,
       );
       return res
         .status(200)

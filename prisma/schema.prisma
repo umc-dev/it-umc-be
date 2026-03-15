@@ -148,6 +148,7 @@ model Partnership {
 model Alumni {
   id       String @id @default(uuid())
   name      String
+  photo     String?
   video     String
   message   String @db.Text
   year      Int @db.UnsignedMediumInt

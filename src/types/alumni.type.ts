@@ -9,6 +9,7 @@ import z from 'zod';
 export interface Alumni {
   id: string;
   name: string;
+  photo: string | null;
   video: string;
   message: string; 
   year: number;
@@ -23,6 +24,7 @@ export type CreateAlumniDto = z.infer<
 
 export interface CreateAlumniData {
   name: string;
+  photo?: string | null;
   video: string;
   message: string;
   year: number;
@@ -34,6 +36,7 @@ export type UpdateAlumniDto = z.infer<
 
 export interface UpdateAlumniData {
   name?: string;
+  photo?: string | null;
   video?: string;
   message?: string;
   year?: number;
@@ -43,6 +46,7 @@ export interface UpdateAlumniData {
 export interface AlumniResponse {
   id: string;
   name: string;
+  photo: string | null;
   video: string;
   message: string;
   year: number;
