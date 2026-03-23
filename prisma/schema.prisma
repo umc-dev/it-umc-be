@@ -178,3 +178,10 @@ model Achievement {
 
   @@map("achievements")
 }
+
+model OrganizationalStructure {
+  image       String @id @db.VarChar(255)
+  description String @db.Text
+
+  @@map("organizational_structure")
+}
