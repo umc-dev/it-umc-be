@@ -32,6 +32,9 @@ const envSchema = z.object({
 
   // Allowed Origins
   ALLOWED_ORIGINS: z.string(),
+
+  // Chatbot API KEY
+  GROQ_API_KEY: z.string(),
 });
 
 const parsed = envSchema.safeParse(process.env);
