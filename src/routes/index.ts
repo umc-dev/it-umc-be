@@ -13,6 +13,7 @@ import partnershipsRouter from "./partnerships.route";
 import alumniRouter from "./alumni.route";
 import studyRouter from "./study.route";
 import achievementRouter from "./achievement.route";
+import facilityRouter from "./facility.route";
 import { chatbotRouter } from "./chatbot.route";
 
 const router: IRouter = Router();
@@ -30,6 +31,7 @@ router.use("/partnerships", partnershipsRouter);
 router.use("/alumni", alumniRouter);
 router.use("/studies", studyRouter);
 router.use("/achievement", achievementRouter);
+router.use("/facilities", facilityRouter);
 router.use("/chatbot", chatbotRouter);
 
 // kalau nanti ada routes lain

@@ -178,3 +178,14 @@ model Achievement {
 
   @@map("achievements")
 }
+
+model Facility {
+  id                 Int      @id @default(autoincrement())
+  name               String   @db.VarChar(100)
+  description        String   @db.Text
+  photo              String   @db.VarChar(255)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@map("facilities")
+}
