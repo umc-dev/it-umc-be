@@ -52,6 +52,7 @@ export const dosenService = {
       const positions = await this.validatePositions(data.positions);
 
       const dataToSave: CreateDosenData = {
+        nidn: data.nidn,
         name: data.name,
         expertise: data.expertise,
         photo: uploaded.url,

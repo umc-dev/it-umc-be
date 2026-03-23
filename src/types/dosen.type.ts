@@ -8,6 +8,7 @@ import { PaginationMeta } from ".";
 // Lecturer Model
 export interface Dosen {
   id: string;
+  nidn: string;
   name: string;
   expertise: string;
   research: string;
@@ -46,6 +47,7 @@ export interface DosenPositionResponse {
 export type CreateDosenDTO = z.infer<typeof CreateDosenSchema>;
 
 export interface CreateDosenData {
+  nidn: string;
   name: string;
   expertise: string;
   research: string;
@@ -58,6 +60,7 @@ export interface CreateDosenData {
 export type UpdateDosenDTO = z.infer<typeof UpdateDosenSchema>;
 
 export interface UpdateDosenData {
+  nidn?: string;
   name?: string;
   expertise?: string;
   research?: string;
@@ -73,6 +76,7 @@ export interface UpdateDosenData {
 
 export interface DosenResponse {
   id: string;
+  nidn: string;
   name: string;
   expertise: string;
   research: string;

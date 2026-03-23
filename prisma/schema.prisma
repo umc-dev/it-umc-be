@@ -83,6 +83,7 @@ model Lectureship {
 
 model dosen {
   id            String             @id @default(uuid())
+  nidn          String             @unique
   name          String
   expertise     String
   photo         String
@@ -179,14 +180,13 @@ model Achievement {
   @@map("achievements")
 }
 
-<<<<<<< HEAD
 model OrganizationalStructure {
   image       String @id @db.VarChar(255)
   description String @db.Text
 
   @@map("organizational_structure")
 }
-=======
+
 model Facility {
   id                 Int      @id @default(autoincrement())
   name               String   @db.VarChar(100)
@@ -197,4 +197,3 @@ model Facility {
 
   @@map("facilities")
 }
->>>>>>> d4344c41719e1f876d4e6a3ba3ad1513012c27fa
