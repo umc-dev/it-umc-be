@@ -26,10 +26,10 @@ facilityRouter.get("/:id", facilityController.getById);
 
 facilityRouter.use(
   authMiddleware,
-  requirePermission(PERMISSIONS.VISION_MISSION_MANAGE),
+  requirePermission(PERMISSIONS.FACILITY_MANAGE),
 );
 
-// CREATE VISION MISSION
+// CREATE FACILITY
 facilityRouter.post(
   '/',
   upload.single('photo'),

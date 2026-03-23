@@ -25,10 +25,10 @@ lectureshipRouter.get("/:id", lectureshipController.getById);
 
 lectureshipRouter.use(
   authMiddleware,
-  requirePermission(PERMISSIONS.VISION_MISSION_MANAGE),
+  requirePermission(PERMISSIONS.LECTURESHIP_MANAGE),
 );
 
-// CREATE VISION MISSION
+// CREATE LECTURESHIP
 lectureshipRouter.post(
   "/",
   validate(CreateLectureshipSchema),
