@@ -71,15 +71,46 @@ model news {
   @@map("news")
 }
 
+model Lectureship {
+  id          Int                 @id @default(autoincrement())
+  name        String              @db.VarChar(50)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  assignments DosenLectureship[]
+
+  @@map("lectureships")
+}
+
 model dosen {
-  id          String @id @default(uuid())
-  name        String
-  expertise   String
-  photo       String
-  teaching    String
-  research    String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String             @id @default(uuid())
+  nidn          String             @unique
+  name          String
+  expertise     String
+  photo         String
+  teaching      String
+  research      String
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  positions     DosenLectureship[]
+
+  @@map("dosen")
+}
+
+model DosenLectureship {
+  id            Int         @id @default(autoincrement())
+  dosenId       String
+  lectureshipId Int
+  startDate     DateTime    @db.Date
+  endDate       DateTime?   @db.Date
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  dosen         dosen       @relation(fields: [dosenId], references: [id], onDelete: Cascade)
+  lectureship   Lectureship @relation(fields: [lectureshipId], references: [id], onDelete: Cascade)
+
+  @@index([dosenId], map: "DosenLectureship_dosenId_fkey")
+  @@index([lectureshipId], map: "DosenLectureship_lectureshipId_fkey")
+  @@map("dosen_lectureships")
 }
 
 model StatisticStudent  {
@@ -118,6 +149,7 @@ model Partnership {
 model Alumni {
   id       String @id @default(uuid())
   name      String
+  photo     String?
   video     String
   message   String @db.Text
   year      Int @db.UnsignedMediumInt
@@ -134,4 +166,44 @@ model Study {
   updatedAt          DateTime @updatedAt
 
   @@map("study")
+}
+
+model Achievement {
+  id              Int      @id @default(autoincrement())
+  name            String   @db.VarChar(255)
+  achievementName String @db.VarChar(255)
+  link            String   @db.VarChar(255)
+  achievedAt      DateTime @db.Date
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("achievements")
+}
+
+model OrganizationalStructure {
+  image       String @id @db.VarChar(255)
+  description String @db.Text
+
+  @@map("organizational_structure")
+}
+
+model Facility {
+  id                 Int      @id @default(autoincrement())
+  name               String   @db.VarChar(100)
+  description        String   @db.Text
+  photo              String   @db.VarChar(255)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@map("facilities")
+}
+
+model ChatbotContext {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(100)
+  context   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("chatbot_contexts")
 }

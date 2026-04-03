@@ -4,7 +4,21 @@ import { db } from "../utils/prisma";
 
 export const dosenRepository = {
   async create(data: CreateDosenData) {
-    return await db.dosen.create({ data });
+    return await db.dosen.create({
+      data,
+      include: {
+        positions: {
+          orderBy: {
+            startDate: "desc",
+          },
+          include: {
+            lectureship: {
+              select: { id: true, name: true },
+            },
+          },
+        },
+      },
+    });
   },
 
   async update(id: string, data: UpdateDosenData) {
@@ -12,6 +26,18 @@ export const dosenRepository = {
       where: { id },
       data: {
         ...removeUndefined(data),
+      },
+      include: {
+        positions: {
+          orderBy: {
+            startDate: "desc",
+          },
+          include: {
+            lectureship: {
+              select: { id: true, name: true },
+            },
+          },
+        },
       },
     });
   },
@@ -41,6 +67,18 @@ export const dosenRepository = {
           createdAt: "desc",
         },
         where: whereClause,
+        include: {
+          positions: {
+            orderBy: {
+              startDate: "desc",
+            },
+            include: {
+              lectureship: {
+                select: { id: true, name: true },
+              },
+            },
+          },
+        },
       }),
 
       // 2. Query untuk hitung total data
@@ -63,12 +101,36 @@ export const dosenRepository = {
   async getById(id: string) {
     return db.dosen.findUnique({
       where: { id },
+      include: {
+        positions: {
+          orderBy: {
+            startDate: "desc",
+          },
+          include: {
+            lectureship: {
+              select: { id: true, name: true },
+            },
+          },
+        },
+      },
     });
   },
 
   async delete(id: string) {
     return db.dosen.delete({
       where: { id },
+      include: {
+        positions: {
+          orderBy: {
+            startDate: "desc",
+          },
+          include: {
+            lectureship: {
+              select: { id: true, name: true },
+            },
+          },
+        },
+      },
     });
   },
 };

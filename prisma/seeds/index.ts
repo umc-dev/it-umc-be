@@ -4,12 +4,14 @@ import { seedNews } from "./news.seed";
 import { seedCategory } from "./category.seed";
 import { seedVisionMission } from "./visionMission.seed";
 import { seedAlumni } from "./alumni.seed";
+import { seedChatbotContext } from "./chatbotContext.seed";
 
 const prisma = new PrismaClient();
 
 async function main() {
   console.log("Running seeders...");
   await seedAdmins();
+  await seedChatbotContext();
   console.log("Seeding finished.");
 }
 

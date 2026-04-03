@@ -1,9 +1,11 @@
 import NotFoundException from "../exceptions/NotFoundException";
 import { dosenRepository } from "../repositories/dosen.repository";
+import { lectureshipRepository } from "../repositories/lectureship.repository";
 import {
   CreateDosenData,
   CreateDosenDTO,
   DosenResponse,
+  DosenPositionData,
   PaginatedDosenResponse,
   UpdateDosenData,
   UpdateDosenDTO,
@@ -11,6 +13,30 @@ import {
 import { deleteUploadedFile, saveUploadedFile } from "../utils/file";
 
 export const dosenService = {
+  async validatePositions(
+    positions?: CreateDosenDTO["positions"],
+  ): Promise<DosenPositionData[] | undefined> {
+    if (!positions) return undefined;
+
+    await Promise.all(
+      positions.map(async (position) => {
+        const lectureship = await lectureshipRepository.getById(
+          position.lectureshipId,
+        );
+
+        if (!lectureship) {
+          throw new NotFoundException("Lectureship not found");
+        }
+      }),
+    );
+
+    return positions.map((position) => ({
+      lectureshipId: position.lectureshipId,
+      startDate: position.startDate,
+      endDate: position.endDate ?? null,
+    }));
+  },
+
   // Create dosen
   async create(
     data: CreateDosenDTO,
@@ -23,12 +49,20 @@ export const dosenService = {
         uploaded = saveUploadedFile(file);
       }
 
+      const positions = await this.validatePositions(data.positions);
+
       const dataToSave: CreateDosenData = {
+        nidn: data.nidn,
         name: data.name,
         expertise: data.expertise,
         photo: uploaded.url,
         research: data.research,
         teaching: data.teaching,
+        ...(positions && {
+          positions: {
+            create: positions,
+          },
+        }),
       };
 
       return await dosenRepository.create(dataToSave);
@@ -81,13 +115,23 @@ export const dosenService = {
       newPhotoUrl = saved.url;
     }
 
+    const { positions: rawPositions, ...restData } = data;
+
     const updateData: UpdateDosenData = {
-      ...data,
+      ...restData,
     };
 
     // set thumbnail jika upload baru
     if (newPhotoUrl) {
       updateData.photo = newPhotoUrl;
+    }
+
+    if (rawPositions) {
+      const positions = await this.validatePositions(rawPositions);
+      updateData.positions = {
+        deleteMany: {},
+        create: positions ?? [],
+      };
     }
 
     const updated = await dosenRepository.update(id, updateData);

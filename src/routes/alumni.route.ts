@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { alumniController } from "../controllers/alumni.controller";
+import upload from "../middlewares/upload.middleware";
 import { validate } from "../middlewares/validation.middleware";
 import {
   CreateAlumniSchema,
@@ -26,10 +27,20 @@ alumniRouter.get("/:id", alumniController.getById);
 alumniRouter.use(authMiddleware, requirePermission(PERMISSIONS.ALUMNI_MANAGE));
 
 // CREATE ALUMNI
-alumniRouter.post("/", validate(CreateAlumniSchema), alumniController.create);
+alumniRouter.post(
+  "/",
+  upload.single("photo"),
+  validate(CreateAlumniSchema),
+  alumniController.create,
+);
 
 // UPDATE ALUMNI
-alumniRouter.put("/:id", validate(UpdateAlumniSchema), alumniController.update);
+alumniRouter.put(
+  "/:id",
+  upload.single("photo"),
+  validate(UpdateAlumniSchema),
+  alumniController.update,
+);
 
 // DELETE ALUMNI
 alumniRouter.delete("/:id", alumniController.delete);

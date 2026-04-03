@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { dosenController } from "../controllers/dosen.controller";
 import upload from "../middlewares/upload.middleware";
+import { parseDosenPositions } from "../middlewares/parseDosenPositions.middleware";
 import { validate } from "../middlewares/validation.middleware";
 import {
   CreateDosenSchema,
@@ -32,6 +33,7 @@ dosenRouter.use(authMiddleware, requirePermission(PERMISSIONS.DOSEN_MANAGE));
 dosenRouter.post(
   "/",
   upload.single("photo"),
+  parseDosenPositions,
   validate(CreateDosenSchema),
   dosenController.create,
 );
@@ -40,6 +42,7 @@ dosenRouter.post(
 dosenRouter.put(
   "/:id",
   upload.single("photo"),
+  parseDosenPositions,
   validate(UpdateDosenSchema),
   dosenController.update,
 );

@@ -4,12 +4,12 @@ export const CreateAlumniSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   video: z.url().min(1, 'Video URL is required'),
   message: z.string().min(1, 'Message is required'),
-  year: z.number().min(2000, 'Year must be 2000 or later'),
+  year: z.coerce.number().min(2000, 'Year must be 2000 or later'),
 });
 
 export const UpdateAlumniSchema = z.object({
   name: z.string().optional(),
   video: z.url().optional(),
   message: z.string().optional(),
-  year: z.number().optional(),
+  year: z.coerce.number().optional(),
 });
