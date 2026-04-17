@@ -9,9 +9,14 @@ import {
   UpdateDosenTridharmaDto,
 } from '../types/dosenTridharma.type';
 import NotFoundException from '../exceptions/NotFoundException';
+import { dosenRepository } from '../repositories/dosen.repository';
 
 export const dosenTridharmaService = {
   async create(data: CreateDosenTridharmaDto): Promise<DosenTridharmaResponse> {
+    const dosen = await dosenRepository.getById(data.dosenId);
+    
+    if (!dosen) throw new NotFoundException('Dosen not found');
+
     const dataToSave: CreateDosenTridharmaData = {
       dosenId: data.dosenId,
       category: data.category,
@@ -55,6 +60,11 @@ export const dosenTridharmaService = {
     const dosenTridharma = await dosenTridharmaRepository.getById(id);
 
     if (!dosenTridharma) throw new NotFoundException('Dosen Tridharma not found');
+
+    if(data.dosenId) {
+      const dosen = await dosenRepository.getById(data.dosenId);
+      if (!dosen) throw new NotFoundException('Dosen not found');
+    }
 
     const dataToUpdate: UpdateDosenTridharmaData = {
       ...data,
