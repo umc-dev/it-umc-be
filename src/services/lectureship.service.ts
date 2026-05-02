@@ -35,7 +35,7 @@ export const lectureshipService = {
     };
   },
 
-  async getById(id: number): Promise<LectureshipWithDosenResponse | null> {
+  async getById(id: number): Promise<LectureshipWithDosenResponse> {
     const lectureship = await lectureshipRepository.getById(id);
 
     if (!lectureship) throw new NotFoundException('Lectureship not found');

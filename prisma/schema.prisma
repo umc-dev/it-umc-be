@@ -13,6 +13,12 @@ enum AdminRole {
   EDITOR
 }
 
+enum DosenTridharmaCategory {
+  PENGABDIAN
+  PENGAJARAN
+  PENELITIAN
+}
+
 model admin {
   id        String          @id @default(uuid())
   email     String          @unique
@@ -92,6 +98,7 @@ model dosen {
   createdAt     DateTime           @default(now())
   updatedAt     DateTime           @updatedAt
   positions     DosenLectureship[]
+  dosenTridharmas      DosenTridharma[]
 
   @@map("dosen")
 }
@@ -206,4 +213,21 @@ model ChatbotContext {
   updatedAt DateTime @updatedAt
 
   @@map("chatbot_contexts")
+}
+
+model DosenTridharma {
+  id            Int         @id @default(autoincrement())
+  dosenId       String      
+  category      DosenTridharmaCategory
+  title         String      @db.VarChar(100)
+  year          Int         @db.UnsignedMediumInt
+  description   String      @db.Text
+  link          String      @db.VarChar(255)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  dosen         dosen       @relation(fields: [dosenId], references: [id], onDelete: Cascade)
+
+  @@index([dosenId], map: "DosenTridharma_dosenId_fkey")
+  @@map("dosen_tridharmas")
 }

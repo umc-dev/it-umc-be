@@ -16,6 +16,7 @@ import achievementRouter from "./achievement.route";
 import facilityRouter from "./facility.route";
 import { chatbotRouter } from "./chatbot.route";
 import organizationalStructureRouter from "./organizationalStructure.route";
+import dosenTridharmaRouter from "./dosenTridharma.route";
 
 const router: IRouter = Router();
 
@@ -35,6 +36,7 @@ router.use("/achievement", achievementRouter);
 router.use("/facilities", facilityRouter);
 router.use("/chatbot", chatbotRouter);
 router.use("/organizational-structure", organizationalStructureRouter);
+router.use("/dosen-tridharma", dosenTridharmaRouter);
 
 // kalau nanti ada routes lain
 // router.use("/news", newsRoutes);
