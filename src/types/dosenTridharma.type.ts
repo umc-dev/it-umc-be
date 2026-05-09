@@ -72,5 +72,11 @@ export interface DosenTridharmaWithDosenResponse extends DosenTridharmaResponse 
     id: string;
     nidn: string;
     name: string;
+    expertise: string;
+    photo: string;
+    teaching: string;
+    research: string;
+    createdAt: Date;
+    updatedAt: Date;
   };
 }
