@@ -1,6 +1,7 @@
 import { IRouter, Router } from "express";
 import { chatbotController } from "../controllers/chatbot.controller";
 import { chatbotFileController } from "../controllers/chatbotFile.controller";
+import { chatbotContextController } from "../controllers/chatbotContext.controller";
 import { validate } from "../middlewares/validation.middleware";
 import { ChatbotSchema } from "../validator/chatbot.validator";
 import { authMiddleware } from "../middlewares/auth.middleware";
@@ -34,4 +35,18 @@ chatbotRouter.delete(
   authMiddleware,
   chatbotFileController.deleteFile,
 );
+
+// Text-based General Context Management (Protected for logged in admins)
+chatbotRouter.get(
+  "/contexts/:name",
+  authMiddleware,
+  chatbotContextController.getContext,
+);
+
+chatbotRouter.put(
+  "/contexts/:name",
+  authMiddleware,
+  chatbotContextController.upsertContext,
+);
+
 
