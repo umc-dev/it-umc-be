@@ -38,6 +38,11 @@ export const dosenRepository = {
             },
           },
         },
+        dosenTridharmas: {
+          orderBy: {
+            createdAt: 'desc',
+          },
+        },
       },
     });
   },
@@ -78,6 +83,11 @@ export const dosenRepository = {
               },
             },
           },
+          dosenTridharmas: {
+            orderBy: {
+              createdAt: "desc", 
+            },
+          },
         },
       }),
 
@@ -104,12 +114,17 @@ export const dosenRepository = {
       include: {
         positions: {
           orderBy: {
-            startDate: "desc",
+            startDate: 'desc',
           },
           include: {
             lectureship: {
               select: { id: true, name: true },
             },
+          },
+        },
+        dosenTridharmas: {
+          orderBy: {
+            createdAt: 'desc',
           },
         },
       },

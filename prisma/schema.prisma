@@ -7,22 +7,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum AdminRole {
-  SUPER_ADMIN
-  ADMIN
-  EDITOR
-}
-
 model admin {
-  id        String          @id @default(uuid())
-  email     String          @unique
+  id        String         @id @default(uuid())
+  email     String         @unique
   name      String?
   password  String?
   avatar    String?
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
-  role      AdminRole       @default(ADMIN)
-
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  role      AdminRole      @default(ADMIN)
   accounts  AdminAccount[]
   news      news[]
 
@@ -30,14 +23,14 @@ model admin {
 }
 
 model AdminAccount {
-  id                String   @id @default(uuid())
-  provider          String   // "google"
+  id                String @id @default(uuid())
+  provider          String
   providerAccountId String
-
-  admin   admin   @relation(fields: [adminId], references: [id], onDelete: Cascade)
-  adminId String
+  adminId           String
+  admin             admin  @relation(fields: [adminId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([adminId], map: "admin_accounts_adminId_fkey")
   @@map("admin_accounts")
 }
 
@@ -58,43 +51,66 @@ model news {
   content    String   @db.Text
   authorId   String
   thumbnail  String
-  slug       String @unique
+  slug       String   @unique
   categoryId Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  admin      admin    @relation(fields: [authorId], references: [id], map: "News_authorId_fkey", onDelete : Cascade)
-  category   category @relation(fields: [categoryId], references: [id], map: "News_categoryId_fkey", onDelete : Restrict)
+  admin      admin    @relation(fields: [authorId], references: [id], onDelete: Cascade, map: "News_authorId_fkey")
+  category   category @relation(fields: [categoryId], references: [id], map: "News_categoryId_fkey")
 
   @@index([authorId], map: "News_authorId_fkey")
   @@index([categoryId], map: "News_categoryId_fkey")
-
   @@map("news")
 }
 
 model Lectureship {
-  id          Int                 @id @default(autoincrement())
-  name        String              @db.VarChar(50)
-  createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @updatedAt
+  id          Int                @id @default(autoincrement())
+  name        String             @db.VarChar(50)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
   assignments DosenLectureship[]
 
   @@map("lectureships")
 }
 
 model dosen {
-  id            String             @id @default(uuid())
-  nidn          String             @unique
-  name          String
-  expertise     String
-  photo         String
-  teaching      String
-  research      String
-  createdAt     DateTime           @default(now())
-  updatedAt     DateTime           @updatedAt
-  positions     DosenLectureship[]
+  id              String             @id @default(uuid())
+  name            String
+  expertise       String
+  photo           String
+  teaching        String
+  research        String
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  nidn            String             @unique
+  positions       DosenLectureship[]
+  dosenTridharmas DosenTridharma[]
 
   @@map("dosen")
 }
+
+model DosenTridharma {
+  id          Int                    @id @default(autoincrement())
+  dosenId     String
+  category    DosenTridharmaCategory
+  title       String
+  year        Int
+  description String                 @db.Text
+  link        String
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+  dosen       dosen                  @relation(fields: [dosenId], references: [id], onDelete: Cascade)
+
+  @@index([dosenId])
+  @@map("dosen_tridharmas")
+}
+
+enum DosenTridharmaCategory {
+  PENGABDIAN
+  PENGAJARAN
+  PENELITIAN
+}
+
 
 model DosenLectureship {
   id            Int         @id @default(autoincrement())
@@ -104,7 +120,6 @@ model DosenLectureship {
   endDate       DateTime?   @db.Date
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
-
   dosen         dosen       @relation(fields: [dosenId], references: [id], onDelete: Cascade)
   lectureship   Lectureship @relation(fields: [lectureshipId], references: [id], onDelete: Cascade)
 
@@ -113,57 +128,57 @@ model DosenLectureship {
   @@map("dosen_lectureships")
 }
 
-model StatisticStudent  {
-  id                 String @id @default(uuid())
-  year              Int @unique @db.UnsignedMediumInt
-  enteredStudents    Int @db.UnsignedMediumInt
-  graduatedStudents  Int @db.UnsignedMediumInt
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+model StatisticStudent {
+  id                String   @id @default(uuid())
+  year              Int      @unique @db.UnsignedMediumInt
+  enteredStudents   Int      @db.UnsignedMediumInt
+  graduatedStudents Int      @db.UnsignedMediumInt
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   @@map("statistic_student")
 }
 
 model VisionMission {
-  id       Int @id @default(autoincrement())
-  vision   String @db.Text
-  mission  String @db.Text
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  vision    String   @db.Text
+  mission   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("vission_mission")
 }
 
 model Partnership {
-  id            String      @id @default(uuid())
-  name          String   @db.VarChar(255)
-  photo         String?   @db.VarChar(255)
-  startDate     DateTime @db.Date
-  endDate       DateTime @db.Date
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id        String   @id @default(uuid())
+  name      String   @db.VarChar(255)
+  photo     String?  @db.VarChar(255)
+  startDate DateTime @db.Date
+  endDate   DateTime @db.Date
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("partnerships")
 }
 
 model Alumni {
-  id       String @id @default(uuid())
+  id        String   @id @default(uuid())
   name      String
-  photo     String?
   video     String
-  message   String @db.Text
-  year      Int @db.UnsignedMediumInt
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  message   String   @db.Text
+  year      Int      @db.UnsignedMediumInt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  photo     String?
 
   @@map("alumni")
 }
 
 model Study {
-  id                 Int @id @default(autoincrement())
-  source             String
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  source    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("study")
 }
@@ -171,11 +186,11 @@ model Study {
 model Achievement {
   id              Int      @id @default(autoincrement())
   name            String   @db.VarChar(255)
-  achievementName String @db.VarChar(255)
   link            String   @db.VarChar(255)
   achievedAt      DateTime @db.Date
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  achievementName String   @db.VarChar(255)
 
   @@map("achievements")
 }
@@ -188,12 +203,12 @@ model OrganizationalStructure {
 }
 
 model Facility {
-  id                 Int      @id @default(autoincrement())
-  name               String   @db.VarChar(100)
-  description        String   @db.Text
-  photo              String   @db.VarChar(255)
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(100)
+  description String   @db.Text
+  photo       String   @db.VarChar(255)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@map("facilities")
 }
@@ -207,3 +222,22 @@ model ChatbotContext {
 
   @@map("chatbot_contexts")
 }
+
+model ChatbotFile {
+  id        Int      @id @default(autoincrement())
+  filename  String   @db.VarChar(255)
+  filePath  String   @db.VarChar(255)
+  fileUrl   String   @db.VarChar(255)
+  content   String   @db.LongText
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("chatbot_files")
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR
+}
+

@@ -24,6 +24,14 @@ export const chatbotContextRepository = {
     return rows[0] ?? null;
   },
 
+  async upsertByName(name: string, context: string) {
+    return await db.chatbotContext.upsert({
+      where: { name },
+      update: { context },
+      create: { name, context },
+    });
+  },
+
   async getPublicDatabaseSnapshot() {
     const [
       categories,
