@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import { env } from "../config/env";
 import { chatbotContextRepository } from "../repositories/chatbotContext.repository";
+import { chatbotFileRepository } from "../repositories/chatbotFile.repository";
 
 const client = new OpenAI({
   apiKey: env.GROQ_API_KEY,
@@ -29,17 +30,22 @@ Aturan Jawaban:
 
 export const chatbotService = {
   async getResponseFromGroq(message: string) {
-    const [chatbotContext, publicDatabaseSnapshot] = await Promise.all([
+    const [chatbotContext, publicDatabaseSnapshot, chatbotFilesContent] = await Promise.all([
       chatbotContextRepository.getByName("pmb"),
       chatbotContextRepository.getPublicDatabaseSnapshot(),
+      chatbotFileRepository.getAllContent(),
     ]);
 
     const pmbContext = chatbotContext?.context?.trim() || defaultPmbContext;
     const databaseContext = publicDatabaseSnapshot.trim();
+    const filesContext = chatbotFilesContent.trim();
 
     const payload = `
 Konteks Utama:
 ${pmbContext}
+
+Konteks Tambahan dari Dokumen yang Diupload:
+${filesContext || "Tidak ada dokumen tambahan."}
 
 Data Publik dari Database:
 ${databaseContext}
@@ -50,6 +56,7 @@ Aturan Tambahan:
 - Jangan tampilkan atau menyebut data sensitif seperti admin, password, token, atau akun internal.
 
 Pertanyaan User: ${message}`.trim();
+
 
     const response: any = await client.responses.create({
       model: "openai/gpt-oss-20b",

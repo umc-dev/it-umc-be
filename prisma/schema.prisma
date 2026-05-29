@@ -223,8 +223,21 @@ model ChatbotContext {
   @@map("chatbot_contexts")
 }
 
+model ChatbotFile {
+  id        Int      @id @default(autoincrement())
+  filename  String   @db.VarChar(255)
+  filePath  String   @db.VarChar(255)
+  fileUrl   String   @db.VarChar(255)
+  content   String   @db.LongText
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("chatbot_files")
+}
+
 enum AdminRole {
   SUPER_ADMIN
   ADMIN
   EDITOR
 }
+
