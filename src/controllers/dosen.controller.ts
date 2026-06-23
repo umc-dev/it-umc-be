@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import fs from "fs";
 import path from "path";
 import {
-  CreateDosenDTO,
+  // CreateDosenDTO,
   DosenResponse,
   PaginatedDosenResponse,
   UpdateDosenDTO,
@@ -13,21 +13,21 @@ import BadRequestException from "../exceptions/BadRequestException";
 
 export const dosenController = {
   // Create Dosen Controller
-  async create(req: Request, res: Response, next: NextFunction) {
-    try {
-      const body: CreateDosenDTO = {
-        ...req.body,
-      };
+  // async create(req: Request, res: Response, next: NextFunction) {
+  //   try {
+  //     const body: CreateDosenDTO = {
+  //       ...req.body,
+  //     };
 
-      const result: DosenResponse = await dosenService.create(body, req.file);
+  //     const result: DosenResponse = await dosenService.create(body, req.file);
 
-      return res
-        .status(201)
-        .json(ResponseHTTP.created(result, "Dosen created"));
-    } catch (err) {
-      next(err);
-    }
-  },
+  //     return res
+  //       .status(201)
+  //       .json(ResponseHTTP.created(result, "Dosen created"));
+  //   } catch (err) {
+  //     next(err);
+  //   }
+  // },
 
   // Get All Dosen Controller
   async getAll(req: Request, res: Response, next: NextFunction) {

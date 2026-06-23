@@ -1,6 +1,5 @@
 import z from "zod";
 import {
-  CreateDosenSchema,
   UpdateDosenSchema,
 } from "../validator/dosen.validator";
 import { PaginationMeta } from ".";
@@ -44,19 +43,19 @@ export interface DosenPositionResponse {
 }
 
 // Request DTO
-export type CreateDosenDTO = z.infer<typeof CreateDosenSchema>;
+// export type CreateDosenDTO = z.infer<typeof CreateDosenSchema>;
 
-export interface CreateDosenData {
-  nidn: string;
-  name: string;
-  expertise: string;
-  research: string;
-  teaching: string;
-  photo: string;
-  positions?: {
-    create: DosenPositionData[];
-  };
-}
+// export interface CreateDosenData {
+//   nidn: string;
+//   name: string;
+//   expertise: string;
+//   research: string;
+//   teaching: string;
+//   photo: string;
+//   positions?: {
+//     create: DosenPositionData[];
+//   };
+// }
 export type UpdateDosenDTO = z.infer<typeof UpdateDosenSchema>;
 
 export interface UpdateDosenData {

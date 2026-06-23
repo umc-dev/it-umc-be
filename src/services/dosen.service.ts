@@ -2,8 +2,8 @@ import NotFoundException from "../exceptions/NotFoundException";
 import { dosenRepository } from "../repositories/dosen.repository";
 import { lectureshipRepository } from "../repositories/lectureship.repository";
 import {
-  CreateDosenData,
-  CreateDosenDTO,
+  // CreateDosenData,
+  // CreateDosenDTO,
   DosenResponse,
   DosenPositionData,
   PaginatedDosenResponse,
@@ -14,7 +14,7 @@ import { deleteUploadedFile, saveUploadedFile } from "../utils/file";
 
 export const dosenService = {
   async validatePositions(
-    positions?: CreateDosenDTO["positions"],
+    positions?: UpdateDosenDTO["positions"],
   ): Promise<DosenPositionData[] | undefined> {
     if (!positions) return undefined;
 
@@ -38,41 +38,41 @@ export const dosenService = {
   },
 
   // Create dosen
-  async create(
-    data: CreateDosenDTO,
-    file?: Express.Multer.File,
-  ): Promise<DosenResponse> {
-    let uploaded: { url: string } | null = null;
+  // async create(
+  //   data: CreateDosenDTO,
+  //   file?: Express.Multer.File,
+  // ): Promise<DosenResponse> {
+  //   let uploaded: { url: string } | null = null;
 
-    try {
-      if (file) {
-        uploaded = saveUploadedFile(file);
-      }
+  //   try {
+  //     if (file) {
+  //       uploaded = saveUploadedFile(file);
+  //     }
 
-      const positions = await this.validatePositions(data.positions);
+  //     const positions = await this.validatePositions(data.positions);
 
-      const dataToSave: CreateDosenData = {
-        nidn: data.nidn,
-        name: data.name,
-        expertise: data.expertise,
-        photo: uploaded.url,
-        research: data.research,
-        teaching: data.teaching,
-        ...(positions && {
-          positions: {
-            create: positions,
-          },
-        }),
-      };
+  //     const dataToSave: CreateDosenData = {
+  //       nidn: data.nidn,
+  //       name: data.name,
+  //       expertise: data.expertise,
+  //       photo: uploaded.url,
+  //       research: data.research,
+  //       teaching: data.teaching,
+  //       ...(positions && {
+  //         positions: {
+  //           create: positions,
+  //         },
+  //       }),
+  //     };
 
-      return await dosenRepository.create(dataToSave);
-    } catch (err: unknown) {
-      if (uploaded?.url) {
-        deleteUploadedFile(uploaded.url);
-      }
-      throw err;
-    }
-  },
+  //     return await dosenRepository.create(dataToSave);
+  //   } catch (err: unknown) {
+  //     if (uploaded?.url) {
+  //       deleteUploadedFile(uploaded.url);
+  //     }
+  //     throw err;
+  //   }
+  // },
 
   // Get all dosen
   async getAll(

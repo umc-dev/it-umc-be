@@ -1,25 +1,28 @@
-import { CreateDosenData, UpdateDosenData } from "../types/dosen.type";
+import { 
+  // CreateDosenData,
+  UpdateDosenData 
+} from "../types/dosen.type";
 import { removeUndefined } from "../utils";
 import { db } from "../utils/prisma";
 
 export const dosenRepository = {
-  async create(data: CreateDosenData) {
-    return await db.dosen.create({
-      data,
-      include: {
-        positions: {
-          orderBy: {
-            startDate: "desc",
-          },
-          include: {
-            lectureship: {
-              select: { id: true, name: true },
-            },
-          },
-        },
-      },
-    });
-  },
+  // async create(data: CreateDosenData) {
+  //   return await db.dosen.create({
+  //     data,
+  //     include: {
+  //       positions: {
+  //         orderBy: {
+  //           startDate: "desc",
+  //         },
+  //         include: {
+  //           lectureship: {
+  //             select: { id: true, name: true },
+  //           },
+  //         },
+  //       },
+  //     },
+  //   });
+  // },
 
   async update(id: string, data: UpdateDosenData) {
     return await db.dosen.update({
