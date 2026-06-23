@@ -1,3 +1,5 @@
+import BadRequestException from "../exceptions/BadRequestException";
+import NotFoundException from "../exceptions/NotFoundException";
 import type {
   AdminCreateData,
   AdminCreateDTO,
@@ -47,15 +49,37 @@ const adminRepository = {
 
   // Menambahkan admin
   async addAdmin(data: AdminCreateData) {
-    return await db.admin.create({
-      data: {
-        email: data.email,
-        name: data.name ?? null,
-        password: data.password,
-        avatar: data.avatar ?? null,
-        role: data.role,
-        updatedAt: new Date(),
-      },
+    // Memulai transaction untuk memastikan konsistensi
+    return await db.$transaction(async (tx) => {
+      // 1. Buat akun admin
+      const admin = await tx.admin.create({
+        data: {
+          email: data.email,
+          name: data.name ?? null,
+          password: data.password,
+          avatar: data.avatar,
+          role: data.role,
+          updatedAt: new Date(),
+        },
+      });
+
+      // 2. Cek jika role adalah DOSEN
+      if (data.role === 'DOSEN') {
+        // Buat data dosen secara sinkron
+        await tx.dosen.create({
+          data: {
+            nidn: `TEMP-${Date.now()}`,
+            name: data.name,
+            email: data.email,
+            expertise: '-',
+            research: '-',
+            teaching: '-',
+            photo: data.avatar ?? '',
+          },
+        });
+      }
+
+      return admin;
     });
   },
 
@@ -75,12 +99,62 @@ const adminRepository = {
 
   // Update admin
   async updateAdmin(id: string, data: AdminUpdateDTO) {
-    return await db.admin.update({
-      where: { id },
-      data: {
-        ...removeUndefined(data),
-        updatedAt: new Date(),
-      },
+    return await db.$transaction(async (tx) => {
+      // Ambil data admin lama
+      const existingAdmin = await tx.admin.findUnique({
+        where: { id },
+      });
+
+      if (!existingAdmin) {
+        throw new NotFoundException('Admin not found');
+      }
+
+      const updatedAdmin = await tx.admin.update({
+        where: { id },
+        data: {
+          ...removeUndefined(data),
+          updatedAt: new Date(),
+        },
+      });
+
+      const oldRole = existingAdmin.role;
+      const newRole = data.role ?? oldRole;
+
+      // Selain dosen -> DOSEN
+      if (oldRole !== 'DOSEN' && newRole === 'DOSEN') {
+        const existingDosen = await tx.dosen.findUnique({
+          where: {
+            email: existingAdmin.email,
+          },
+        });
+
+        if (!existingDosen) {
+          await tx.dosen.create({
+            data: {
+              nidn: `TEMP-${Date.now()}`,
+              name: updatedAdmin.name ?? '',
+              email: updatedAdmin.email,
+              expertise: '-',
+              research: '-',
+              teaching: '-',
+              photo: updatedAdmin.avatar ?? '',
+            },
+          });
+        } else {
+          throw new BadRequestException ('Dosen already exist')
+        }
+      }
+
+      // DOSEN -> selain DOSEN
+      if (oldRole === 'DOSEN' && newRole !== 'DOSEN') {
+        await tx.dosen.deleteMany({
+          where: {
+            email: existingAdmin.email,
+          },
+        });
+      }
+
+      return updatedAdmin;
     });
   },
 
