@@ -7,9 +7,7 @@ export const PERMISSIONS = {
 
   CATEGORY_MANAGE: 'category:manage',
 
-  DOSEN_CREATE: 'dosen:create',
   DOSEN_UPDATE: 'dosen:update',
-  DOSEN_DELETE: 'dosen:delete',
 
   STATISTIC_MANAGE: 'statistic:manage',
   VISION_MISSION_MANAGE: 'vision-mission:manage',
