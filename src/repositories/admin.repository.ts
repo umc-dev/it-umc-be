@@ -154,6 +154,20 @@ const adminRepository = {
         });
       }
 
+      // role sudah DOSEN
+      if (oldRole === 'DOSEN' && newRole === 'DOSEN') {
+        await tx.dosen.updateMany({
+          where: {
+            email: existingAdmin.email,
+          },
+          data: {
+            name: updatedAdmin.name ?? '',
+            email: updatedAdmin.email,
+            photo: updatedAdmin.avatar ?? '',
+          },
+        });
+      }
+
       return updatedAdmin;
     });
   },
