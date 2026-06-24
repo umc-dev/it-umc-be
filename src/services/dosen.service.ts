@@ -145,15 +145,15 @@ export const dosenService = {
   },
 
   // Delete dosen
-  async delete(id: string): Promise<DosenResponse> {
-    const dosen = await dosenRepository.getById(id);
+  // async delete(id: string): Promise<DosenResponse> {
+  //   const dosen = await dosenRepository.getById(id);
 
-    if (!dosen) throw new NotFoundException("Dosen not found");
+  //   if (!dosen) throw new NotFoundException("Dosen not found");
 
-    if (dosen.photo) {
-      deleteUploadedFile(dosen.photo);
-    }
+  //   if (dosen.photo) {
+  //     deleteUploadedFile(dosen.photo);
+  //   }
 
-    return dosenRepository.delete(id);
-  },
+  //   return dosenRepository.delete(id);
+  // },
 };

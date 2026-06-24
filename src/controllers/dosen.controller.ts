@@ -93,19 +93,19 @@ export const dosenController = {
   },
 
   // Delete Dosen Controller
-  async delete(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { id } = req.params;
+  // async delete(req: Request, res: Response, next: NextFunction) {
+  //   try {
+  //     const { id } = req.params;
 
-      if (!id) {
-        throw new BadRequestException("Id params is required");
-      }
+  //     if (!id) {
+  //       throw new BadRequestException("Id params is required");
+  //     }
 
-      await dosenService.delete(id);
+  //     await dosenService.delete(id);
 
-      return res.status(200).json(ResponseHTTP.success("Dosen deleted"));
-    } catch (err) {
-      next(err);
-    }
-  },
+  //     return res.status(200).json(ResponseHTTP.success("Dosen deleted"));
+  //   } catch (err) {
+  //     next(err);
+  //   }
+  // },
 };

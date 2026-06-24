@@ -8,7 +8,7 @@ import {
   // CreateDosenSchema,
   UpdateDosenSchema,
 } from "../validator/dosen.validator";
-import { requirePermission } from "../middlewares/permissions.middleware";
+import { requireOwnPermission } from "../middlewares/permissions.middleware";
 import { PERMISSIONS } from "../auth/permissions";
 
 const dosenRouter: IRouter = Router();
@@ -41,19 +41,19 @@ dosenRouter.use(authMiddleware);
 
 // Update Dosen
 dosenRouter.put(
-  "/:id",
-  requirePermission(PERMISSIONS.DOSEN_UPDATE),
-  upload.single("photo"),
+  '/:id',
+  requireOwnPermission(PERMISSIONS.DOSEN_UPDATE),
+  upload.single('photo'),
   parseDosenPositions,
   validate(UpdateDosenSchema),
   dosenController.update,
 );
 
 // Delete Dosen
-dosenRouter.delete(
-  '/:id',
-  requirePermission(PERMISSIONS.DOSEN_DELETE),
-  dosenController.delete,
-);
+// dosenRouter.delete(
+//   '/:id',
+//   requirePermission(PERMISSIONS.DOSEN_DELETE),
+//   dosenController.delete,
+// );
 
 export default dosenRouter;
