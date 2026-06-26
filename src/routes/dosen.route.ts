@@ -5,10 +5,10 @@ import upload from "../middlewares/upload.middleware";
 import { parseDosenPositions } from "../middlewares/parseDosenPositions.middleware";
 import { validate } from "../middlewares/validation.middleware";
 import {
-  CreateDosenSchema,
+  // CreateDosenSchema,
   UpdateDosenSchema,
 } from "../validator/dosen.validator";
-import { requirePermission } from "../middlewares/permissions.middleware";
+import { requireOwnPermission } from "../middlewares/permissions.middleware";
 import { PERMISSIONS } from "../auth/permissions";
 
 const dosenRouter: IRouter = Router();
@@ -27,27 +27,33 @@ dosenRouter.get("/:id", dosenController.getById);
    PROTECTED
 ===================== */
 
-dosenRouter.use(authMiddleware, requirePermission(PERMISSIONS.DOSEN_MANAGE));
+dosenRouter.use(authMiddleware);
 
 // Create Dosen
-dosenRouter.post(
-  "/",
-  upload.single("photo"),
-  parseDosenPositions,
-  validate(CreateDosenSchema),
-  dosenController.create,
-);
+// dosenRouter.post(
+//   "/",
+//   requirePermission(PERMISSIONS.DOSEN_CREATE),
+//   upload.single("photo"),
+//   parseDosenPositions,
+//   validate(CreateDosenSchema),
+//   dosenController.create,
+// );
 
 // Update Dosen
 dosenRouter.put(
-  "/:id",
-  upload.single("photo"),
+  '/:id',
+  requireOwnPermission(PERMISSIONS.DOSEN_UPDATE),
+  upload.single('photo'),
   parseDosenPositions,
   validate(UpdateDosenSchema),
   dosenController.update,
 );
 
 // Delete Dosen
-dosenRouter.delete("/:id", dosenController.delete);
+// dosenRouter.delete(
+//   '/:id',
+//   requirePermission(PERMISSIONS.DOSEN_DELETE),
+//   dosenController.delete,
+// );
 
 export default dosenRouter;

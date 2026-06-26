@@ -18,6 +18,7 @@ model admin {
   role      AdminRole      @default(ADMIN)
   accounts  AdminAccount[]
   news      news[]
+  dosen     dosen[]
 
   @@map("admin")
 }
@@ -83,9 +84,12 @@ model dosen {
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @updatedAt
   nidn            String             @unique
+  email           String             @unique
   positions       DosenLectureship[]
   dosenTridharmas DosenTridharma[]
+  admin           admin    @relation(fields: [email], references: [email], onDelete: Cascade, map: "dosen_email_fkey")
 
+  @@index([email], map: "dosen_email_fkey")
   @@map("dosen")
 }
 
@@ -239,5 +243,6 @@ enum AdminRole {
   SUPER_ADMIN
   ADMIN
   EDITOR
+  DOSEN
 }
 

@@ -25,3 +25,25 @@ export const requirePermission =
 
     next();
   };
+
+export const requireOwnPermission =
+  (permission: Permission) =>
+  (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user;
+
+    if (!user) {
+      return next(
+        new UnauthorizedException('Access denied, user not authenticated'),
+      );
+    }
+
+    const permissions = ROLE_PERMISSIONS[user.role] || [];
+
+    if (!permissions.includes(permission) && user.role != 'SUPER_ADMIN') {
+      return next(
+        new ForbiddenException('Access denied, insufficient permission'),
+      );
+    }
+
+    next();
+  };
