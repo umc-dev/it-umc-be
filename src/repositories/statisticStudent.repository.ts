@@ -12,17 +12,20 @@ export const statisticStudentRepository = {
     });
   },
 
-  async getAll(limit: number, page: number, search: number) {
+  async getAll(limit: number, page: number, search?: string, prodi?: 'S1' | 'D3') {
     const skip = (page - 1) * limit;
-    const whereClause = search
-      ? {
-          OR: [
-            {
-              year: search,
-            },
-          ],
-        }
-      : {};
+    const whereClause: any = {};
+
+    if (search) {
+      const searchNum = Number(search);
+      if (!Number.isNaN(searchNum)) {
+        whereClause.year = searchNum;
+      }
+    }
+
+    if (prodi) {
+      whereClause.prodi = prodi;
+    }
 
     const [statisticStudent, total] = await db.$transaction([
       db.statisticStudent.findMany({
@@ -50,22 +53,30 @@ export const statisticStudentRepository = {
     };
   },
 
-  getByYear(year: number) {
+  getById(id: string) {
     return db.statisticStudent.findUnique({
-      where: { year },
+      where: { id },
     });
   },
 
-  async update(year: number, data: UpdateStatisticStudentData) {
+  getByYearAndProdi(year: number, prodi: 'S1' | 'D3') {
+    return db.statisticStudent.findUnique({
+      where: {
+        year_prodi: { year, prodi },
+      },
+    });
+  },
+
+  async update(id: string, data: UpdateStatisticStudentData) {
     return await db.statisticStudent.update({
-      where: { year },
+      where: { id },
       data: removeUndefined(data),
     });
   },
 
-  async delete(year: number) {
+  async delete(id: string) {
     return await db.statisticStudent.delete({
-      where: { year },
+      where: { id },
     });
   },
 };

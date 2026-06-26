@@ -7,12 +7,15 @@ import { PaginationMeta } from ".";
 // Lecturer Model
 export interface Dosen {
   id: string;
+  prodi: 'S1' | 'D3';
   nidn: string;
   name: string;
   expertise: string;
   research: string;
   teaching: string;
   photo: string | null;
+  education: string | null;
+  description: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -59,12 +62,15 @@ export interface DosenPositionResponse {
 export type UpdateDosenDTO = z.infer<typeof UpdateDosenSchema>;
 
 export interface UpdateDosenData {
+  prodi?: 'S1' | 'D3';
   nidn?: string;
   name?: string;
   expertise?: string;
   research?: string;
   teaching?: string;
   photo?: string;
+  education?: string | null;
+  description?: string | null;
   positions?: {
     deleteMany: Record<string, never>;
     create: DosenPositionData[];
@@ -75,12 +81,15 @@ export interface UpdateDosenData {
 
 export interface DosenResponse {
   id: string;
+  prodi: 'S1' | 'D3';
   nidn: string;
   name: string;
   expertise: string;
   research: string;
   teaching: string;
   photo: string | null;
+  education: string | null;
+  description: string | null;
   positions: DosenPositionResponse[];
   createdAt: Date;
   updatedAt: Date;

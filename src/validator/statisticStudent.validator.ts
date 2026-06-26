@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const CreateStatisticStudentSchema = z.object({
+  prodi: z.enum(['S1', 'D3']).optional(),
   year: z.number().min(2000, 'Year must be 2000 or later'),
   enteredStudents: z.number().min(0, 'Entered students must be non-negative'),
   graduatedStudents: z
@@ -9,6 +10,7 @@ export const CreateStatisticStudentSchema = z.object({
 });
 
 export const UpdateStatisticStudentSchema = z.object({
+  prodi: z.enum(['S1', 'D3']).optional(),
   year: z.number().min(2000, 'Year must be 2000 or later').optional(),
   enteredStudents: z
     .number()

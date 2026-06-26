@@ -12,6 +12,7 @@ import {
 const achievementService = {
   async create(data: CreateAchievementDto): Promise<AchievementResponse> {
     const dataToSave: CreateAchievementData = {
+      prodi: data.prodi,
       name: data.name,
       achievementName: data.achievementName,
       link: data.link,
@@ -25,11 +26,13 @@ const achievementService = {
     limit: number,
     page: number,
     search: string,
+    prodi?: 'S1' | 'D3',
   ): Promise<PaginatedAchievementResponse> {
     const paginatedResult = await achievementRepository.getAll(
       limit,
       page,
       search,
+      prodi,
     );
 
     return {

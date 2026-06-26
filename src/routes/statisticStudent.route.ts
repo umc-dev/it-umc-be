@@ -17,7 +17,7 @@ const statisticStudentRouter: IRouter = Router();
 
 // GET STATISTIC STUDENT
 statisticStudentRouter.get("/", statisticStudentController.getAll);
-statisticStudentRouter.get("/:year", statisticStudentController.getByYear);
+statisticStudentRouter.get("/:id", statisticStudentController.getById);
 
 /* =====================
     PROTECTED
@@ -37,12 +37,12 @@ statisticStudentRouter.post(
 
 // UPDATE STATISTIC STUDENT
 statisticStudentRouter.put(
-  "/:year",
+  "/:id",
   validate(UpdateStatisticStudentSchema),
   statisticStudentController.update,
 );
 
 // DELETE STATISTIC STUDENT
-statisticStudentRouter.delete("/:year", statisticStudentController.delete);
+statisticStudentRouter.delete("/:id", statisticStudentController.delete);
 
 export default statisticStudentRouter;

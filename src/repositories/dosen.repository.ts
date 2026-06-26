@@ -110,20 +110,24 @@ export const dosenRepository = {
     });
   },
 
-  async getAll(limit: number, page: number, search: string) {
+  async getAll(limit: number, page: number, search: string, prodi?: 'S1' | 'D3') {
     const skip = (page - 1) * limit;
-    const whereClause = search
-      ? {
-          OR: [
-            {
-              name: { contains: search, mode: "insensitive" },
-            },
-            {
-              expertise: { contains: search, mode: "insensitive" },
-            },
-          ],
-        }
-      : {};
+    const whereClause: any = {};
+
+    if (search) {
+      whereClause.OR = [
+        {
+          name: { contains: search, mode: "insensitive" },
+        },
+        {
+          expertise: { contains: search, mode: "insensitive" },
+        },
+      ];
+    }
+
+    if (prodi) {
+      whereClause.prodi = prodi;
+    }
 
     // Pake Transaction biar konsisten kalo jalanin 2 kali query
     const [dosen, total] = await db.$transaction([

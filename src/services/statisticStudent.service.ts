@@ -14,16 +14,19 @@ export const statisticStudentService = {
   async create(
     data: CreateStatisticStudentDto
   ): Promise<StatisticStudentResponse> {
-    const statisticStudentIsExist = await statisticStudentRepository.getByYear(
-      data.year
+    const prodi = data.prodi || 'S1';
+    const statisticStudentIsExist = await statisticStudentRepository.getByYearAndProdi(
+      data.year,
+      prodi
     );
 
     if (statisticStudentIsExist)
       throw new BadRequestException(
-        'Statistic Student for this year already exists'
+        'Statistic Student for this year and study program already exists'
       );
 
     const dataToSave: CreateStatisticStudentData = {
+      prodi,
       year: data.year,
       enteredStudents: data.enteredStudents,
       graduatedStudents: data.graduatedStudents,
@@ -36,12 +39,14 @@ export const statisticStudentService = {
   async getAll(
     limit: number,
     page: number,
-    search: number
+    search?: string,
+    prodi?: 'S1' | 'D3'
   ): Promise<PaginatedStatisticStudentResponse> {
     const paginatedResult = await statisticStudentRepository.getAll(
       limit,
       page,
-      search
+      search,
+      prodi
     );
 
     return {
@@ -50,8 +55,8 @@ export const statisticStudentService = {
     };
   },
 
-  async getByYear(year: number): Promise<StatisticStudentResponse> {
-    const statisticStudent = await statisticStudentRepository.getByYear(year);
+  async getById(id: string): Promise<StatisticStudentResponse> {
+    const statisticStudent = await statisticStudentRepository.getById(id);
 
     if (!statisticStudent)
       throw new NotFoundException('Statistic Student not found');
@@ -60,10 +65,10 @@ export const statisticStudentService = {
   },
 
   async update(
-    year: number,
+    id: string,
     data: UpdateStatisticStudentDto
   ): Promise<StatisticStudentResponse> {
-    const statisticStudent = await statisticStudentRepository.getByYear(year);
+    const statisticStudent = await statisticStudentRepository.getById(id);
 
     if (!statisticStudent)
       throw new NotFoundException('Statistic Student not found');
@@ -72,26 +77,31 @@ export const statisticStudentService = {
       ...data,
     };
 
-    // Jika ada data.year dan tidak sama dengan tahun lama, cek duplikasi
-    if (data.year && data.year !== statisticStudent.year) {
-      const statisticStudentIsExist =
-        await statisticStudentRepository.getByYear(data.year);
+    const targetYear = data.year || statisticStudent.year;
+    const targetProdi = data.prodi || statisticStudent.prodi;
 
-      if (statisticStudentIsExist)
+    if (
+      (data.year && data.year !== statisticStudent.year) ||
+      (data.prodi && data.prodi !== statisticStudent.prodi)
+    ) {
+      const statisticStudentIsExist =
+        await statisticStudentRepository.getByYearAndProdi(targetYear, targetProdi);
+
+      if (statisticStudentIsExist && statisticStudentIsExist.id !== id)
         throw new BadRequestException(
-          'Statistic Student for this year already exists'
+          'Statistic Student for this year and study program already exists'
         );
     }
 
-    return await statisticStudentRepository.update(year, dataToUpdate);;
+    return await statisticStudentRepository.update(id, dataToUpdate);
   },
 
-  async delete(year: number): Promise<StatisticStudentResponse> {
-    const statisticStudent = await statisticStudentRepository.getByYear(year);
+  async delete(id: string): Promise<StatisticStudentResponse> {
+    const statisticStudent = await statisticStudentRepository.getById(id);
 
     if (!statisticStudent)
       throw new NotFoundException('Statistic Student not found');
 
-    return await statisticStudentRepository.delete(year);
+    return await statisticStudentRepository.delete(id);
   },
 };

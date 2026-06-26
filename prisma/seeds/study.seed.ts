@@ -6,11 +6,14 @@ const prisma = new PrismaClient();
 export async function seedStudies() {
   console.log("Seeding studies...");
 
-  for (let i = 0; i < 3; i++) {
+  const studies = [
+    { prodi: "S1" as const, source: "https://example.com/kurikulum-s1.pdf" },
+    { prodi: "D3" as const, source: "https://example.com/kurikulum-d3.pdf" },
+  ];
+
+  for (const study of studies) {
     await prisma.study.create({
-      data: {
-        source: faker.internet.url(),
-      },
+      data: study,
     });
   }
 

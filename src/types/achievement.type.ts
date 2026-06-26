@@ -7,6 +7,7 @@ import {
 
 export interface Achievement {
   id: number;
+  prodi: 'S1' | 'D3';
   name: string;
   achievementName: string;
   link: string;
@@ -18,6 +19,7 @@ export interface Achievement {
 export type CreateAchievementDto = z.infer<typeof CreateAchievementSchema>;
 
 export interface CreateAchievementData {
+  prodi?: 'S1' | 'D3';
   name: string;
   achievementName: string;
   link: string;
@@ -27,6 +29,7 @@ export interface CreateAchievementData {
 export type UpdateAchievementDto = z.infer<typeof UpdateAchievementSchema>;
 
 export interface UpdateAchievementData {
+  prodi?: 'S1' | 'D3';
   name?: string;
   achievementName?: string;
   link?: string;
@@ -35,6 +38,7 @@ export interface UpdateAchievementData {
 
 export interface AchievementResponse {
   id: number;
+  prodi: 'S1' | 'D3';
   name: string;
   achievementName: string;
   link: string;

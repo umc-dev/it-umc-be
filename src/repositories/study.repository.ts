@@ -12,17 +12,21 @@ export const studyRepository = {
     });
   },
 
-  async getAll(limit: number, page: number, search: string) {
+  async getAll(limit: number, page: number, search: string, prodi?: 'S1' | 'D3') {
     const skip = (page - 1) * limit;
-    const whereClause = search
-      ? {
-          OR: [
-            {
-              source: search,
-            },
-          ],
-        }
-      : {};
+    const whereClause: any = {};
+
+    if (search) {
+      whereClause.OR = [
+        {
+          source: search,
+        },
+      ];
+    }
+
+    if (prodi) {
+      whereClause.prodi = prodi;
+    }
 
     const [study, total] = await db.$transaction([
       db.study.findMany({

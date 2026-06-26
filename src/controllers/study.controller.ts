@@ -13,6 +13,7 @@ export const studyController = {
       
       const result: StudyResponse = await studyService.create(
         req.file,
+        req.body,
       );
 
       return res.status(201).json(ResponseHTTP.created(result, 'Study created'));
@@ -26,8 +27,9 @@ export const studyController = {
       const limit = parseInt(req.query.limit as string) || 25;
       const page = parseInt(req.query.page as string) || 1;
       const search = (req.query.search as string) || '';
+      const prodi = req.query.prodi as 'S1' | 'D3' | undefined;
 
-      const result = await studyService.getAll(limit, page, search);
+      const result = await studyService.getAll(limit, page, search, prodi);
 
       return res
         .status(200)
@@ -61,7 +63,8 @@ export const studyController = {
       
       const result: StudyResponse = await studyService.update(
         id,
-        req.file
+        req.file,
+        req.body,
       );
 
       return res.status(200).json(ResponseHTTP.created(result, 'Study updated'));

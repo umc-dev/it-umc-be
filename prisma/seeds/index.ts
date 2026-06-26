@@ -25,7 +25,7 @@ async function main() {
   await seedVisionMission();
   await seedAlumni();
   await seedLectureships();
-  // await seedDosen();
+  await seedDosen();
   await seedStatisticStudents();
   await seedPartnerships();
   await seedStudies();

@@ -12,6 +12,7 @@ import NotFoundException from '../exceptions/NotFoundException';
 export const visionMissionService = {
   async create(data: CreateVisionMissionDto): Promise<VisionMissionResponse> {
     const dataToSave: CreateVisionMissionData = {
+      prodi: data.prodi,
       vision: data.vision,
       mission: data.mission,
     };
@@ -21,12 +22,14 @@ export const visionMissionService = {
   async getAll(
     limit: number,
     page: number,
-    search: string
+    search: string,
+    prodi?: 'S1' | 'D3'
   ): Promise<PaginatedVisionMissionResponse> {
     const paginatedResult = await visionMissionRepository.getAll(
       limit,
       page,
-      search
+      search,
+      prodi
     );
 
     return {

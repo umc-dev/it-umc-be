@@ -1,5 +1,6 @@
 import { PrismaClient, DosenTridharmaCategory } from "@prisma/client";
 import { Faker, id_ID, faker } from "@faker-js/faker";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -31,23 +32,44 @@ export async function seedDosen() {
   ];
 
   const totalDosen = 6;
+  const defaultPasswordHash = await bcrypt.hash("dosen123", 10);
 
   for (let i = 0; i < totalDosen; i++) {
+    const prodi = i % 2 === 0 ? "S1" : "D3";
     const nidn = faker.string.numeric(10);
     const name = fakerID.person.fullName();
+    const email = faker.internet.email({ firstName: name.split(" ")[0].toLowerCase() });
     const expertise = expertises[i % expertises.length];
     const teaching = subjects[i % subjects.length];
     const research = `Penelitian tentang ${faker.lorem.sentence(4)}`;
+    const photo = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name)}`;
+    const education = `S1 Informatika Universitas Muhammadiyah Cirebon, S2 Ilmu Komputer ${faker.helpers.arrayElement(["Institut Teknologi Bandung", "Universitas Gadjah Mada", "Universitas Indonesia"])}`;
+    const description = `Dosen tetap dengan keahlian di bidang ${expertise}. Aktif mengajar dan melakukan publikasi ilmiah tingkat nasional maupun internasional.`;
     
+    // Create admin account for Dosen
+    await prisma.admin.create({
+      data: {
+        name,
+        email,
+        password: defaultPasswordHash,
+        role: "DOSEN",
+        avatar: photo,
+      },
+    });
+
     // Create dosen
     const dosen = await prisma.dosen.create({
       data: {
+        prodi,
         nidn,
         name,
+        email,
         expertise,
-        photo: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name)}`,
+        photo,
         teaching,
         research,
+        education,
+        description,
       },
     });
 

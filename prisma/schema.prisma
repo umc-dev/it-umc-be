@@ -76,11 +76,14 @@ model Lectureship {
 
 model dosen {
   id              String             @id @default(uuid())
+  prodi           Prodi              @default(S1)
   name            String
   expertise       String
   photo           String
   teaching        String
   research        String
+  education       String?            @db.Text
+  description     String?            @db.Text
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @updatedAt
   nidn            String             @unique
@@ -134,17 +137,20 @@ model DosenLectureship {
 
 model StatisticStudent {
   id                String   @id @default(uuid())
-  year              Int      @unique @db.UnsignedMediumInt
+  year              Int      @db.UnsignedMediumInt
+  prodi             Prodi    @default(S1)
   enteredStudents   Int      @db.UnsignedMediumInt
   graduatedStudents Int      @db.UnsignedMediumInt
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
+  @@unique([year, prodi])
   @@map("statistic_student")
 }
 
 model VisionMission {
   id        Int      @id @default(autoincrement())
+  prodi     Prodi    @default(S1)
   vision    String   @db.Text
   mission   String   @db.Text
   createdAt DateTime @default(now())
@@ -180,6 +186,7 @@ model Alumni {
 
 model Study {
   id        Int      @id @default(autoincrement())
+  prodi     Prodi    @default(S1)
   source    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -189,6 +196,7 @@ model Study {
 
 model Achievement {
   id              Int      @id @default(autoincrement())
+  prodi     Prodi    @default(S1)
   name            String   @db.VarChar(255)
   link            String   @db.VarChar(255)
   achievedAt      DateTime @db.Date
@@ -245,4 +253,10 @@ enum AdminRole {
   EDITOR
   DOSEN
 }
+
+enum Prodi {
+  S1
+  D3
+}
+
 

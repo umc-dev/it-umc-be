@@ -79,8 +79,9 @@ export const dosenService = {
     limit: number,
     page: number,
     search: string,
+    prodi?: 'S1' | 'D3'
   ): Promise<PaginatedDosenResponse> {
-    const paginatedResult = await dosenRepository.getAll(limit, page, search);
+    const paginatedResult = await dosenRepository.getAll(limit, page, search, prodi);
 
     return {
       data: paginatedResult.data,

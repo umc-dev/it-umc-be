@@ -21,10 +21,13 @@ const DosenPositionSchema = z
 // });
 
 export const UpdateDosenSchema = z.object({
+  prodi: z.enum(['S1', 'D3']).optional(),
   nidn: z.string().min(1, "NIDN is required").optional(),
   name: z.string().optional(),
   expertise: z.string().optional(),
   research: z.url().optional(),
   teaching: z.url().optional(),
+  education: z.string().optional().nullable(),
+  description: z.string().optional().nullable(),
   positions: z.array(DosenPositionSchema).optional(),
 });

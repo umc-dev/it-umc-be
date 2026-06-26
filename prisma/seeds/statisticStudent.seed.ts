@@ -9,19 +9,29 @@ export async function seedStatisticStudents() {
   const currentYear = new Date().getFullYear();
   const startYear = currentYear - 5;
 
-  for (let year = startYear; year <= currentYear; year++) {
-    const enteredStudents = faker.number.int({ min: 100, max: 250 });
-    const graduatedStudents = faker.number.int({ min: 80, max: 180 });
+  const prodis = ["S1", "D3"] as const;
 
-    await prisma.statisticStudent.upsert({
-      where: { year },
-      update: {},
-      create: {
-        year,
-        enteredStudents,
-        graduatedStudents,
-      },
-    });
+  for (let year = startYear; year <= currentYear; year++) {
+    for (const prodi of prodis) {
+      const enteredStudents = faker.number.int({ min: 100, max: 250 });
+      const graduatedStudents = faker.number.int({ min: 80, max: 180 });
+
+      await prisma.statisticStudent.upsert({
+        where: {
+          year_prodi: {
+            year,
+            prodi,
+          },
+        },
+        update: {},
+        create: {
+          year,
+          prodi,
+          enteredStudents,
+          graduatedStudents,
+        },
+      });
+    }
   }
 
   console.log("Student statistics seeded.");
