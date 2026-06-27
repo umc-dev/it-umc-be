@@ -11,7 +11,8 @@ import { organizationalStructureService } from "../services/organizationalStruct
 export const organizationalStructureController = {
   async getOne(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await organizationalStructureService.getOne();
+      const prodi = (req.query.prodi as 'S1' | 'D3') || 'S1';
+      const result = await organizationalStructureService.getOne(prodi);
 
       return res
         .status(200)
@@ -44,12 +45,13 @@ export const organizationalStructureController = {
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
+      const prodi = (req.query.prodi as 'S1' | 'D3') || req.body.prodi || 'S1';
       const body: UpdateOrganizationalStructureDto = {
         ...req.body,
       };
 
       const result: OrganizationalStructureResponse =
-        await organizationalStructureService.update(body, req.file);
+        await organizationalStructureService.update(prodi, body, req.file);
 
       return res
         .status(200)
@@ -61,7 +63,8 @@ export const organizationalStructureController = {
 
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
-      await organizationalStructureService.delete();
+      const prodi = (req.query.prodi as 'S1' | 'D3') || 'S1';
+      await organizationalStructureService.delete(prodi);
 
       return res
         .status(200)

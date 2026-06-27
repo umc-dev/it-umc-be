@@ -28,17 +28,21 @@ export const alumniRepository = {
     limit: number,
     page: number,
     search: string,
+    prodi?: 'S1' | 'D3',
   ): Promise<PaginatedAlumniResponse> {
     const skip = (page - 1) * limit;
-    const whereClause = search
-      ? {
-          OR: [
-            ...(Number.isInteger(Number(search))
-              ? [{ year: Number(search) }]
-              : [{ name: { contains: search } }]),
-          ],
-        }
-      : {};
+    
+    const whereClause: any = {};
+    if (search) {
+      whereClause.OR = [
+        ...(Number.isInteger(Number(search))
+          ? [{ year: Number(search) }]
+          : [{ name: { contains: search } }]),
+      ];
+    }
+    if (prodi) {
+      whereClause.prodi = prodi;
+    }
 
     const [alumni, total] = await db.$transaction([
       db.alumni.findMany({

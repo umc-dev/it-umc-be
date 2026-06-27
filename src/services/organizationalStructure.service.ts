@@ -9,11 +9,11 @@ import { deleteUploadedFile, saveUploadedFile } from "../utils/file";
 import { organizationalStructureRepository } from "../repositories/organizationalStructure.repository";
 
 export const organizationalStructureService = {
-  async getOne(): Promise<OrganizationalStructureResponse> {
-    const data = await organizationalStructureRepository.getOne();
+  async getOne(prodi: 'S1' | 'D3'): Promise<OrganizationalStructureResponse> {
+    const data = await organizationalStructureRepository.getOne(prodi);
 
     if (!data) {
-      throw new NotFoundException("Organizational structure not found");
+      throw new NotFoundException(`Organizational structure for prodi ${prodi} not found`);
     }
 
     return data;
@@ -23,11 +23,12 @@ export const organizationalStructureService = {
     body: CreateOrganizationalStructureDto,
     file: Express.Multer.File,
   ): Promise<OrganizationalStructureResponse> {
-    const existing = await organizationalStructureRepository.getOne();
+    const prodi = body.prodi || 'S1';
+    const existing = await organizationalStructureRepository.getOne(prodi);
 
     if (existing) {
       throw new BadRequestException(
-        "Organizational structure already exists. Use update endpoint instead.",
+        `Organizational structure for prodi ${prodi} already exists. Use update endpoint instead.`,
       );
     }
 
@@ -37,6 +38,7 @@ export const organizationalStructureService = {
       return await organizationalStructureRepository.create({
         image: uploaded.url,
         description: body.description,
+        prodi,
       });
     } catch (err) {
       deleteUploadedFile(uploaded.url);
@@ -45,13 +47,14 @@ export const organizationalStructureService = {
   },
 
   async update(
+    prodi: 'S1' | 'D3',
     body: UpdateOrganizationalStructureDto,
     file?: Express.Multer.File,
   ): Promise<OrganizationalStructureResponse> {
-    const existing = await organizationalStructureRepository.getOne();
+    const existing = await organizationalStructureRepository.getOne(prodi);
 
     if (!existing) {
-      throw new NotFoundException("Organizational structure not found");
+      throw new NotFoundException(`Organizational structure for prodi ${prodi} not found`);
     }
 
     if (!file && body.description === undefined) {
@@ -69,7 +72,7 @@ export const organizationalStructureService = {
 
     try {
       const updated = await organizationalStructureRepository.update(
-        existing.image,
+        prodi,
         {
           image: newImageUrl,
           description: body.description,
@@ -89,16 +92,14 @@ export const organizationalStructureService = {
     }
   },
 
-  async delete(): Promise<OrganizationalStructureResponse> {
-    const existing = await organizationalStructureRepository.getOne();
+  async delete(prodi: 'S1' | 'D3'): Promise<OrganizationalStructureResponse> {
+    const existing = await organizationalStructureRepository.getOne(prodi);
 
     if (!existing) {
-      throw new NotFoundException("Organizational structure not found");
+      throw new NotFoundException(`Organizational structure for prodi ${prodi} not found`);
     }
 
-    const deleted = await organizationalStructureRepository.delete(
-      existing.image,
-    );
+    const deleted = await organizationalStructureRepository.delete(prodi);
 
     if (deleted.image) {
       deleteUploadedFile(deleted.image);

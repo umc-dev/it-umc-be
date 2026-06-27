@@ -40,9 +40,10 @@ export const alumniController = {
       const limit = parseInt(req.query.limit as string) || 25;
       const page = parseInt(req.query.page as string) || 1;
       const search = (req.query.search as string) || '';
+      const prodi = (req.query.prodi as 'S1' | 'D3') || undefined;
 
       const result: PaginatedAlumniResponse =
-        await alumniService.getAll(limit, page, search);
+        await alumniService.getAll(limit, page, search, prodi);
 
       return res
         .status(200)

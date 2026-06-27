@@ -5,6 +5,7 @@ export const CreateAlumniSchema = z.object({
   video: z.url().min(1, 'Video URL is required'),
   message: z.string().min(1, 'Message is required'),
   year: z.coerce.number().min(2000, 'Year must be 2000 or later'),
+  prodi: z.enum(['S1', 'D3']).optional(),
 });
 
 export const UpdateAlumniSchema = z.object({
@@ -12,4 +13,5 @@ export const UpdateAlumniSchema = z.object({
   video: z.url().optional(),
   message: z.string().optional(),
   year: z.coerce.number().optional(),
+  prodi: z.enum(['S1', 'D3']).optional(),
 });

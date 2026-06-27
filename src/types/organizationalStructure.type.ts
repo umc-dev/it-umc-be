@@ -13,6 +13,10 @@ export type UpdateOrganizationalStructureDto = z.infer<
 >;
 
 export interface OrganizationalStructureResponse {
+  id: string;
+  prodi: 'S1' | 'D3';
   image: string;
   description: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
