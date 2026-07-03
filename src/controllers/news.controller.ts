@@ -34,8 +34,9 @@ export const newsController = {
       const limit = parseInt(req.query.limit as string) || 25;
       const page = parseInt(req.query.page as string) || 1;
       const search = (req.query.search as string) || "";
+      const category = req.query.category as string | undefined;
 
-      const result = await newsService.getAll(limit, page, search);
+      const result = await newsService.getAll(limit, page, search, category);
 
       return res
         .status(200)

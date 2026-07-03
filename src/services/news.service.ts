@@ -47,8 +47,9 @@ export const newsService = {
     limit: number,
     page: number,
     search: string,
+    category?: string,
   ): Promise<PaginatedNewsResponse> {
-    const paginatedResult = await newsRepository.getAll(limit, page, search);
+    const paginatedResult = await newsRepository.getAll(limit, page, search, category);
 
     return {
       data: paginatedResult.data,
