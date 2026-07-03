@@ -75,6 +75,7 @@ const adminRepository = {
             research: '-',
             teaching: '-',
             photo: data.avatar ?? '',
+            prodi: data.prodi || 'S1',
           },
         });
       }
@@ -138,6 +139,7 @@ const adminRepository = {
               research: '-',
               teaching: '-',
               photo: updatedAdmin.avatar ?? '',
+              prodi: data.prodi || 'S1',
             },
           });
         } else {
@@ -164,6 +166,7 @@ const adminRepository = {
             name: updatedAdmin.name ?? '',
             email: updatedAdmin.email,
             photo: updatedAdmin.avatar ?? '',
+            ...(data.prodi && { prodi: data.prodi }),
           },
         });
       }

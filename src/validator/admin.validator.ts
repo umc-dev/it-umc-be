@@ -5,6 +5,7 @@ export const CreateAdminSchema = z.object({
   name: z.string(),
   password: z.string().min(6),
   role: z.enum(['SUPER_ADMIN', 'ADMIN', 'DOSEN', 'EDITOR']).optional(),
+  prodi: z.enum(['S1', 'D3']).optional(),
 });
 
 export const UpdateAdminSchema = z.object({
@@ -12,4 +13,5 @@ export const UpdateAdminSchema = z.object({
   name: z.string().optional(),
   password: z.string().min(6).optional(),
   role: z.enum(["SUPER_ADMIN", "ADMIN", "DOSEN", "EDITOR"]).optional(),
+  prodi: z.enum(["S1", "D3"]).optional(),
 });
