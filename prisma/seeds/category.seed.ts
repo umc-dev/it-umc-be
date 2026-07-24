@@ -10,6 +10,7 @@ export async function seedCategory() {
       { name: "Kemahasiswaan", slug: "kemahasiswaan" },
       { name: "Akademik", slug: "akademik" },
       { name: "Berita Kampus", slug: "berita-kampus" },
+      { name: "Promosi", slug: "promosi" },
     ],
     skipDuplicates: true,
   });
