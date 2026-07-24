@@ -19,33 +19,36 @@ export const alumniService = {
       name: data.name,
       ...(photo && { photo }),
       video: data.video,
-      message:data.message,
-      year: data.year
-    }
+      message: data.message,
+      year: data.year,
+      prodi: data.prodi,
+    };
     return await alumniRepository.add(dataToSave);
   },
 
   async getAll(
     limit: number,
     page: number,
-    search: string
+    search: string,
+    prodi?: 'S1' | 'D3',
   ): Promise<PaginatedAlumniResponse> {
     const paginateResult = await alumniRepository.getAll(
       limit,
       page,
       search,
+      prodi,
     );
 
     return {
       data: paginateResult.data,
-      meta: paginateResult.meta, 
-    }
+      meta: paginateResult.meta,
+    };
   },
 
   async getById(id: string): Promise<AlumniResponse> {
     const alumni = await alumniRepository.getAlumniById(id);
 
-    if(!alumni) throw new NotFoundException('Alumni not found');
+    if (!alumni) throw new NotFoundException('Alumni not found');
 
     return alumni;
   },
@@ -57,9 +60,9 @@ export const alumniService = {
   ): Promise<AlumniResponse> {
     const alumni = await alumniRepository.getAlumniById(id);
 
-    if(!alumni) throw new NotFoundException('Alumni not found');
+    if (!alumni) throw new NotFoundException('Alumni not found');
 
-    let newPhotoUrl: string;
+    let newPhotoUrl: string | undefined;
     const oldPhotoUrl = alumni.photo;
 
     if (file) {
@@ -87,12 +90,12 @@ export const alumniService = {
   async delete(id: string): Promise<AlumniResponse> {
     const alumni = await alumniRepository.getAlumniById(id);
 
-    if(!alumni) throw new NotFoundException('Alumni not found');
+    if (!alumni) throw new NotFoundException('Alumni not found');
 
     if (alumni.photo) {
       deleteUploadedFile(alumni.photo);
     }
 
     return await alumniRepository.delete(id);
-  }
-}
+  },
+};

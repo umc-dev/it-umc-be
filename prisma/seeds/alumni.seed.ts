@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 export async function seedAlumni() {
   // Total data yang ingin dibuat
-  const totalAlumni = 5;
+  const totalAlumni = 10;
 
   // Faker Bahasa Indonesia
   const fakerID = new Faker({ locale: [id_ID] });
@@ -19,6 +19,7 @@ export async function seedAlumni() {
         video: `https://www.youtube.com/watch?v=${videoId}`,
         message: faker.lorem.paragraph(1),
         year: faker.number.int({ min: 2000, max: 2025 }),
+        prodi: faker.helpers.arrayElement(['S1', 'D3']) as 'S1' | 'D3',
       };
     })
   );

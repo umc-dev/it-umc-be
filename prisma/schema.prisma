@@ -18,6 +18,7 @@ model admin {
   role      AdminRole      @default(ADMIN)
   accounts  AdminAccount[]
   news      news[]
+  dosen     dosen[]
 
   @@map("admin")
 }
@@ -75,17 +76,23 @@ model Lectureship {
 
 model dosen {
   id              String             @id @default(uuid())
+  prodi           Prodi              @default(S1)
   name            String
   expertise       String
   photo           String
   teaching        String
   research        String
+  education       String?            @db.Text
+  description     String?            @db.Text
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @updatedAt
   nidn            String             @unique
+  email           String             @unique
   positions       DosenLectureship[]
   dosenTridharmas DosenTridharma[]
+  admin           admin    @relation(fields: [email], references: [email], onDelete: Cascade, map: "dosen_email_fkey")
 
+  @@index([email], map: "dosen_email_fkey")
   @@map("dosen")
 }
 
@@ -130,17 +137,20 @@ model DosenLectureship {
 
 model StatisticStudent {
   id                String   @id @default(uuid())
-  year              Int      @unique @db.UnsignedMediumInt
+  year              Int      @db.UnsignedMediumInt
+  prodi             Prodi    @default(S1)
   enteredStudents   Int      @db.UnsignedMediumInt
   graduatedStudents Int      @db.UnsignedMediumInt
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
+  @@unique([year, prodi])
   @@map("statistic_student")
 }
 
 model VisionMission {
   id        Int      @id @default(autoincrement())
+  prodi     Prodi    @default(S1)
   vision    String   @db.Text
   mission   String   @db.Text
   createdAt DateTime @default(now())
@@ -167,6 +177,7 @@ model Alumni {
   video     String
   message   String   @db.Text
   year      Int      @db.UnsignedMediumInt
+  prodi     Prodi    @default(S1)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   photo     String?
@@ -176,6 +187,7 @@ model Alumni {
 
 model Study {
   id        Int      @id @default(autoincrement())
+  prodi     Prodi    @default(S1)
   source    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -185,6 +197,7 @@ model Study {
 
 model Achievement {
   id              Int      @id @default(autoincrement())
+  prodi     Prodi    @default(S1)
   name            String   @db.VarChar(255)
   link            String   @db.VarChar(255)
   achievedAt      DateTime @db.Date
@@ -196,8 +209,12 @@ model Achievement {
 }
 
 model OrganizationalStructure {
-  image       String @id @db.VarChar(255)
-  description String @db.Text
+  id          String   @id @default(uuid())
+  prodi       Prodi    @unique @default(S1)
+  image       String   @db.VarChar(255)
+  description String   @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@map("organizational_structure")
 }
@@ -239,5 +256,12 @@ enum AdminRole {
   SUPER_ADMIN
   ADMIN
   EDITOR
+  DOSEN
 }
+
+enum Prodi {
+  S1
+  D3
+}
+
 

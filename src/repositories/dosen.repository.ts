@@ -1,66 +1,133 @@
-import { CreateDosenData, UpdateDosenData } from "../types/dosen.type";
+import NotFoundException from "../exceptions/NotFoundException";
+import { 
+  // CreateDosenData,
+  UpdateDosenData 
+} from "../types/dosen.type";
 import { removeUndefined } from "../utils";
 import { db } from "../utils/prisma";
 
 export const dosenRepository = {
-  async create(data: CreateDosenData) {
-    return await db.dosen.create({
-      data,
-      include: {
-        positions: {
-          orderBy: {
-            startDate: "desc",
-          },
-          include: {
-            lectureship: {
-              select: { id: true, name: true },
-            },
-          },
-        },
-      },
-    });
-  },
+  // async create(data: CreateDosenData) {
+  //   return await db.dosen.create({
+  //     data,
+  //     include: {
+  //       positions: {
+  //         orderBy: {
+  //           startDate: "desc",
+  //         },
+  //         include: {
+  //           lectureship: {
+  //             select: { id: true, name: true },
+  //           },
+  //         },
+  //       },
+  //     },
+  //   });
+  // },
 
   async update(id: string, data: UpdateDosenData) {
-    return await db.dosen.update({
-      where: { id },
-      data: {
-        ...removeUndefined(data),
-      },
-      include: {
-        positions: {
-          orderBy: {
-            startDate: "desc",
+    // return await db.dosen.update({
+    //   where: { id },
+    //   data: {
+    //     ...removeUndefined(data),
+    //   },
+    //   include: {
+    //     positions: {
+    //       orderBy: {
+    //         startDate: "desc",
+    //       },
+    //       include: {
+    //         lectureship: {
+    //           select: { id: true, name: true },
+    //         },
+    //       },
+    //     },
+    //     dosenTridharmas: {
+    //       orderBy: {
+    //         createdAt: 'desc',
+    //       },
+    //     },
+    //   },
+    // });
+
+    return await db.$transaction(async (tx) => {
+      // Ambil data dosen lama
+      const dosen = await tx.dosen.findUnique({
+        where: { id },
+        select: {
+          email: true,
+        },
+      });
+
+      if (!dosen) {
+        throw new NotFoundException('Dosen not found');
+      }
+
+      // Update dosen
+      const updatedDosen = await tx.dosen.update({
+        where: { id },
+        data: {
+          ...removeUndefined(data),
+        },
+        include: {
+          positions: {
+            orderBy: {
+              startDate: 'desc',
+            },
+            include: {
+              lectureship: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
           },
-          include: {
-            lectureship: {
-              select: { id: true, name: true },
+          dosenTridharmas: {
+            orderBy: {
+              createdAt: 'desc',
             },
           },
         },
-        dosenTridharmas: {
-          orderBy: {
-            createdAt: 'desc',
-          },
+      });
+
+      // Sinkronkan ke admin
+      await tx.admin.update({
+        where: {
+          email: dosen.email,
         },
-      },
+        data: {
+          ...(data.name && {
+            name: data.name,
+          }),
+          ...(data.photo && {
+            avatar: data.photo,
+          }),
+        },
+      });
+
+      return updatedDosen;
     });
   },
 
-  async getAll(limit: number, page: number, search: string) {
+  async getAll(limit: number, page: number, search: string, prodi?: 'S1' | 'D3') {
     const skip = (page - 1) * limit;
-    const whereClause = search
-      ? {
-          OR: [
-            {
-              name: { contains: search, mode: "insensitive" },
-            },
-            {
-              expertise: { contains: search, mode: "insensitive" },
-            },
-          ],
-        }
-      : {};
+    const whereClause: any = {};
+
+    if (search) {
+      whereClause.OR = [
+        {
+          name: { contains: search, mode: "insensitive" },
+        },
+        {
+          expertise: { contains: search, mode: "insensitive" },
+        },
+      ];
+    }
+
+    if (prodi) {
+      whereClause.prodi = prodi;
+    }
 
     // Pake Transaction biar konsisten kalo jalanin 2 kali query
     const [dosen, total] = await db.$transaction([
@@ -131,21 +198,21 @@ export const dosenRepository = {
     });
   },
 
-  async delete(id: string) {
-    return db.dosen.delete({
-      where: { id },
-      include: {
-        positions: {
-          orderBy: {
-            startDate: "desc",
-          },
-          include: {
-            lectureship: {
-              select: { id: true, name: true },
-            },
-          },
-        },
-      },
-    });
-  },
+  // async delete(id: string) {
+  //   return db.dosen.delete({
+  //     where: { id },
+  //     include: {
+  //       positions: {
+  //         orderBy: {
+  //           startDate: "desc",
+  //         },
+  //         include: {
+  //           lectureship: {
+  //             select: { id: true, name: true },
+  //           },
+  //         },
+  //       },
+  //     },
+  //   });
+  // },
 };

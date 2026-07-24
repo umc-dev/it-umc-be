@@ -13,20 +13,26 @@ export const newsRepository = {
     });
   },
 
-  async getAll(limit: number, page: number, search: string) {
+  async getAll(limit: number, page: number, search: string, category?: string) {
     const skip = (page - 1) * limit;
-    const whereClause = search
-      ? {
-          OR: [
-            {
-              title: { contains: search },
-            },
-            {
-              content: { contains: search },
-            },
-          ],
-        }
-      : {};
+    const whereClause: any = {};
+
+    if (search) {
+      whereClause.OR = [
+        {
+          title: { contains: search },
+        },
+        {
+          content: { contains: search },
+        },
+      ];
+    }
+
+    if (category) {
+      whereClause.category = {
+        slug: category,
+      };
+    }
 
     // Pake Transaction biar konsisten kalo jalanin 2 kali query
     const [news, total] = await db.$transaction([

@@ -8,6 +8,7 @@ import z from 'zod';
 // Vision Mission DTO
 export interface VisionMission {
   id: number;
+  prodi: 'S1' | 'D3';
   vision: string;
   mission: string;
   createdAt: Date;
@@ -18,6 +19,7 @@ export interface VisionMission {
 export type CreateVisionMissionDto = z.infer<typeof CreateVisionMissionSchema>;
 
 export interface CreateVisionMissionData {
+  prodi?: 'S1' | 'D3';
   vision: string;
   mission: string;
 }
@@ -25,6 +27,7 @@ export interface CreateVisionMissionData {
 export type UpdateVisionMissionDto = z.infer<typeof UpdateVisionMissionSchema>;
 
 export interface UpdateVisionMissionData {
+  prodi?: 'S1' | 'D3';
   vision?: string;
   mission?: string;
 }
@@ -32,6 +35,7 @@ export interface UpdateVisionMissionData {
 // Response DTO
 export interface VisionMissionResponse {
   id: number;
+  prodi: 'S1' | 'D3';
   vision: string;
   mission: string;
   createdAt: Date;

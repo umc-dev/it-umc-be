@@ -13,6 +13,7 @@ export interface Alumni {
   video: string;
   message: string; 
   year: number;
+  prodi: 'S1' | 'D3';
   createdAt: Date;
   updatedAt: Date;
 }
@@ -28,6 +29,7 @@ export interface CreateAlumniData {
   video: string;
   message: string;
   year: number;
+  prodi?: 'S1' | 'D3';
 }
 
 export type UpdateAlumniDto = z.infer<
@@ -40,6 +42,7 @@ export interface UpdateAlumniData {
   video?: string;
   message?: string;
   year?: number;
+  prodi?: 'S1' | 'D3';
 }
 
 // Response DTO
@@ -50,12 +53,9 @@ export interface AlumniResponse {
   video: string;
   message: string;
   year: number;
+  prodi: 'S1' | 'D3';
   createdAt: Date;
   updatedAt: Date;
-}
-
-export interface AlumniListResponse {
-  studentStatistic: AlumniResponse[];
 }
 
 export interface PaginatedAlumniResponse {

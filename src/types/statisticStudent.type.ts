@@ -8,6 +8,7 @@ import z from 'zod';
 // Student Statistic DTO
 export interface StatisticStudent {
   id: string;
+  prodi: 'S1' | 'D3';
   year: number;
   enteredStudents: number;
   graduatedStudents: number;
@@ -21,6 +22,7 @@ export type CreateStatisticStudentDto = z.infer<
 >;
 
 export interface CreateStatisticStudentData {
+  prodi?: 'S1' | 'D3';
   year: number;
   enteredStudents: number;
   graduatedStudents: number;
@@ -31,6 +33,7 @@ export type UpdateStatisticStudentDto = z.infer<
 >;
 
 export interface UpdateStatisticStudentData {
+  prodi?: 'S1' | 'D3';
   year?: number;
   enteredStudents?: number;
   graduatedStudents?: number;
@@ -39,6 +42,7 @@ export interface UpdateStatisticStudentData {
 // Response DTO
 export interface StatisticStudentResponse {
   id: string;
+  prodi: 'S1' | 'D3';
   year: number;
   enteredStudents: number;
   graduatedStudents: number;

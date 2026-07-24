@@ -11,20 +11,23 @@ const DosenPositionSchema = z
     path: ["endDate"],
   });
 
-export const CreateDosenSchema = z.object({
-  nidn: z.string().min(1, "NIDN is required"),
-  name: z.string().min(1, "Name is required"),
-  expertise: z.string().min(1, "Expertise is required"),
-  research: z.url().min(1, "Research description is required"),
-  teaching: z.url().min(1, "Teaching description is required"),
-  positions: z.array(DosenPositionSchema).optional(),
-});
+// export const CreateDosenSchema = z.object({
+//   nidn: z.string().min(1, "NIDN is required"),
+//   name: z.string().min(1, "Name is required"),
+//   expertise: z.string().min(1, "Expertise is required"),
+//   research: z.url().min(1, "Research description is required"),
+//   teaching: z.url().min(1, "Teaching description is required"),
+//   positions: z.array(DosenPositionSchema).optional(),
+// });
 
 export const UpdateDosenSchema = z.object({
+  prodi: z.enum(['S1', 'D3']).optional(),
   nidn: z.string().min(1, "NIDN is required").optional(),
   name: z.string().optional(),
   expertise: z.string().optional(),
   research: z.url().optional(),
   teaching: z.url().optional(),
+  education: z.string().optional().nullable(),
+  description: z.string().optional().nullable(),
   positions: z.array(DosenPositionSchema).optional(),
 });

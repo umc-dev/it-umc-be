@@ -13,12 +13,14 @@ import { deleteUploadedFile, saveUploadedFile } from "../utils/file";
 export const studyService = {
   async create(
     file: Express.Multer.File,
+    data?: CreateStudyDto,
   ): Promise<StudyResponse> {
     let uploaded: { url: string } | null = null;
     try {
       const uploaded = saveUploadedFile(file);
       const dataToSave: CreateStudyData = {
         source: uploaded.url,
+        prodi: data?.prodi,
       };
 
       return await studyRepository.add(dataToSave);
@@ -34,8 +36,9 @@ export const studyService = {
     limit: number,
     page: number,
     search: string,
+    prodi?: 'S1' | 'D3',
   ): Promise<PaginatedStudyResponse> {
-    const paginatedResult = await studyRepository.getAll(limit, page, search);
+    const paginatedResult = await studyRepository.getAll(limit, page, search, prodi);
 
     return {
       data: paginatedResult.data,
@@ -56,11 +59,14 @@ export const studyService = {
   async update(
     id: number,
     file?: Express.Multer.File,
+    data?: UpdateStudyDto,
   ): Promise<StudyResponse> {
     const exist = await studyRepository.getById(id);
     if (!exist) throw new NotFoundException('Study not found');
 
-    const updateData: UpdateStudyData = {};
+    const updateData: UpdateStudyData = {
+      prodi: data?.prodi,
+    };
 
     // Jika ada file baru, simpan dan hapus file lama
     if (file) {

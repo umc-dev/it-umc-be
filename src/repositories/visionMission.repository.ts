@@ -9,20 +9,24 @@ export const visionMissionRepository = {
     });
   },
 
-  async getAll(limit: number, page: number, search: string) {
+  async getAll(limit: number, page: number, search: string, prodi?: 'S1' | 'D3') {
     const skip = (page - 1) * limit;
-    const whereClause = search
-      ? {
-          OR: [
-            {
-              vision: { contains: search },
-            },
-            {
-              mission: { contains: search },
-            },
-          ],
-        }
-      : {};
+    const whereClause: any = {};
+
+    if (search) {
+      whereClause.OR = [
+        {
+          vision: { contains: search },
+        },
+        {
+          mission: { contains: search },
+        },
+      ];
+    }
+
+    if (prodi) {
+      whereClause.prodi = prodi;
+    }
 
     const [visionMission, total] = await db.$transaction([
       db.visionMission.findMany({

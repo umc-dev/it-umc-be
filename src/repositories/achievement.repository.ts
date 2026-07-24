@@ -10,6 +10,7 @@ import { db } from "../utils/prisma";
 function toAchievementResponse(data: any): AchievementResponse {
   return {
     id: data.id,
+    prodi: data.prodi,
     name: data.name,
     achievementName: data.achievementName,
     link: data.link,
@@ -29,17 +30,22 @@ const achievementRepository = {
     limit: number,
     page: number,
     search: string,
+    prodi?: 'S1' | 'D3',
   ): Promise<PaginatedAchievementResponse> {
     const skip = (page - 1) * limit;
-    const whereClause = search
-      ? {
-          OR: [
-            {
-              name: { contains: search },
-            },
-          ],
-        }
-      : {};
+    const whereClause: any = {};
+
+    if (search) {
+      whereClause.OR = [
+        {
+          name: { contains: search },
+        },
+      ];
+    }
+
+    if (prodi) {
+      whereClause.prodi = prodi;
+    }
 
     const [achievements, total] = await db.$transaction([
       db.achievement.findMany({

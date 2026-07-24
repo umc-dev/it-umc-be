@@ -4,7 +4,7 @@ import { AuthAdmin } from "./admin.type";
 export interface AuthPayload {
   id: string;
   email: string;
-  role: "SUPER_ADMIN" | "ADMIN" | "EDITOR";
+  role: "SUPER_ADMIN" | "ADMIN" | "DOSEN" | "EDITOR";
 }
 
 export interface AuthResponse {

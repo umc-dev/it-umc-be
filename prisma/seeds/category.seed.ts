@@ -7,9 +7,9 @@ export async function seedCategory() {
 
   await prisma.category.createMany({
     data: [
-      { name: "Teknologi", slug: "teknologi" },
-      { name: "Pengumuman", slug: "pengumuman" },
-      { name: "Kampus", slug: "kampus" },
+      { name: "Kemahasiswaan", slug: "kemahasiswaan" },
+      { name: "Akademik", slug: "akademik" },
+      { name: "Berita Kampus", slug: "berita-kampus" },
     ],
     skipDuplicates: true,
   });

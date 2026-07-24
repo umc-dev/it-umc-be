@@ -7,7 +7,7 @@ import {
   UpdateDosenTridharmaSchema,
 } from "../validator/dosenTridharma.validator";
 import { PERMISSIONS } from "../auth/permissions";
-import { requirePermission } from "../middlewares/permissions.middleware";
+import { requireOwnPermission } from "../middlewares/permissions.middleware";
 
 const dosenTridharmaRouter: IRouter = Router();
 
@@ -25,7 +25,7 @@ dosenTridharmaRouter.get("/:id", dosenTridharmaController.getById);
 
 dosenTridharmaRouter.use(
   authMiddleware,
-  requirePermission(PERMISSIONS.DOSEN_TRIDARMA_MANAGE),
+  requireOwnPermission(PERMISSIONS.DOSEN_TRIDARMA_MANAGE),
 );
 
 // CREATE DOSEN TRIDHARMA

@@ -97,7 +97,7 @@ const adminService = {
       const dataToSave: AdminCreateData = {
         ...data,
         password: hashedPassword,
-        avatar: avatar.url,
+        avatar: avatar?.url,
       };
 
       const newAdmin = await adminRepository.addAdmin(dataToSave);

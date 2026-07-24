@@ -13,9 +13,9 @@ export async function seedNews() {
 
   // Cek admin & category (pakai yang pertama)
   const admin = await prisma.admin.findFirst();
-  const category = await prisma.category.findFirst();
+  const categories = await prisma.category.findMany();
 
-  if (!admin || !category) {
+  if (!admin || !categories.length) {
     console.log("Admin atau Category belum ada. Seed dibatalkan.");
     return;
   }
@@ -31,7 +31,7 @@ export async function seedNews() {
         authorId: admin.id,
         thumbnail: fakerID.image.url(),
         slug,
-        categoryId: category.id,
+        categoryId: categories[Math.floor(Math.random() * categories.length)].id,
         createdAt: new Date(),
         updatedAt: new Date(),
       };

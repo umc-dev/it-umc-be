@@ -46,6 +46,7 @@ export interface AdminCreateData {
   password?: string;
   avatar?: string;
   role?: AdminRole;
+  prodi?: 'S1' | 'D3';
 }
 
 export type AdminCreateDTO = z.infer<typeof CreateAdminSchema>;
@@ -56,6 +57,7 @@ export interface AdminUpdateData {
   password?: string;
   avatar?: string;
   role?: AdminRole;
+  prodi?: 'S1' | 'D3';
 }
 
 export type AdminUpdateDTO = z.infer<typeof UpdateAdminSchema>;
