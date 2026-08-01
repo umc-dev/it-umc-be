@@ -1,4 +1,4 @@
-import pdf = require("pdf-parse");
+import { PDFParse } from "pdf-parse";
 import XLSX from "xlsx";
 
 
@@ -6,7 +6,8 @@ import XLSX from "xlsx";
  * Extract plain text content from a PDF file buffer.
  */
 export async function parsePdf(buffer: Buffer): Promise<string> {
-  const parsed = await (pdf as any)(buffer);
+  const parser = new PDFParse({ data: buffer });
+  const parsed = await parser.getText();
   return parsed.text || "";
 }
 
