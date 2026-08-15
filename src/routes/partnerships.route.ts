@@ -31,7 +31,7 @@ partnershipsRouter.use(
 // CREATE PARTNERSHIP
 partnershipsRouter.post(
   "/",
-  upload.single("photo"),
+  upload.array("files"),
   validate(CreatePartnershipSchema),
   partnershipsController.create,
 );
@@ -39,7 +39,7 @@ partnershipsRouter.post(
 // UPDATE PARTNERSHIP
 partnershipsRouter.put(
   "/:id",
-  upload.single("photo"),
+  upload.array("files"),
   validate(UpdatePartnershipSchema),
   partnershipsController.update,
 );

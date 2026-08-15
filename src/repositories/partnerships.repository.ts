@@ -1,13 +1,18 @@
 import {
   CreatePartnershipData,
-  UpdatePartnershipDto,
+  UpdatePartnershipData,
 } from "../types/partnerships.type";
 import { removeUndefined } from "../utils";
 import { db } from "../utils/prisma";
 
 const partnershipsRepository = {
   async create(data: CreatePartnershipData) {
-    return await db.partnership.create({ data });
+    return await db.partnership.create({
+      data,
+      include: {
+        files: true,
+      },
+    });
   },
 
   async getAll(limit: number, page: number, search: string) {
@@ -22,9 +27,7 @@ const partnershipsRepository = {
         }
       : {};
 
-    // Pake Transaction biar konsisten kalo jalanin 2 kali query
     const [partnerships, total] = await db.$transaction([
-      // 1. Query untuk mengambil data
       db.partnership.findMany({
         skip,
         take: limit,
@@ -32,9 +35,11 @@ const partnershipsRepository = {
           createdAt: "desc",
         },
         where: whereClause,
+        include: {
+          files: true,
+        },
       }),
 
-      // 2. Query untuk menghitung total data
       db.partnership.count({
         where: whereClause,
       }),
@@ -54,14 +59,50 @@ const partnershipsRepository = {
   async getById(id: string) {
     return db.partnership.findUnique({
       where: { id },
+      include: {
+        files: true,
+      },
     });
   },
 
-  async update(id: string, data: UpdatePartnershipDto) {
+  async update(
+    id: string,
+    data: UpdatePartnershipData,
+    newFiles?: { fileName: string; fileUrl: string; fileType?: string }[],
+    deleteFileIds?: string[],
+  ) {
     return await db.partnership.update({
       where: { id },
       data: {
         ...removeUndefined(data),
+        ...(newFiles && newFiles.length > 0 && {
+          files: {
+            create: newFiles,
+          },
+        }),
+      },
+      include: {
+        files: true,
+      },
+    });
+  },
+
+  async deleteFilesByIds(fileIds: string[]) {
+    return await db.partnershipFile.deleteMany({
+      where: {
+        id: {
+          in: fileIds,
+        },
+      },
+    });
+  },
+
+  async getFilesByIds(fileIds: string[]) {
+    return await db.partnershipFile.findMany({
+      where: {
+        id: {
+          in: fileIds,
+        },
       },
     });
   },
@@ -69,6 +110,9 @@ const partnershipsRepository = {
   async delete(id: string) {
     return await db.partnership.delete({
       where: { id },
+      include: {
+        files: true,
+      },
     });
   },
 };

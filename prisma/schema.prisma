@@ -160,15 +160,30 @@ model VisionMission {
 }
 
 model Partnership {
-  id        String   @id @default(uuid())
-  name      String   @db.VarChar(255)
-  photo     String?  @db.VarChar(255)
-  startDate DateTime @db.Date
-  endDate   DateTime @db.Date
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String            @id @default(uuid())
+  name        String            @db.VarChar(255)
+  description String            @db.Text
+  startDate   DateTime          @db.Date
+  endDate     DateTime          @db.Date
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  files       PartnershipFile[]
 
   @@map("partnerships")
+}
+
+model PartnershipFile {
+  id            String      @id @default(uuid())
+  partnershipId String
+  fileName      String      @db.VarChar(255)
+  fileUrl       String      @db.VarChar(255)
+  fileType      String?     @db.VarChar(100)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  partnership   Partnership @relation(fields: [partnershipId], references: [id], onDelete: Cascade)
+
+  @@index([partnershipId])
+  @@map("partnership_files")
 }
 
 model Alumni {

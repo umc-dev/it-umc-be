@@ -5,12 +5,23 @@ import {
 } from "../validator/partnerships.validator";
 import z from "zod";
 
+export interface PartnershipFileResponse {
+  id: string;
+  partnershipId: string;
+  fileName: string;
+  fileUrl: string;
+  fileType: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface Partnership {
   id: string;
   name: string;
-  photo: string | null;
+  description: string;
   startDate: Date;
   endDate: Date;
+  files: PartnershipFileResponse[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -22,16 +33,23 @@ export type CreatePartnershipDto = z.infer<typeof CreatePartnershipSchema>;
 
 export interface CreatePartnershipData {
   name: string;
-  photo?: string | null;
+  description: string;
   startDate: Date;
   endDate: Date;
+  files?: {
+    create: {
+      fileName: string;
+      fileUrl: string;
+      fileType?: string;
+    }[];
+  };
 }
 
 export type UpdatePartnershipDto = z.infer<typeof UpdatePartnershipSchema>;
 
 export interface UpdatePartnershipData {
   name?: string;
-  photo?: string | null;
+  description?: string;
   startDate?: Date;
   endDate?: Date;
 }
@@ -42,9 +60,10 @@ export interface UpdatePartnershipData {
 export interface PartnershipResponse {
   id: string;
   name: string;
-  photo: string | null;
+  description: string;
   startDate: Date;
   endDate: Date;
+  files: PartnershipFileResponse[];
   createdAt: Date;
   updatedAt: Date;
 }

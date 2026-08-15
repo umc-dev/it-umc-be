@@ -1,3 +1,4 @@
+import BadRequestException from "../exceptions/BadRequestException";
 import NotFoundException from "../exceptions/NotFoundException";
 import partnershipsRepository from "../repositories/partnerships.repository";
 import {
@@ -11,30 +12,38 @@ import {
 import { deleteUploadedFile, saveUploadedFile } from "../utils/file";
 
 const partnershipsService = {
-  // Create Dosen
+  // Create Partnership
   async create(
     data: CreatePartnershipDto,
-    file?: Express.Multer.File,
+    files?: Express.Multer.File[],
   ): Promise<PartnershipResponse> {
-    let photo: string | null = null;
-
-    if (file) {
-      const savedFile = saveUploadedFile(file);
-      photo = savedFile.url;
-    }
+    const uploadedFilesData = files && files.length > 0
+      ? files.map((file) => {
+          const savedFile = saveUploadedFile(file);
+          return {
+            fileName: file.originalname,
+            fileUrl: savedFile.url,
+            fileType: file.mimetype,
+          };
+        })
+      : [];
 
     const dataToSave: CreatePartnershipData = {
       name: data.name,
+      description: data.description,
       startDate: data.startDate,
       endDate: data.endDate,
-      ...(photo && { photo }),
+      ...(uploadedFilesData.length > 0 && {
+        files: {
+          create: uploadedFilesData,
+        },
+      }),
     };
 
     return await partnershipsRepository.create(dataToSave);
   },
 
-  // Get All Dosen
-
+  // Get All Partnerships
   async getAll(
     limit: number,
     page: number,
@@ -52,7 +61,7 @@ const partnershipsService = {
     };
   },
 
-  // Get By Id Dosen
+  // Get By Id Partnership
   async getById(id: string): Promise<PartnershipResponse> {
     const result = await partnershipsRepository.getById(id);
 
@@ -61,40 +70,48 @@ const partnershipsService = {
     return result;
   },
 
+  // Update Partnership
   async update(
     data: UpdatePartnershipDto,
     id: string,
-    file?: Express.Multer.File,
+    files?: Express.Multer.File[],
   ): Promise<PartnershipResponse> {
     const partnership = await partnershipsRepository.getById(id);
 
     if (!partnership) throw new NotFoundException("Partnership not found");
 
-    let newPhotoUrl: string;
-    const oldPhotoUrl = partnership.photo;
+    // Process new file uploads
+    const newFilesData = files && files.length > 0
+      ? files.map((file) => {
+          const saved = saveUploadedFile(file);
+          return {
+            fileName: file.originalname,
+            fileUrl: saved.url,
+            fileType: file.mimetype,
+          };
+        })
+      : [];
 
-    if (file) {
-      const saved = saveUploadedFile(file);
-      newPhotoUrl = saved.url;
+    // Delete requested files
+    if (data.deleteFileIds && data.deleteFileIds.length > 0) {
+      const filesToDelete = await partnershipsRepository.getFilesByIds(data.deleteFileIds);
+      for (const f of filesToDelete) {
+        deleteUploadedFile(f.fileUrl);
+      }
+      await partnershipsRepository.deleteFilesByIds(data.deleteFileIds);
     }
+
+    const { deleteFileIds, ...updateFields } = data;
 
     const updatedData: UpdatePartnershipData = {
-      ...data,
+      ...updateFields,
     };
 
-    // set photo jika upload baru
-    if (newPhotoUrl) {
-      updatedData.photo = newPhotoUrl;
-    }
-
-    const updated = await partnershipsRepository.update(id, updatedData);
-
-    // Hapus file lama jika ada file baru
-    if (newPhotoUrl && oldPhotoUrl) {
-      deleteUploadedFile(oldPhotoUrl);
-    }
-
-    return updated;
+    return await partnershipsRepository.update(
+      id,
+      updatedData,
+      newFilesData,
+    );
   },
 
   // Delete Partnership
@@ -103,11 +120,13 @@ const partnershipsService = {
 
     if (!partnership) throw new NotFoundException("Partnership not found");
 
-    if (partnership.photo) {
-      deleteUploadedFile(partnership.photo);
+    if (partnership.files && partnership.files.length > 0) {
+      for (const file of partnership.files) {
+        deleteUploadedFile(file.fileUrl);
+      }
     }
 
-    return partnershipsRepository.delete(id);
+    return await partnershipsRepository.delete(id);
   },
 };
 

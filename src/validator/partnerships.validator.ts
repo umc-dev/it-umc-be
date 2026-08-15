@@ -7,6 +7,10 @@ export const CreatePartnershipSchema = z
       .min(1, "Partnership name is required")
       .max(255, "Partnership name must be at most 255 characters"),
 
+    description: z
+      .string()
+      .min(1, "Description is required"),
+
     startDate: z.coerce.date(),
 
     endDate: z.coerce.date(),
@@ -24,11 +28,15 @@ export const UpdatePartnershipSchema = z
       .max(255, "Partnership name must be at most 255 characters")
       .optional(),
 
-    photo: z
+    description: z
       .string()
-      .max(255, "Photo path must be at most 255 characters")
-      .optional()
-      .nullable(),
+      .min(1, "Description is required")
+      .optional(),
+
+    deleteFileIds: z
+      .union([z.string(), z.array(z.string())])
+      .transform((val) => (Array.isArray(val) ? val : [val]))
+      .optional(),
 
     startDate: z.coerce.date().optional(),
 

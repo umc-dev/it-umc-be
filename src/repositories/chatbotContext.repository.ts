@@ -131,7 +131,8 @@ export const chatbotContextRepository = {
         select: {
           id: true,
           name: true,
-          photo: true,
+          description: true,
+          files: true,
           startDate: true,
           endDate: true,
           createdAt: true,

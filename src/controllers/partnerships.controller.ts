@@ -19,17 +19,21 @@ const partnershipsController = {
         ...req.body,
       };
 
-      const result = await partnershipsService.create(body, req.file);
+      const files = req.files as Express.Multer.File[] | undefined;
+
+      const result = await partnershipsService.create(body, files);
 
       return res
         .status(201)
         .json(ResponseHTTP.created(result, "Partnership created"));
     } catch (err) {
-      if (req.file) {
-        const filepath = path.join("uploads", req.file.filename);
-
-        fs.unlink(filepath, (e) => {
-          if (e) console.error("Gagal hapus file temp : ", e);
+      const files = req.files as Express.Multer.File[] | undefined;
+      if (files && files.length > 0) {
+        files.forEach((file) => {
+          const filepath = path.join("uploads", file.filename);
+          fs.unlink(filepath, (e) => {
+            if (e) console.error("Gagal hapus file temp : ", e);
+          });
         });
       }
 
@@ -83,10 +87,12 @@ const partnershipsController = {
         ...req.body,
       };
 
+      const files = req.files as Express.Multer.File[] | undefined;
+
       const result: PartnershipResponse = await partnershipsService.update(
         body,
         id,
-        req.file,
+        files,
       );
 
       return res
