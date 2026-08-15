@@ -17,6 +17,7 @@ import facilityRouter from "./facility.route";
 import { chatbotRouter } from "./chatbot.route";
 import organizationalStructureRouter from "./organizationalStructure.route";
 import dosenTridharmaRouter from "./dosenTridharma.route";
+import accreditationRouter from "./accreditation.route";
 
 const router: IRouter = Router();
 
@@ -37,6 +38,7 @@ router.use("/facilities", facilityRouter);
 router.use("/chatbot", chatbotRouter);
 router.use("/organizational-structure", organizationalStructureRouter);
 router.use("/dosen-tridharma", dosenTridharmaRouter);
+router.use("/accreditations", accreditationRouter);
 
 // kalau nanti ada routes lain
 // router.use("/news", newsRoutes);

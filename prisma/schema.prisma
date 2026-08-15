@@ -279,4 +279,27 @@ enum Prodi {
   D3
 }
 
+enum AccreditationCategory {
+  KAMPUS
+  PRODI
+}
+
+model Accreditation {
+  id              String                @id @default(uuid())
+  category        AccreditationCategory
+  prodi           Prodi?
+  title           String                @db.VarChar(255)
+  grade           String                @db.VarChar(50)
+  skNumber        String                @db.VarChar(100)
+  skLink          String?               @db.Text
+  certificateFile String?               @db.VarChar(255)
+  institution     String?               @db.VarChar(100)
+  validFrom       DateTime              @db.Date
+  validUntil      DateTime              @db.Date
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  @@map("accreditations")
+}
+
 

@@ -47,6 +47,7 @@ export const chatbotContextRepository = {
       achievements,
       organizationalStructure,
       facilities,
+      accreditations,
     ] = await Promise.all([
       db.category.findMany({
         select: {
@@ -191,6 +192,22 @@ export const chatbotContextRepository = {
         },
         orderBy: { createdAt: "desc" },
       }),
+      db.accreditation.findMany({
+        select: {
+          id: true,
+          category: true,
+          prodi: true,
+          title: true,
+          grade: true,
+          skNumber: true,
+          skLink: true,
+          certificateFile: true,
+          institution: true,
+          validFrom: true,
+          validUntil: true,
+        },
+        orderBy: { createdAt: "desc" },
+      }),
     ]);
 
     const sections = [
@@ -207,6 +224,7 @@ export const chatbotContextRepository = {
       formatSection("achievements", achievements),
       formatSection("organizational_structure", organizationalStructure),
       formatSection("facilities", facilities),
+      formatSection("accreditations", accreditations),
     ];
 
     return sections.join("\n\n");

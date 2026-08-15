@@ -19,6 +19,7 @@ export const PERMISSIONS = {
   LECTURESHIP_MANAGE: 'lectureship:manage',
   FACILITY_MANAGE: 'facility:manage',
   DOSEN_TRIDARMA_MANAGE: 'dosen-tridarma:manage',
+  ACCREDITATION_MANAGE: 'accreditation:manage',
 } as const;
 
 export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
