@@ -8,10 +8,17 @@ import { removeUndefined } from '../utils';
 import { db } from '../utils/prisma';
 
 // Untuk mengubah photo menjadi null jika tidak ada
+// Untuk mengubah photo/null-able fields menjadi null jika tidak ada
 function toAlumniResponse(data: any): AlumniResponse {
   return {
     ...data,
     photo: data.photo ?? null,
+    workplace: data.workplace ?? null,
+    position: data.position ?? null,
+    linkedin: data.linkedin ?? null,
+    instagram: data.instagram ?? null,
+    video: data.video ?? null,
+    graduationYear: data.graduationYear ?? null,
   };
 }
 
@@ -36,8 +43,12 @@ export const alumniRepository = {
     if (search) {
       whereClause.OR = [
         ...(Number.isInteger(Number(search))
-          ? [{ year: Number(search) }]
-          : [{ name: { contains: search } }]),
+          ? [{ year: Number(search) }, { graduationYear: Number(search) }]
+          : [
+              { name: { contains: search } },
+              { workplace: { contains: search } },
+              { position: { contains: search } },
+            ]),
       ];
     }
     if (prodi) {

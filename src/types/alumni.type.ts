@@ -10,9 +10,14 @@ export interface Alumni {
   id: string;
   name: string;
   photo: string | null;
-  video: string;
-  message: string; 
+  workplace: string | null;
+  position: string | null;
+  linkedin: string | null;
+  instagram: string | null;
+  video: string | null;
+  message: string;
   year: number;
+  graduationYear: number | null;
   prodi: 'S1' | 'D3';
   createdAt: Date;
   updatedAt: Date;
@@ -26,9 +31,14 @@ export type CreateAlumniDto = z.infer<
 export interface CreateAlumniData {
   name: string;
   photo?: string | null;
-  video: string;
+  workplace?: string | null;
+  position?: string | null;
+  linkedin?: string | null;
+  instagram?: string | null;
+  video?: string | null;
   message: string;
   year: number;
+  graduationYear?: number | null;
   prodi?: 'S1' | 'D3';
 }
 
@@ -39,9 +49,14 @@ export type UpdateAlumniDto = z.infer<
 export interface UpdateAlumniData {
   name?: string;
   photo?: string | null;
-  video?: string;
+  workplace?: string | null;
+  position?: string | null;
+  linkedin?: string | null;
+  instagram?: string | null;
+  video?: string | null;
   message?: string;
   year?: number;
+  graduationYear?: number | null;
   prodi?: 'S1' | 'D3';
 }
 
@@ -50,9 +65,14 @@ export interface AlumniResponse {
   id: string;
   name: string;
   photo: string | null;
-  video: string;
+  workplace: string | null;
+  position: string | null;
+  linkedin: string | null;
+  instagram: string | null;
+  video: string | null;
   message: string;
   year: number;
+  graduationYear: number | null;
   prodi: 'S1' | 'D3';
   createdAt: Date;
   updatedAt: Date;

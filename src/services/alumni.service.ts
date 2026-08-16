@@ -18,9 +18,14 @@ export const alumniService = {
     const dataToSave: CreateAlumniData = {
       name: data.name,
       ...(photo && { photo }),
+      workplace: data.workplace,
+      position: data.position,
+      linkedin: data.linkedin,
+      instagram: data.instagram,
       video: data.video,
       message: data.message,
       year: data.year,
+      graduationYear: data.graduationYear,
       prodi: data.prodi,
     };
     return await alumniRepository.add(dataToSave);

@@ -188,15 +188,20 @@ model PartnershipFile {
 }
 
 model Alumni {
-  id        String   @id @default(uuid())
-  name      String
-  video     String
-  message   String   @db.Text
-  year      Int      @db.UnsignedMediumInt
-  prodi     Prodi    @default(S1)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  photo     String?
+  id             String   @id @default(uuid())
+  name           String
+  photo          String?
+  workplace      String?  @db.VarChar(255)
+  position       String?  @db.VarChar(255)
+  linkedin       String?  @db.VarChar(255)
+  instagram      String?  @db.VarChar(255)
+  video          String?
+  message        String   @db.Text
+  year           Int      @db.UnsignedMediumInt
+  graduationYear Int?     @db.UnsignedMediumInt
+  prodi          Prodi    @default(S1)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   @@map("alumni")
 }

@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE `alumni` ADD COLUMN `graduationYear` MEDIUMINT UNSIGNED NULL,
+    ADD COLUMN `instagram` VARCHAR(255) NULL,
+    ADD COLUMN `linkedin` VARCHAR(255) NULL,
+    ADD COLUMN `position` VARCHAR(255) NULL,
+    ADD COLUMN `workplace` VARCHAR(255) NULL,
+    MODIFY `video` VARCHAR(191) NULL;
