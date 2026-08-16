@@ -19,17 +19,27 @@ const partnershipsController = {
         ...req.body,
       };
 
-      const files = req.files as Express.Multer.File[] | undefined;
+      const filesDict = req.files as
+        | { [fieldname: string]: Express.Multer.File[] }
+        | undefined;
+      const photoFile = filesDict?.photo?.[0];
+      const attachmentFiles = filesDict?.files;
 
-      const result = await partnershipsService.create(body, files);
+      const result = await partnershipsService.create(
+        body,
+        photoFile,
+        attachmentFiles,
+      );
 
       return res
         .status(201)
         .json(ResponseHTTP.created(result, "Partnership created"));
     } catch (err) {
-      const files = req.files as Express.Multer.File[] | undefined;
-      if (files && files.length > 0) {
-        files.forEach((file) => {
+      const filesDict = req.files as
+        | { [fieldname: string]: Express.Multer.File[] }
+        | undefined;
+      if (filesDict) {
+        Object.values(filesDict).flat().forEach((file) => {
           const filepath = path.join("uploads", file.filename);
           fs.unlink(filepath, (e) => {
             if (e) console.error("Gagal hapus file temp : ", e);
@@ -87,18 +97,35 @@ const partnershipsController = {
         ...req.body,
       };
 
-      const files = req.files as Express.Multer.File[] | undefined;
+      const filesDict = req.files as
+        | { [fieldname: string]: Express.Multer.File[] }
+        | undefined;
+      const photoFile = filesDict?.photo?.[0];
+      const attachmentFiles = filesDict?.files;
 
       const result: PartnershipResponse = await partnershipsService.update(
         body,
         id,
-        files,
+        photoFile,
+        attachmentFiles,
       );
 
       return res
         .status(200)
         .json(ResponseHTTP.ok(result, "Partnership updated"));
     } catch (err) {
+      const filesDict = req.files as
+        | { [fieldname: string]: Express.Multer.File[] }
+        | undefined;
+      if (filesDict) {
+        Object.values(filesDict).flat().forEach((file) => {
+          const filepath = path.join("uploads", file.filename);
+          fs.unlink(filepath, (e) => {
+            if (e) console.error("Gagal hapus file temp : ", e);
+          });
+        });
+      }
+
       next(err);
     }
   },

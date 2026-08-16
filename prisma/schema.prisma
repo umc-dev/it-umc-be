@@ -162,6 +162,7 @@ model VisionMission {
 model Partnership {
   id          String            @id @default(uuid())
   name        String            @db.VarChar(255)
+  photo       String            @db.VarChar(255)
   description String            @db.Text
   startDate   DateTime          @db.Date
   endDate     DateTime          @db.Date

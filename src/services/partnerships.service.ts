@@ -15,10 +15,18 @@ const partnershipsService = {
   // Create Partnership
   async create(
     data: CreatePartnershipDto,
-    files?: Express.Multer.File[],
+    photoFile?: Express.Multer.File,
+    attachmentFiles?: Express.Multer.File[],
   ): Promise<PartnershipResponse> {
-    const uploadedFilesData = files && files.length > 0
-      ? files.map((file) => {
+    if (!photoFile) {
+      throw new BadRequestException("Photo / logo is required");
+    }
+
+    const savedPhoto = saveUploadedFile(photoFile);
+    const photo = savedPhoto.url;
+
+    const uploadedFilesData = attachmentFiles && attachmentFiles.length > 0
+      ? attachmentFiles.map((file) => {
           const savedFile = saveUploadedFile(file);
           return {
             fileName: file.originalname,
@@ -30,6 +38,7 @@ const partnershipsService = {
 
     const dataToSave: CreatePartnershipData = {
       name: data.name,
+      photo,
       description: data.description,
       startDate: data.startDate,
       endDate: data.endDate,
@@ -74,15 +83,24 @@ const partnershipsService = {
   async update(
     data: UpdatePartnershipDto,
     id: string,
-    files?: Express.Multer.File[],
+    photoFile?: Express.Multer.File,
+    attachmentFiles?: Express.Multer.File[],
   ): Promise<PartnershipResponse> {
     const partnership = await partnershipsRepository.getById(id);
 
     if (!partnership) throw new NotFoundException("Partnership not found");
 
-    // Process new file uploads
-    const newFilesData = files && files.length > 0
-      ? files.map((file) => {
+    let newPhotoUrl: string | undefined;
+    const oldPhotoUrl = partnership.photo;
+
+    if (photoFile) {
+      const saved = saveUploadedFile(photoFile);
+      newPhotoUrl = saved.url;
+    }
+
+    // Process new attachment uploads
+    const newFilesData = attachmentFiles && attachmentFiles.length > 0
+      ? attachmentFiles.map((file) => {
           const saved = saveUploadedFile(file);
           return {
             fileName: file.originalname,
@@ -92,7 +110,7 @@ const partnershipsService = {
         })
       : [];
 
-    // Delete requested files
+    // Delete requested attachment files
     if (data.deleteFileIds && data.deleteFileIds.length > 0) {
       const filesToDelete = await partnershipsRepository.getFilesByIds(data.deleteFileIds);
       for (const f of filesToDelete) {
@@ -107,11 +125,21 @@ const partnershipsService = {
       ...updateFields,
     };
 
-    return await partnershipsRepository.update(
+    if (newPhotoUrl) {
+      updatedData.photo = newPhotoUrl;
+    }
+
+    const updated = await partnershipsRepository.update(
       id,
       updatedData,
       newFilesData,
     );
+
+    if (newPhotoUrl && oldPhotoUrl) {
+      deleteUploadedFile(oldPhotoUrl);
+    }
+
+    return updated;
   },
 
   // Delete Partnership
@@ -119,6 +147,10 @@ const partnershipsService = {
     const partnership = await partnershipsRepository.getById(id);
 
     if (!partnership) throw new NotFoundException("Partnership not found");
+
+    if (partnership.photo) {
+      deleteUploadedFile(partnership.photo);
+    }
 
     if (partnership.files && partnership.files.length > 0) {
       for (const file of partnership.files) {

@@ -18,6 +18,7 @@ export interface PartnershipFileResponse {
 export interface Partnership {
   id: string;
   name: string;
+  photo: string;
   description: string;
   startDate: Date;
   endDate: Date;
@@ -33,6 +34,7 @@ export type CreatePartnershipDto = z.infer<typeof CreatePartnershipSchema>;
 
 export interface CreatePartnershipData {
   name: string;
+  photo: string;
   description: string;
   startDate: Date;
   endDate: Date;
@@ -49,6 +51,7 @@ export type UpdatePartnershipDto = z.infer<typeof UpdatePartnershipSchema>;
 
 export interface UpdatePartnershipData {
   name?: string;
+  photo?: string;
   description?: string;
   startDate?: Date;
   endDate?: Date;
@@ -60,6 +63,7 @@ export interface UpdatePartnershipData {
 export interface PartnershipResponse {
   id: string;
   name: string;
+  photo: string;
   description: string;
   startDate: Date;
   endDate: Date;

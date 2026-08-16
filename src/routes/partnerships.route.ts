@@ -31,7 +31,10 @@ partnershipsRouter.use(
 // CREATE PARTNERSHIP
 partnershipsRouter.post(
   "/",
-  upload.array("files"),
+  upload.fields([
+    { name: "photo", maxCount: 1 },
+    { name: "files", maxCount: 10 },
+  ]),
   validate(CreatePartnershipSchema),
   partnershipsController.create,
 );
@@ -39,7 +42,10 @@ partnershipsRouter.post(
 // UPDATE PARTNERSHIP
 partnershipsRouter.put(
   "/:id",
-  upload.array("files"),
+  upload.fields([
+    { name: "photo", maxCount: 1 },
+    { name: "files", maxCount: 10 },
+  ]),
   validate(UpdatePartnershipSchema),
   partnershipsController.update,
 );
