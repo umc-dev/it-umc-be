@@ -1,9 +1,39 @@
 import NotFoundException from "../exceptions/NotFoundException";
 import { alumniRepository } from "../repositories/alumni.repository";
-import { AlumniResponse, CreateAlumniData, CreateAlumniDto, PaginatedAlumniResponse, UpdateAlumniData, UpdateAlumniDto } from "../types/alumni.type";
+import { AlumniResponse, ApproveAlumniDto, CreateAlumniData, CreateAlumniDto, PaginatedAlumniResponse, UpdateAlumniData, UpdateAlumniDto } from "../types/alumni.type";
 import { deleteUploadedFile, saveUploadedFile } from "../utils/file";
 
 export const alumniService = {
+  // Public submit by alumni (defaults to isApproved = false)
+  async createPublic(
+    data: CreateAlumniDto,
+    file?: Express.Multer.File,
+  ): Promise<AlumniResponse> {
+    let photo: string | null = null;
+
+    if (file) {
+      const savedFile = saveUploadedFile(file);
+      photo = savedFile.url;
+    }
+
+    const dataToSave: CreateAlumniData = {
+      name: data.name,
+      ...(photo && { photo }),
+      workplace: data.workplace,
+      position: data.position,
+      linkedin: data.linkedin,
+      instagram: data.instagram,
+      video: data.video,
+      message: data.message,
+      year: data.year,
+      graduationYear: data.graduationYear,
+      prodi: data.prodi,
+      isApproved: false, // Must be approved by admin
+    };
+    return await alumniRepository.add(dataToSave);
+  },
+
+  // Admin create alumni (defaults to isApproved = true)
   async create(
     data: CreateAlumniDto,
     file?: Express.Multer.File,
@@ -27,6 +57,7 @@ export const alumniService = {
       year: data.year,
       graduationYear: data.graduationYear,
       prodi: data.prodi,
+      isApproved: true,
     };
     return await alumniRepository.add(dataToSave);
   },
@@ -36,12 +67,14 @@ export const alumniService = {
     page: number,
     search: string,
     prodi?: 'S1' | 'D3',
+    isApprovedFilter?: boolean,
   ): Promise<PaginatedAlumniResponse> {
     const paginateResult = await alumniRepository.getAll(
       limit,
       page,
       search,
       prodi,
+      isApprovedFilter,
     );
 
     return {
@@ -92,6 +125,14 @@ export const alumniService = {
     return updated;
   },
 
+  async approveOrReject(id: string, dto: ApproveAlumniDto): Promise<AlumniResponse> {
+    const alumni = await alumniRepository.getAlumniById(id);
+
+    if (!alumni) throw new NotFoundException('Alumni not found');
+
+    return await alumniRepository.updateStatus(id, dto.isApproved);
+  },
+
   async delete(id: string): Promise<AlumniResponse> {
     const alumni = await alumniRepository.getAlumniById(id);
 
@@ -104,3 +145,4 @@ export const alumniService = {
     return await alumniRepository.delete(id);
   },
 };
+

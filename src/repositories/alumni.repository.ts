@@ -36,6 +36,7 @@ export const alumniRepository = {
     page: number,
     search: string,
     prodi?: 'S1' | 'D3',
+    isApproved?: boolean,
   ): Promise<PaginatedAlumniResponse> {
     const skip = (page - 1) * limit;
     
@@ -53,6 +54,9 @@ export const alumniRepository = {
     }
     if (prodi) {
       whereClause.prodi = prodi;
+    }
+    if (typeof isApproved === 'boolean') {
+      whereClause.isApproved = isApproved;
     }
 
     const [alumni, total] = await db.$transaction([
@@ -100,6 +104,15 @@ export const alumniRepository = {
     return toAlumniResponse(alumni);
   },
 
+  async updateStatus(id: string, isApproved: boolean): Promise<AlumniResponse> {
+    const alumni = await db.alumni.update({
+      where: { id },
+      data: { isApproved },
+    });
+
+    return toAlumniResponse(alumni);
+  },
+
   async delete(id: string): Promise<AlumniResponse> {
     const alumni = await db.alumni.delete({
       where: { id },
@@ -108,3 +121,4 @@ export const alumniRepository = {
     return toAlumniResponse(alumni);
   },
 };
+

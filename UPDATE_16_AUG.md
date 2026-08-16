@@ -113,22 +113,76 @@ Penambahan **Workflow Approval Status** (`PENDING`, `PUBLISHED`, `REJECTED`) dan
 
 ## 3. Update Modul Alumni (`/api/v1/alumni`)
 
-Penambahan detail bidang pekerjaan, jabatan, sosial media, dan tahun kelulusan.
+Penambahan detail bidang pekerjaan, jabatan, sosial media, tahun kelulusan, serta **Form Submit Publik (Self-Submission)** dan **Workflow Approval Admin**.
 
-### 📥 `POST /api/v1/alumni` & `PUT /api/v1/alumni/:id`
-*Content-Type*: `multipart/form-data` atau `application/json`
+### 🌐 Endpoints Overview
 
-#### New/Updated Fields:
+| Method | Endpoint | Access | Permission | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/api/v1/alumni` | Public / Auth | - | Ambil alumni. Publik = `isApproved: true`. Admin = bisa filter `?status=pending`/`approved`/`all` |
+| `POST` | `/api/v1/alumni/public` | Public | - | Form publik pengisian alumni mandiri (Otomatis set `isApproved: false`) |
+| `POST` | `/api/v1/alumni` | Protected | `alumni:manage` | Tambah alumni oleh Admin (Otomatis set `isApproved: true`) |
+| `PATCH` | `/api/v1/alumni/:id/approve` | Protected | `alumni:manage` | Approve atau Reject data alumni yang masuk |
+| `PUT` | `/api/v1/alumni/:id` | Protected | `alumni:manage` | Edit data alumni |
+| `DELETE` | `/api/v1/alumni/:id` | Protected | `alumni:manage` | Hapus data alumni |
+
+---
+
+### 📥 `POST /api/v1/alumni/public` [NEW]
+*Content-Type*: `multipart/form-data`
+
+#### Request Body:
 ```form-data
 name: string                     (Required)
 graduationYear: number | string  (Optional, e.g. 2023)
+year: number | string            (Required, Angkatan e.g. 2019)
 workplace: string                (Optional, e.g. "PT Teknologi Indonesia")
 position: string                 (Optional, e.g. "Senior Software Engineer")
 linkedin: string                 (Optional, URL LinkedIn)
 instagram: string                (Optional, Username/URL Instagram)
-testimonial: string              (Optional)
+video: string                    (Optional, URL Video)
+message: string                  (Required, Kesan/Pesan Testimoni)
+prodi: S1 | D3                   (Optional)
 photo: File (Image)              (Optional)
 ```
+
+#### Response (201 Created):
+```json
+{
+  "statusCode": 201,
+  "message": "Alumni submission received, pending review",
+  "data": {
+    "id": "e4f8b912-32a1-41b2-b123-1a2b3c4d5e6f",
+    "name": "Budi Santoso",
+    "photo": "/uploads/1723802000-photo.jpg",
+    "workplace": "PT Tech Nusantara",
+    "position": "Backend Developer",
+    "linkedin": "https://linkedin.com/in/budisantoso",
+    "instagram": "https://instagram.com/budisantoso",
+    "video": null,
+    "message": "Kuliah di IT UMC membuka wawasan teknologi saya.",
+    "year": 2019,
+    "graduationYear": 2023,
+    "prodi": "S1",
+    "isApproved": false,
+    "createdAt": "2026-08-16T09:48:00.000Z",
+    "updatedAt": "2026-08-16T09:48:00.000Z"
+  }
+}
+```
+
+---
+
+### 📥 `PATCH /api/v1/alumni/:id/approve` [NEW]
+*Content-Type*: `application/json`
+
+#### Request Body:
+```json
+{
+  "isApproved": true // boolean: true (Approve) atau false (Pending/Reject)
+}
+```
+
 
 ---
 

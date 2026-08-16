@@ -201,11 +201,13 @@ model Alumni {
   year           Int      @db.UnsignedMediumInt
   graduationYear Int?     @db.UnsignedMediumInt
   prodi          Prodi    @default(S1)
+  isApproved     Boolean  @default(true)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
   @@map("alumni")
 }
+
 
 model Study {
   id        Int      @id @default(autoincrement())

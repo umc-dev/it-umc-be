@@ -25,3 +25,11 @@ export const UpdateAlumniSchema = z.object({
   graduationYear: z.coerce.number().optional().nullable(),
   prodi: z.enum(['S1', 'D3']).optional(),
 });
+
+export const ApproveAlumniSchema = z.object({
+  isApproved: z.boolean({
+    message: 'isApproved must be a boolean',
+  }),
+});
+
+

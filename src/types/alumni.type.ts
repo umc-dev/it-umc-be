@@ -1,6 +1,7 @@
 import {
   CreateAlumniSchema,
   UpdateAlumniSchema,
+  ApproveAlumniSchema,
 } from '../validator/alumni.validator';
 import { PaginationMeta } from '.';
 import z from 'zod';
@@ -19,6 +20,7 @@ export interface Alumni {
   year: number;
   graduationYear: number | null;
   prodi: 'S1' | 'D3';
+  isApproved: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -40,6 +42,7 @@ export interface CreateAlumniData {
   year: number;
   graduationYear?: number | null;
   prodi?: 'S1' | 'D3';
+  isApproved?: boolean;
 }
 
 export type UpdateAlumniDto = z.infer<
@@ -58,7 +61,12 @@ export interface UpdateAlumniData {
   year?: number;
   graduationYear?: number | null;
   prodi?: 'S1' | 'D3';
+  isApproved?: boolean;
 }
+
+export type ApproveAlumniDto = z.infer<
+  typeof ApproveAlumniSchema
+>;
 
 // Response DTO
 export interface AlumniResponse {
@@ -74,6 +82,7 @@ export interface AlumniResponse {
   year: number;
   graduationYear: number | null;
   prodi: 'S1' | 'D3';
+  isApproved: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -82,3 +91,4 @@ export interface PaginatedAlumniResponse {
   data: AlumniResponse[];
   meta: PaginationMeta;
 }
+
