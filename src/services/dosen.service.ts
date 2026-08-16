@@ -79,9 +79,10 @@ export const dosenService = {
     limit: number,
     page: number,
     search: string,
-    prodi?: 'S1' | 'D3'
+    prodi?: 'S1' | 'D3',
+    emailFilter?: string,
   ): Promise<PaginatedDosenResponse> {
-    const paginatedResult = await dosenRepository.getAll(limit, page, search, prodi);
+    const paginatedResult = await dosenRepository.getAll(limit, page, search, prodi, emailFilter);
 
     return {
       data: paginatedResult.data,

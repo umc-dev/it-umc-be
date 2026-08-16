@@ -1,7 +1,7 @@
 import {
   CreateNewsData,
-  CreateNewsDto,
-  UpdateNewsDto,
+  NewsStatus,
+  UpdateNewsData,
 } from "../types/news.type";
 import { db } from "../utils/prisma";
 import { removeUndefined } from "../utils";
@@ -13,47 +13,46 @@ export const newsRepository = {
     });
   },
 
-  async getAll(limit: number, page: number, search: string, category?: string) {
+  async getAll(
+    limit: number,
+    page: number,
+    search: string,
+    category?: string,
+    authorId?: string,
+    status?: NewsStatus,
+  ) {
     const skip = (page - 1) * limit;
     const whereClause: any = {};
 
     if (search) {
       whereClause.OR = [
-        {
-          title: { contains: search },
-        },
-        {
-          content: { contains: search },
-        },
+        { title: { contains: search } },
+        { content: { contains: search } },
       ];
     }
 
     if (category) {
-      whereClause.category = {
-        slug: category,
-      };
+      whereClause.category = { slug: category };
     }
 
-    // Pake Transaction biar konsisten kalo jalanin 2 kali query
+    if (authorId) {
+      whereClause.authorId = authorId;
+    }
+
+    if (status) {
+      whereClause.status = status;
+    }
+
     const [news, total] = await db.$transaction([
-      // 1. Query untuk mengambil data
       db.news.findMany({
         skip,
         take: limit,
-        orderBy: {
-          createdAt: "desc",
-        },
+        orderBy: { createdAt: "desc" },
         where: whereClause,
-        include: {
-          category: true,
-          admin: true,
-        },
+        include: { category: true, admin: true },
       }),
 
-      // 2. Query untuk menghitung total data
-      db.news.count({
-        where: whereClause,
-      }),
+      db.news.count({ where: whereClause }),
     ]);
 
     return {
@@ -74,12 +73,17 @@ export const newsRepository = {
     });
   },
 
-  async update(slug: string, data: UpdateNewsDto) {
+  async update(slug: string, data: UpdateNewsData) {
     return await db.news.update({
       where: { slug },
-      data: {
-        ...removeUndefined(data),
-      },
+      data: { ...removeUndefined(data) },
+    });
+  },
+
+  async approveOrReject(slug: string, status: NewsStatus) {
+    return await db.news.update({
+      where: { slug },
+      data: { status },
     });
   },
 

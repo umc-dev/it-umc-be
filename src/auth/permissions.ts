@@ -4,6 +4,7 @@ export const PERMISSIONS = {
   NEWS_CREATE: 'news:create',
   NEWS_UPDATE: 'news:update',
   NEWS_DELETE: 'news:delete',
+  NEWS_APPROVE: 'news:approve',
 
   CATEGORY_MANAGE: 'category:manage',
 

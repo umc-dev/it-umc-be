@@ -1,21 +1,25 @@
 import NotFoundException from "../exceptions/NotFoundException";
+import ForbiddenException from "../exceptions/ForbiddenException";
 import { newsRepository } from "../repositories/news.repository";
 import {
+  ApproveNewsDto,
   CreateNewsData,
   CreateNewsDto,
   NewsResponse,
+  NewsStatus,
   PaginatedNewsResponse,
   UpdateNewsData,
   UpdateNewsDto,
 } from "../types/news.type";
 import { generateSlug } from "../utils";
 import { deleteUploadedFile, saveUploadedFile } from "../utils/file";
+import { AuthPayload } from "../types/auth.type";
 
 export const newsService = {
   async create(
     data: CreateNewsDto,
     file: Express.Multer.File,
-    authorId: string,
+    user: AuthPayload,
   ): Promise<NewsResponse> {
     let uploaded: { url: string } | null = null;
     try {
@@ -25,13 +29,18 @@ export const newsService = {
         uploaded = saveUploadedFile(file);
       }
 
+      // Dosen's news needs approval — set to PENDING
+      const status: NewsStatus =
+        user.role === "DOSEN" ? "PENDING" : "PUBLISHED";
+
       const dataToSave: CreateNewsData = {
         title: data.title,
         content: data.content,
-        authorId,
+        authorId: user.id,
         categoryId: data.categoryId,
         slug,
         thumbnail: uploaded.url,
+        status,
       };
 
       return await newsRepository.add(dataToSave);
@@ -48,8 +57,28 @@ export const newsService = {
     page: number,
     search: string,
     category?: string,
+    viewer?: AuthPayload,
   ): Promise<PaginatedNewsResponse> {
-    const paginatedResult = await newsRepository.getAll(limit, page, search, category);
+    let filterAuthorId: string | undefined;
+    let filterStatus: NewsStatus | undefined;
+
+    if (!viewer) {
+      // Public: only published
+      filterStatus = "PUBLISHED";
+    } else if (viewer.role === "DOSEN") {
+      // Dosen: only their own news (all statuses)
+      filterAuthorId = viewer.id;
+    }
+    // ADMIN / SUPER_ADMIN / EDITOR: all news, all statuses
+
+    const paginatedResult = await newsRepository.getAll(
+      limit,
+      page,
+      search,
+      category,
+      filterAuthorId,
+      filterStatus,
+    );
 
     return {
       data: paginatedResult.data,
@@ -57,10 +86,20 @@ export const newsService = {
     };
   },
 
-  async getBySlug(slug: string): Promise<NewsResponse> {
+  async getBySlug(slug: string, viewer?: AuthPayload): Promise<NewsResponse> {
     const result = await newsRepository.getBySlug(slug);
 
     if (!result) {
+      throw new NotFoundException("News not found");
+    }
+
+    // Dosen can only see their own news
+    if (viewer?.role === "DOSEN" && result.authorId !== viewer.id) {
+      throw new ForbiddenException("Access denied, this news belongs to another user");
+    }
+
+    // Public access: only published
+    if (!viewer && result.status !== "PUBLISHED") {
       throw new NotFoundException("News not found");
     }
 
@@ -70,10 +109,16 @@ export const newsService = {
   async update(
     slug: string,
     data: UpdateNewsDto,
+    viewer: AuthPayload,
     file?: Express.Multer.File,
   ): Promise<NewsResponse> {
     const exist = await newsRepository.getBySlug(slug);
     if (!exist) throw new NotFoundException("News not found");
+
+    // Dosen can only edit their own news
+    if (viewer.role === "DOSEN" && exist.authorId !== viewer.id) {
+      throw new ForbiddenException("Access denied, you can only update your own news");
+    }
 
     let newThumbnailUrl: string;
     const oldThumbnailUrl = exist.thumbnail;
@@ -83,28 +128,18 @@ export const newsService = {
       newThumbnailUrl = saved.url;
     }
 
-    // Generate slug baru jika title berubah
-    const updateData: UpdateNewsData = {
-      ...data,
-    };
+    const updateData: UpdateNewsData = { ...data };
 
     if (data.title && data.title !== exist.title) {
       updateData.slug = generateSlug(data.title);
     }
 
-    // set thumbnail jika upload baru
     if (newThumbnailUrl) {
       updateData.thumbnail = newThumbnailUrl;
     }
 
-    // Jika update sukses dan ada file baru → hapus file lama
-    if (newThumbnailUrl && exist.thumbnail) {
-      deleteUploadedFile(exist.thumbnail);
-    }
-
     const updated = await newsRepository.update(slug, updateData);
 
-    // Hapus file lama jika ada file baru
     if (newThumbnailUrl && oldThumbnailUrl) {
       deleteUploadedFile(oldThumbnailUrl);
     }
@@ -112,9 +147,14 @@ export const newsService = {
     return updated;
   },
 
-  async delete(slug: string): Promise<NewsResponse> {
+  async delete(slug: string, viewer: AuthPayload): Promise<NewsResponse> {
     const exist = await newsRepository.getBySlug(slug);
     if (!exist) throw new NotFoundException("News not found");
+
+    // Dosen can only delete their own news
+    if (viewer.role === "DOSEN" && exist.authorId !== viewer.id) {
+      throw new ForbiddenException("Access denied, you can only delete your own news");
+    }
 
     if (exist.thumbnail) {
       deleteUploadedFile(exist.thumbnail);
@@ -122,4 +162,12 @@ export const newsService = {
 
     return newsRepository.delete(slug);
   },
+
+  async approveOrReject(slug: string, dto: ApproveNewsDto): Promise<NewsResponse> {
+    const exist = await newsRepository.getBySlug(slug);
+    if (!exist) throw new NotFoundException("News not found");
+
+    return newsRepository.approveOrReject(slug, dto.status as NewsStatus);
+  },
 };
+

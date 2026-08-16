@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { newsController } from "../controllers/news.controller";
 import {
+  ApproveNewsSchema,
   CreateNewsSchema,
   UpdateNewsSchema,
 } from "../validator/news.validator";
@@ -13,14 +14,22 @@ import { PERMISSIONS } from "../auth/permissions";
 const newsRouter: IRouter = Router();
 
 /* =====================
-   PUBLIC
+   PUBLIC (with optional auth for scoping)
 ===================== */
 
-// GET NEWS
-newsRouter.get("/", newsController.getAll);
+// Optional auth middleware — populates req.user if valid token present, but doesn't block if missing
+const optionalAuth = async (req: any, res: any, next: any) => {
+  if (req.cookies?.access_token) {
+    return authMiddleware(req, res, next);
+  }
+  next();
+};
 
-// Get By Slug
-newsRouter.get("/:slug", newsController.getBySlug);
+// GET NEWS (public sees only PUBLISHED; Dosen sees own news; Admin sees all)
+newsRouter.get("/", optionalAuth, newsController.getAll);
+
+// Get By Slug (public sees only PUBLISHED; Dosen sees only own)
+newsRouter.get("/:slug", optionalAuth, newsController.getBySlug);
 
 /* =====================
    PROTECTED
@@ -44,6 +53,14 @@ newsRouter.put(
   upload.single("thumbnail"),
   validate(UpdateNewsSchema),
   newsController.update,
+);
+
+// APPROVE / REJECT NEWS (Admin & Super Admin only)
+newsRouter.patch(
+  "/:slug/approve",
+  requirePermission(PERMISSIONS.NEWS_APPROVE),
+  validate(ApproveNewsSchema),
+  newsController.approveOrReject,
 );
 
 // DELETE NEWS

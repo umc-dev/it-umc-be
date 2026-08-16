@@ -11,3 +11,10 @@ export const UpdateNewsSchema = z.object({
   content: z.string().optional(),
   categoryId: z.coerce.number().optional(),
 });
+
+export const ApproveNewsSchema = z.object({
+  status: z.enum(['PUBLISHED', 'REJECTED'], {
+    message: 'Status must be PUBLISHED or REJECTED',
+  }),
+});
+

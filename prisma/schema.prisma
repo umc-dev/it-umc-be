@@ -47,17 +47,18 @@ model category {
 }
 
 model news {
-  id         String   @id @default(uuid())
+  id         String     @id @default(uuid())
   title      String
-  content    String   @db.Text
+  content    String     @db.Text
   authorId   String
   thumbnail  String
-  slug       String   @unique
+  slug       String     @unique
   categoryId Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  admin      admin    @relation(fields: [authorId], references: [id], onDelete: Cascade, map: "News_authorId_fkey")
-  category   category @relation(fields: [categoryId], references: [id], map: "News_categoryId_fkey")
+  status     NewsStatus @default(PUBLISHED)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  admin      admin      @relation(fields: [authorId], references: [id], onDelete: Cascade, map: "News_authorId_fkey")
+  category   category   @relation(fields: [categoryId], references: [id], map: "News_categoryId_fkey")
 
   @@index([authorId], map: "News_authorId_fkey")
   @@index([categoryId], map: "News_categoryId_fkey")
@@ -308,4 +309,8 @@ model Accreditation {
   @@map("accreditations")
 }
 
-
+enum NewsStatus {
+  PENDING
+  PUBLISHED
+  REJECTED
+}

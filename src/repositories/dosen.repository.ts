@@ -110,7 +110,7 @@ export const dosenRepository = {
     });
   },
 
-  async getAll(limit: number, page: number, search: string, prodi?: 'S1' | 'D3') {
+  async getAll(limit: number, page: number, search: string, prodi?: 'S1' | 'D3', emailFilter?: string) {
     const skip = (page - 1) * limit;
     const whereClause: any = {};
 
@@ -127,6 +127,11 @@ export const dosenRepository = {
 
     if (prodi) {
       whereClause.prodi = prodi;
+    }
+
+    // If emailFilter is provided, scope to only this dosen
+    if (emailFilter) {
+      whereClause.email = emailFilter;
     }
 
     // Pake Transaction biar konsisten kalo jalanin 2 kali query

@@ -1,10 +1,13 @@
 import {
   CreateNewsSchema,
   UpdateNewsSchema,
+  ApproveNewsSchema,
 } from "../validator/news.validator";
 import { PaginationMeta } from ".";
 import { AdminResponse } from "./admin.type";
 import z from "zod";
+
+export type NewsStatus = "PENDING" | "PUBLISHED" | "REJECTED";
 
 // News DTO
 export interface News {
@@ -13,6 +16,7 @@ export interface News {
   content: string;
   thumbnail: string | null;
   slug: string;
+  status: NewsStatus;
   categoryId: number;
   authorId: string;
   createdAt: Date;
@@ -29,6 +33,7 @@ export interface CreateNewsData {
   thumbnail: string;
   categoryId: number;
   authorId: string;
+  status: NewsStatus;
 }
 
 export type UpdateNewsDto = z.infer<typeof UpdateNewsSchema>;
@@ -41,6 +46,8 @@ export interface UpdateNewsData {
   slug?: string;
 }
 
+export type ApproveNewsDto = z.infer<typeof ApproveNewsSchema>;
+
 // Response DTO
 export interface NewsResponse {
   id: string;
@@ -48,6 +55,7 @@ export interface NewsResponse {
   content: string;
   thumbnail: string | null;
   slug: string;
+  status: NewsStatus;
   categoryId: number;
   authorId: string;
   createdAt: Date;

@@ -37,11 +37,15 @@ export const dosenController = {
       const search = (req.query.search as string) || "";
       const prodi = req.query.prodi as 'S1' | 'D3' | undefined;
 
+      // If caller is DOSEN, only show their own data
+      const emailFilter = req.user?.role === 'DOSEN' ? req.user.email : undefined;
+
       const result: PaginatedDosenResponse = await dosenService.getAll(
         limit,
         page,
         search,
         prodi,
+        emailFilter,
       );
 
       return res
