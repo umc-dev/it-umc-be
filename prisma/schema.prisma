@@ -105,6 +105,9 @@ model DosenTridharma {
   year        Int
   description String                 @db.Text
   link        String                 @db.Text
+  semester    String                 @default("-")
+  credits     Int                    @default(1)
+  class       String                 @default("-")
   createdAt   DateTime               @default(now())
   updatedAt   DateTime               @updatedAt
   dosen       dosen                  @relation(fields: [dosenId], references: [id], onDelete: Cascade)
