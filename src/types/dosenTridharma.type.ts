@@ -14,6 +14,9 @@ export interface DosenTridarma {
   title: string;
   description: string;
   link: string;
+  semester?: string;
+  credits?: number;
+  class?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -30,6 +33,9 @@ export interface CreateDosenTridharmaData {
   year: number;
   description: string;
   link: string;
+  semester?: string;
+  credits?: number;
+  class?: string;
 }
 
 export type UpdateDosenTridharmaDto = z.infer<
@@ -43,6 +49,9 @@ export interface UpdateDosenTridharmaData {
   year?: number;
   description?: string;
   link?: string;
+  semester?: string;
+  credits?: number;
+  class?: string;
 }
 
 // Response DTO
@@ -54,6 +63,9 @@ export interface DosenTridharmaResponse {
   year: number;
   description: string;
   link: string;
+  semester?: string;
+  credits?: number;
+  class?: string;
   createdAt: Date;
   updatedAt: Date;
 }
