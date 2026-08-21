@@ -1,3 +1,4 @@
+import { AchievementCategory } from "@prisma/client";
 import {
   PaginatedAchievementResponse,
   AchievementResponse,
@@ -11,6 +12,7 @@ function toAchievementResponse(data: any): AchievementResponse {
   return {
     id: data.id,
     prodi: data.prodi,
+    category: data.category,
     name: data.name,
     achievementName: data.achievementName,
     link: data.link,
@@ -31,6 +33,7 @@ const achievementRepository = {
     page: number,
     search: string,
     prodi?: 'S1' | 'D3',
+    category?: AchievementCategory,
   ): Promise<PaginatedAchievementResponse> {
     const skip = (page - 1) * limit;
     const whereClause: any = {};
@@ -46,6 +49,11 @@ const achievementRepository = {
     if (prodi) {
       whereClause.prodi = prodi;
     }
+
+    if (category) {
+      whereClause.category = category;
+    }
+
 
     const [achievements, total] = await db.$transaction([
       db.achievement.findMany({

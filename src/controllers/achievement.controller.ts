@@ -1,3 +1,4 @@
+import { AchievementCategory } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import BadRequestException from "../exceptions/BadRequestException";
 import achievementService from "../services/achievement.service";
@@ -42,13 +43,16 @@ const achievementController = {
       const page = parseInt(req.query.page as string) || 1;
       const search = (req.query.search as string) || "";
       const prodi = req.query.prodi as 'S1' | 'D3' | undefined;
+      const category = req.query.category as AchievementCategory | undefined;
 
       const result: PaginatedAchievementResponse = await achievementService.getAll(
         limit,
         page,
         search,
         prodi,
+        category,
       );
+
 
       return res
         .status(200)

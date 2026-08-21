@@ -1,3 +1,4 @@
+import { AchievementCategory } from "@prisma/client";
 import NotFoundException from "../exceptions/NotFoundException";
 import achievementRepository from "../repositories/achievement.repository";
 import {
@@ -13,6 +14,7 @@ const achievementService = {
   async create(data: CreateAchievementDto): Promise<AchievementResponse> {
     const dataToSave: CreateAchievementData = {
       prodi: data.prodi,
+      category: data.category,
       name: data.name,
       achievementName: data.achievementName,
       link: data.link,
@@ -27,13 +29,16 @@ const achievementService = {
     page: number,
     search: string,
     prodi?: 'S1' | 'D3',
+    category?: AchievementCategory,
   ): Promise<PaginatedAchievementResponse> {
     const paginatedResult = await achievementRepository.getAll(
       limit,
       page,
       search,
       prodi,
+      category,
     );
+
 
     return {
       data: paginatedResult.data,

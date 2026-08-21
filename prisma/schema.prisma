@@ -222,18 +222,25 @@ model Study {
   @@map("study")
 }
 
+enum AchievementCategory {
+  AKADEMIK
+  NON_AKADEMIK
+}
+
 model Achievement {
-  id              Int      @id @default(autoincrement())
-  prodi     Prodi    @default(S1)
-  name            String   @db.VarChar(255)
-  link            String   @db.VarChar(255)
-  achievedAt      DateTime @db.Date
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  achievementName String   @db.VarChar(255)
+  id              Int                 @id @default(autoincrement())
+  prodi           Prodi               @default(S1)
+  category        AchievementCategory @default(AKADEMIK)
+  name            String              @db.VarChar(255)
+  link            String              @db.VarChar(255)
+  achievedAt      DateTime            @db.Date
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  achievementName String              @db.VarChar(255)
 
   @@map("achievements")
 }
+
 
 model OrganizationalStructure {
   id          String   @id @default(uuid())

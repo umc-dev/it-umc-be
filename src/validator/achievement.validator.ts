@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const CreateAchievementSchema = z.object({
   prodi: z.enum(['S1', 'D3']).optional(),
+  category: z.enum(['AKADEMIK', 'NON_AKADEMIK']).optional(),
   name: z
     .string()
     .min(1, "Achievement name is required")
@@ -19,6 +20,7 @@ export const CreateAchievementSchema = z.object({
 
 export const UpdateAchievementSchema = z.object({
   prodi: z.enum(['S1', 'D3']).optional(),
+  category: z.enum(['AKADEMIK', 'NON_AKADEMIK']).optional(),
   name: z
     .string()
     .min(1, "Achievement name is required")
@@ -35,3 +37,4 @@ export const UpdateAchievementSchema = z.object({
     .optional(),
   achievedAt: z.coerce.date().optional(),
 });
+
