@@ -2,7 +2,7 @@ import multer from 'multer';
 import path from 'path';
 import BadRequestException from '../exceptions/BadRequestException';
 import { UPLOAD_ALLOWED_MIME, UPLOAD_MAX_FILE_SIZE } from '../config/file.config';
-
+import { UPLOADS_PATH } from '../config/path.config';
 
 const uploadFile = multer({
   limits: {
@@ -17,7 +17,7 @@ const uploadFile = multer({
 
     next(null, true);
   },
-  dest: path.join(__dirname, "../../uploads/temp"),
+  dest: path.join(UPLOADS_PATH, "temp"),
 });
 
 export default uploadFile;

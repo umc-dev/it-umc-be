@@ -17,8 +17,9 @@ export const saveUploadedFile = (file: Express.Multer.File) => {
   const fileName = `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
   const targetPath = path.join(UPLOADS_PATH, fileName);
 
-  // pindahkan dari temp ke uploads
-  fs.renameSync(file.path, targetPath);
+  // pindahkan dari temp ke uploads (gunakan copyFileSync agar aman lintas volume/filesystem)
+  fs.copyFileSync(file.path, targetPath);
+  fs.unlinkSync(file.path);
 
   return {
     fileName,
