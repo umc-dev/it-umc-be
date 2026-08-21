@@ -1,0 +1,8 @@
+-- AlterTable
+ALTER TABLE `achievements` ADD COLUMN `category` ENUM('AKADEMIK', 'NON_AKADEMIK') NOT NULL DEFAULT 'AKADEMIK';
+
+-- AlterTable
+ALTER TABLE `dosen_tridharmas` ADD COLUMN `semester` VARCHAR(191) NOT NULL DEFAULT '-',
+    ADD COLUMN `credits` INTEGER NOT NULL DEFAULT 1,
+    ADD COLUMN `class` VARCHAR(191) NOT NULL DEFAULT '-',
+    MODIFY `link` TEXT NOT NULL;
