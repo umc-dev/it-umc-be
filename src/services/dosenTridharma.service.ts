@@ -24,6 +24,9 @@ export const dosenTridharmaService = {
       year: data.year,
       description: data.description,
       link: data.link,
+      semester: data.semester,
+      credits: data.credits,
+      class: data.class,
     };
     return await dosenTridharmaRepository.add(dataToSave);
   },

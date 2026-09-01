@@ -7,6 +7,9 @@ export const CreateDosenTridharmaSchema = z.object({
   year: z.number().min(2000, 'Year must be 2000 or later'),
   description: z.string('description is required').min(3),
   link: z.url('link must be a valid URL'),
+  semester: z.string().optional(),
+  credits: z.union([z.number(), z.string().transform((val) => Number(val))]).optional(),
+  class: z.string().optional(),
 });
 
 export const UpdateDosenTridharmaSchema = z.object({
@@ -16,4 +19,7 @@ export const UpdateDosenTridharmaSchema = z.object({
   year: z.number().min(2000, 'Year must be 2000 or later').optional(),
   description: z.string('description is required').min(3).optional(),
   link: z.url('link must be a valid URL').optional(),
+  semester: z.string().optional(),
+  credits: z.union([z.number(), z.string().transform((val) => Number(val))]).optional(),
+  class: z.string().optional(),
 });

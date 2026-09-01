@@ -19,6 +19,7 @@ export async function seedPartnerships() {
       data: {
         name: partner.name,
         photo: partner.logo,
+        description: "Kerjasama Kemitraan UMC",
         startDate: faker.date.past({ years: 2 }),
         endDate: faker.date.future({ years: 3 }),
       },
