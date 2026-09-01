@@ -143,7 +143,16 @@ const adminRepository = {
             },
           });
         } else {
-          throw new BadRequestException ('Dosen already exist')
+          // Jika dosen sudah ada maka update data dosen tersebut
+          await tx.dosen.update({
+            where: { email: existingAdmin.email },
+            data: {
+              name: updatedAdmin.name ?? '',
+              email: updatedAdmin.email,
+              photo: updatedAdmin.avatar ?? '',
+              ...(data.prodi && { prodi: data.prodi }),
+            },
+          });
         }
       }
 
